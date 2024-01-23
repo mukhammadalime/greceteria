@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import products from "../data/products.json";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/productCard";
 import usePaginate from "../hooks/usePaginate";
 import PaginationButtons from "../components/UI/PaginationButtons";
 
