@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 @import "base/base";
 @import "components/buttons";
-// @import "layout/section";
+@import "layout/section";
 @import "layout/header";
 // @import "layout/footer";
 @import "layout/banner";
@@ -19,6 +19,7 @@
 // @import "components/admin";
 // @import "layout/product";
 @import "components/components";
+@import "components/category";
 // @import "components/form";
 // @import "components/social-share";
 // @import "pages/news";

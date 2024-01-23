@@ -1,0 +1,54 @@
+.category {
+  &__main {
+    display: flex;
+    column-gap: 2.4rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 2.4rem;
+  }
+
+  &__item {
+    width: 19.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    background-color: #fff;
+    padding: 2.4rem 0 2.4rem 0;
+    transition: all 0.3s linear;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #2c742f;
+      transition: all 0.3s linear;
+      box-shadow: 0 0 1.2rem 0 #20b52652;
+    }
+
+    img {
+      height: 8rem;
+    }
+
+    h5 {
+      margin-top: 1.6rem;
+      color: #1a1a1a;
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+
+    .quantity {
+      font-size: 1.4rem;
+      line-height: 2.1rem;
+      color: #808080;
+      font-weight: 400;
+      margin-top: 0.6rem;
+    }
+  }
+}
+
+.swiper-slide {
+  width: 19.6rem;
+  margin-right: 1.85%;
+
+  &:last-child {
+    margin-right: unset;
+  }
+}
