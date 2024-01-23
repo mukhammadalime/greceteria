@@ -1,0 +1,98 @@
+.cart {
+  &__content {
+    border-radius: 0;
+    border: unset;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 2.4rem;
+  }
+
+  &__table {
+    border-radius: 0.5rem;
+    border: 1px solid #e5e5e5;
+    height: min-content;
+  }
+
+  &__head {
+    grid-template-columns: 2fr 1fr 1fr 1fr 2.4rem;
+    .head-title:nth-child(3) {
+      justify-self: center;
+      margin-left: -0.5rem;
+    }
+  }
+
+  &__item {
+    grid-template-columns: 2fr 1fr 1fr 1fr 2.4rem;
+    align-items: center;
+    padding: 1rem 2.4rem;
+
+    .table-3 {
+      .counter-lg {
+        margin-right: unset;
+      }
+    }
+    .table-4 {
+      justify-self: center;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1.6rem 2rem;
+    border-top: 1px solid #e5e5e5;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+.bill-card {
+  position: relative;
+  width: 100%;
+  padding: 2.4rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  height: min-content;
+
+  &__top {
+    h2 {
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+    }
+  }
+
+  &__detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid #e5e5e5;
+    p {
+      color: #4d4d4d;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+    span {
+      color: #1a1a1a;
+      font-size: 1.4rem;
+      font-weight: 500;
+    }
+
+    &:last-child {
+      border-bottom: unset;
+      span {
+        font-size: 1.8rem;
+      }
+    }
+  }
+  &__action {
+    text-decoration: none;
+    width: 100%;
+    margin-top: 2rem;
+  }
+}

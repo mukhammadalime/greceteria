@@ -1,0 +1,52 @@
+.address-form {
+  border: 1px solid #e5e5e5;
+  border-radius: 0.8rem;
+  background-color: #fff;
+  z-index: 100;
+  width: 84.6rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &__header {
+    padding: 1.6rem 2.4rem;
+    border-bottom: 1px solid #e5e5e5;
+    text-transform: capitalize;
+    color: #1a1a1a;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+
+  &__main {
+    padding: 2.4rem;
+
+    .form-inputs:last-child {
+      margin-bottom: unset;
+    }
+  }
+
+  &__bottom {
+    align-items: center;
+
+    .delete-button {
+      margin-right: 1rem;
+      background-color: red;
+    }
+
+    button:last-child {
+      background-color: #3a4374;
+    }
+  }
+
+  &__bottom {
+    padding: 1.6rem 2.4rem;
+    border-top: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      font-size: 1.5rem;
+    }
+  }
+}

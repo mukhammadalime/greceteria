@@ -1,0 +1,100 @@
+.settings {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  column-gap: 2rem;
+
+  &__main {
+    .container {
+      padding: 0 !important;
+    }
+  }
+
+  .account-settings {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.8rem;
+    margin-bottom: 3.5rem;
+
+    &__form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      align-items: center;
+      padding: 2.4rem;
+    }
+    &__inputs {
+      display: grid;
+      row-gap: 1rem;
+
+      button {
+        font-size: 1.5rem;
+        justify-self: left;
+        margin-top: 1rem;
+      }
+    }
+
+    &__photo {
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      row-gap: 2rem;
+      img {
+        height: 22.4rem;
+        width: 22.4rem;
+        border-radius: 50%;
+      }
+
+      label {
+        font-size: 1.5rem;
+        margin: 0 auto;
+      }
+
+      input {
+        display: none;
+      }
+    }
+  }
+
+  .user-addresses {
+    margin-bottom: 3.5rem;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.8rem;
+
+    .address-book__items {
+      overflow-y: unset;
+      min-height: 8rem;
+      height: auto;
+    }
+
+    .address-book__header {
+      padding: 1.6rem 2.4rem;
+      border-bottom: 1px solid #e5e5e5;
+      text-transform: capitalize;
+      color: #1a1a1a;
+      line-height: unset !important;
+      font-size: 2rem;
+      font-weight: 500;
+    }
+  }
+
+  .user-password {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.8rem;
+    margin-bottom: 3.5rem;
+
+    &__form {
+      padding: 2.4rem;
+      display: grid;
+      row-gap: 1.5rem;
+
+      button {
+        font-size: 1.5rem;
+        justify-self: left;
+      }
+
+      .new-passwords {
+        display: flex;
+        column-gap: 2rem;
+      }
+    }
+  }
+}

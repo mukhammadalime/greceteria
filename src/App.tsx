@@ -1,4 +1,5 @@
 import Categories from "./components/CategoriesCarousel";
+import AllProductCards from "./layout/AllProductCards";
 import Banner from "./layout/Banner";
 import Header from "./layout/Header";
 
@@ -8,6 +9,7 @@ function App() {
       <Header />
       <Banner />
       <Categories />
+      <AllProductCards />
     </>
   );
 }
