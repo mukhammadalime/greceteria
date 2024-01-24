@@ -7,6 +7,8 @@ import AboutUs from "./pages/AboutShop/AboutUs";
 import ContactUs from "./pages/AboutShop/ContactUs";
 import CustomerCenter from "./pages/AboutShop/CustomerCenter";
 import TermsAndPrivacy from "./pages/AboutShop/TermsAndPrivacy";
+import NewsPage from "./pages/News";
+import NewsDetails from "./pages/NewsDetails";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/customer-center" element={<CustomerCenter />} />
         <Route path="/terms-privacy" element={<TermsAndPrivacy />} />
+        <Route path="/news" element={<NewsPage />} />
+        <Route path="/news/:newsId" element={<NewsDetails />} />
 
         <Route path="/auth/*" element={<Auth />} />
       </Routes>

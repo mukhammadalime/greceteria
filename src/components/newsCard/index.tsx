@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import RightArrowIcon from "../UI/Icons/RightArrowIcon";
 
 const NewsCard = () => {
   return (
-    <div className="news-card">
+    <Link to="/news/details" className="news-card">
       <div className="news-card__img-box">
         <div>
           <img
@@ -26,7 +27,7 @@ const NewsCard = () => {
           <RightArrowIcon />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
