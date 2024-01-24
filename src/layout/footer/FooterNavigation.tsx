@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const myAccountItems = [
   { name: "My Dashboard", link: "/my-dashboard" },
   { name: "Order History", link: "/orders" },
@@ -18,7 +20,7 @@ const FooterNavigation = ({ text }: { text: string }) => {
       <li className="footer__navigation--title">{text}</li>
       {items.map((item, i) => (
         <li className="footer__navigation--link" key={i}>
-          <a href="/">{item.name}</a>
+          <Link to={item.link}>{item.name}</Link>
         </li>
       ))}
     </ul>

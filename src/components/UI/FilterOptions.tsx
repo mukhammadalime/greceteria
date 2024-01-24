@@ -8,7 +8,6 @@ const FilterOptions = ({
   title: string;
 }) => {
   const [option, setOption] = useState<string | null>(title);
-  console.log("option:", option);
   const btnRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const [showOptions, setShowOptions] = useState<boolean>(() => false);
