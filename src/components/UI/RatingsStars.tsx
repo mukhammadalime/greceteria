@@ -3,8 +3,9 @@ import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 
 const RatingsStars = (props: {
-  notRatingsQuantity: boolean;
+  notRatingsQuantity?: boolean;
   ratingsAverage: number;
+  ratingsQuantity?: number;
 }) => {
   return (
     <ul className="ratings">

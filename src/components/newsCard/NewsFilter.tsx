@@ -1,18 +1,19 @@
-// import { useState } from "react";
+import { useState } from "react";
 import FilterOptions from "../UI/FilterOptions";
+import AddNewsModal from "../modals/AddNewsModal";
 const sortOptions = ["Sort by: Newest", "Sort by: Oldest"];
 
 const NewsFilter = () => {
-  // const [addNewsModal, setAddNewsModal] = useState(() => false);
+  const [addNewsModal, setAddNewsModal] = useState(() => false);
 
   return (
     <>
-      {/* {addNewsModal && (
+      {addNewsModal && (
         <AddNewsModal
           text="Add News"
           closeModal={() => setAddNewsModal(false)}
         />
-      )} */}
+      )}
       <div className="section__head">
         <form className="header__search">
           <input type="text" placeholder="Search for news" />
@@ -33,7 +34,7 @@ const NewsFilter = () => {
         </div>
         <button
           className="button add-button"
-          // onClick={() => setAddNewsModal(true)}
+          onClick={() => setAddNewsModal(true)}
           children="Add News"
         />
       </div>
