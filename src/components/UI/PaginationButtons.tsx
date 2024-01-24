@@ -1,5 +1,5 @@
 import ReactPaginate from "react-paginate";
-import { leftArrow, rightArrow } from "./Slider/Silder";
+import { leftArrow, rightArrow } from "./Slider/SilderButton";
 
 const PaginationButtons = ({
   handlePageClick,

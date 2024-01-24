@@ -9,7 +9,7 @@ export const rightArrow = (
   </svg>
 );
 
-export default function BtnSlider({
+export default function SilderButton({
   direction,
   moveSlide,
 }: {
