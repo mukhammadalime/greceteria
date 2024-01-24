@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 const navUserItems = [
   {
     name: "Home",
@@ -60,7 +62,9 @@ const HeaderBottom = () => {
           <ul className="header__nav">
             {navUserItems.map((item) => (
               <li className="header__nav--link" key={item.name}>
-                <div className="nav--link-item">{item.name}</div>
+                <NavLink to={item.link} className="nav--link-item">
+                  {item.name}
+                </NavLink>
               </li>
             ))}
           </ul>

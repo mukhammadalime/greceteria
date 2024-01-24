@@ -1,9 +1,13 @@
+import { Link } from "react-router-dom";
+
 const HeaderTop = () => {
   return (
     <div className="header__top">
       <div className="container">
         <div className="header__top--content">
-          <div className="header__brand">Welcome To Groceteria</div>
+          <Link to="/home" className="header__brand">
+            Welcome To Groceteria
+          </Link>
           <form className="header__search">
             <input type="text" placeholder="Search for products" />
             <img
@@ -31,9 +35,13 @@ const HeaderTop = () => {
             </div>
             <div className="header__cart--auth">
               <div className="header__cart--not-logged">
-                <div className="login-btn">Sign in</div>
+                <Link to="/auth/login" className="login-btn">
+                  Sign in
+                </Link>
                 <span> / </span>
-                <div className="login-btn">Sign up</div>
+                <Link to="/auth/signup" className="login-btn">
+                  Sign up
+                </Link>
               </div>
               {/* <Link to="/my-dashboard" className="header__cart--user">
                     <img src="/assets/images/users/default.jpg" alt="User" />
