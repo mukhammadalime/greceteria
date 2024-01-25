@@ -1,7 +1,6 @@
 .all-products {
-  display: flex;
+  display: grid;
   column-gap: 2.4rem;
   row-gap: 2.4rem;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
 }
