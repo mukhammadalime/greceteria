@@ -2,7 +2,7 @@ const ModalActions = (props: { closeModal: () => void; text: string }) => {
   return (
     <div className="address-form__bottom">
       <button className="button button-md" onClick={props.closeModal}>
-        Save Address
+        Save Product
       </button>
       <div>
         {props.text.includes("Edit") && (

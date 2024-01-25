@@ -14,7 +14,7 @@ export default function SilderButton({
   moveSlide,
 }: {
   direction: string;
-  moveSlide: () => {};
+  moveSlide: () => void;
 }) {
   return (
     <div

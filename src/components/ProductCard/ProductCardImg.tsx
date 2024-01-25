@@ -1,8 +1,15 @@
+import { useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
+import QuickViewModal from "../modals/QuickViewModal";
 
 const ProductCardImg = (props: { image: string }) => {
+  const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
+
   return (
     <>
+      {showQuickView && (
+        <QuickViewModal closeQuickView={() => setShowQuickView(false)} />
+      )}
       <div className="product-item__img-box">
         <div>
           <img
@@ -18,7 +25,7 @@ const ProductCardImg = (props: { image: string }) => {
               <use href="/assets/icons/icons.svg#icon-heart"></use>
             </svg>
           </div>
-          <div className="favs-item">
+          <div className="favs-item" onClick={() => setShowQuickView(true)}>
             <svg>
               <use href="/assets/icons/icons.svg#icon-eye"></use>
             </svg>

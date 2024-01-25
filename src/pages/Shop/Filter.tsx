@@ -1,8 +1,7 @@
 import { useState } from "react";
-// import FilterOptions from "../../components/FilterOptions";
 import CloseIcon from "../../components/UI/Icons/CloseIcon";
 import FilterOptions from "../../components/UI/FilterOptions";
-// import AddProductModal from "../../components/modals/AddProductModal";
+import AddProductModal from "../../components/modals/AddProductModal";
 
 const categoryOptions = [
   "Water and Drinks",
@@ -30,12 +29,13 @@ const Filter = () => {
 
   return (
     <>
-      {/* {addProductModal && (
+      {addProductModal && (
         <AddProductModal
           text="Add Product"
           closeModal={() => setAddProductModal(false)}
+          images={[]}
         />
-      )} */}
+      )}
 
       <div className="filter">
         <div className="container">

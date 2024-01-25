@@ -1,7 +1,7 @@
 import { useState } from "react";
-// import AddNewsModal from "../components/modals/AddNewsModal";
+import AddNewsModal from "../components/modals/AddNewsModal";
 import SwiperSlider from "../components/UI/Slider/SwiperSlider";
-// import SocialShareModal from "../components/modals/SocialShareModal";
+import SocialShareModal from "../components/modals/SocialShareModal";
 
 const images = [
   "/assets/images/products/almond-1.jpeg",
@@ -10,19 +10,23 @@ const images = [
 
 const NewsDetails = () => {
   const [shareModal, setShareModal] = useState(() => false);
-  // const [addNewsModal, setAddNewsModal] = useState(() => false);
+  const [addNewsModal, setAddNewsModal] = useState(() => false);
 
   return (
     <>
-      {/* {shareModal && (
-        <SocialShareModal text="news" closeModal={() => setShareModal(false)} />
-      )} */}
-      {/* {addNewsModal && (
+      {shareModal && (
+        <SocialShareModal
+          text="news"
+          closeModal={() => setShareModal(false)}
+          url={""}
+        />
+      )}
+      {addNewsModal && (
         <AddNewsModal
           text="Edit News"
           closeModal={() => setAddNewsModal(false)}
         />
-      )} */}
+      )}
       <div className="section-lg">
         <div className="container">
           <div className="news">
