@@ -1,14 +1,7 @@
+import { TeamMemberTypes } from "../../utils/types";
 import SocialAppsIcons from "../UI/SocialAppsIcons";
 
-const TeamMember = ({
-  image,
-  name,
-  position,
-}: {
-  image: string;
-  name: string;
-  position: string;
-}) => {
+const TeamMember = ({ image, name, position }: TeamMemberTypes) => {
   return (
     <div className="team__member">
       <div className="team__member--img">

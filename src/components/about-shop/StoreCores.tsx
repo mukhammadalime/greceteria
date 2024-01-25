@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import RightArrowIcon from "../UI/Icons/RightArrowIcon";
+import { MotoItemTypes } from "../../utils/types";
 
-const motos = [
-  "Sed in metus pellentesque.",
-  "Fusce et ex commodo, aliquam nulla efficitur, tempus lorem.",
-  "Maecenas ut nunc fringilla erat varius.",
+const motos: MotoItemTypes[] = [
+  { id: 1, motoText: "Sed in metus pellentesque." },
+  {
+    id: 2,
+    motoText: "Fusce et ex commodo, aliquam nulla efficitur, tempus lorem.",
+  },
+  { id: 3, motoText: "Maecenas ut nunc fringilla erat varius." },
 ];
 
 const StoreCores = () => {
@@ -45,14 +49,14 @@ const StoreCores = () => {
                 auctor bibendum nunc eget elementum.
               </p>
               <div className="hero__info">
-                {motos.map((moto) => (
-                  <div className="hero__info--item" key={moto}>
+                {motos.map((moto: MotoItemTypes) => (
+                  <div className="hero__info--item" key={moto.id}>
                     <span>
                       <svg>
                         <use href="/assets/icons/icons.svg#icon-check-circle"></use>
                       </svg>
                     </span>
-                    <p>{moto}</p>
+                    <p>{moto.motoText}</p>
                   </div>
                 ))}
               </div>

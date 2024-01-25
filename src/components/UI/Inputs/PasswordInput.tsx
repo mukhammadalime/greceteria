@@ -1,5 +1,5 @@
 import React from "react";
-import ShowHidePassword from "../../../utils/ShowHidePassword";
+import useShowHidePassword from "../../../hooks/useShowHidePassword";
 
 interface PasswordInputTypes {
   label: string;
@@ -8,7 +8,7 @@ interface PasswordInputTypes {
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputTypes>(
   ({ label, placeholder }, ref) => {
-    const { passShown, togglePassShown } = ShowHidePassword();
+    const { passShown, togglePassShown } = useShowHidePassword();
 
     return (
       <div className="input">

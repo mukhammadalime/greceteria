@@ -1,4 +1,8 @@
-const UploadImages = ({ onChange }: { onChange: (e: any) => void }) => {
+const UploadImages = ({
+  onChange,
+}: {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
   return (
     <div className="upload-image">
       <span>

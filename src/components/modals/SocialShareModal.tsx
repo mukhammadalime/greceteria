@@ -11,20 +11,13 @@ import {
   TelegramShareButton,
   WhatsappShareButton,
 } from "react-share";
+import { SocialShareTypes } from "../../utils/types";
 
 const Backdrop = ({ closeModal }: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={closeModal} />;
 };
 
-const SocialShareOverlay = ({
-  text,
-  url,
-  closeModal,
-}: {
-  text: string;
-  url: string;
-  closeModal: () => void;
-}) => {
+const SocialShareOverlay = ({ text, url, closeModal }: SocialShareTypes) => {
   const hideModalHandler = (e: any) => {
     if (e.target.className === "social-share__buttons") return;
     closeModal();
@@ -65,15 +58,7 @@ const SocialShareOverlay = ({
   );
 };
 
-const SocialShareModal = ({
-  text,
-  closeModal,
-  url,
-}: {
-  text: string;
-  url: string;
-  closeModal: () => void;
-}) => {
+const SocialShareModal = ({ text, closeModal, url }: SocialShareTypes) => {
   return (
     <>
       {ReactDOM.createPortal(

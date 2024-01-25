@@ -19,7 +19,7 @@ const AddNewsOverlay = (props: {
   );
   const [paragraphs, setParagraphs] = useState(() => 0);
 
-  const onSelectFile = (e: Event) => {
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = (e.target as HTMLInputElement).files!;
     let imagesArray: string[] = [];
     for (let i = 0; i < selectedFiles.length; i++) {

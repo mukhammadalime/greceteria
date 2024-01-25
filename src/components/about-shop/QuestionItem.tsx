@@ -1,13 +1,8 @@
 import { useState } from "react";
+import { QuestionItemTypes } from "../../utils/types";
 
-const QuestionItem = ({
-  question,
-  answer,
-}: {
-  question: string;
-  answer: any;
-}) => {
-  const [answerShown, setAnswerShown] = useState(() => false);
+const QuestionItem = ({ question, answer }: QuestionItemTypes) => {
+  const [answerShown, setAnswerShown] = useState<boolean>(() => false);
   let updatedAnswer = answer;
   if (answer.includes("*")) {
     updatedAnswer = (

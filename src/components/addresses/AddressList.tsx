@@ -1,30 +1,37 @@
 import { useState } from "react";
 import AddressItem from "./AddressItem";
+import { AddressItemTypes } from "../../utils/types";
 
-const addresses = [
+const addresses: AddressItemTypes[] = [
   {
-    id: 1,
-    name: "Laura Wilson",
-    address: "4140 Parker Rd. Allentown, New Mexico 31134",
-    phoneNumber: "+82 1054678921",
+    id: "1",
+    receiverName: "Laura Wilson",
+    address1: "4140 Parker Rd. Allentown",
+    city: "New Mexico",
+    postalCode: 31134,
+    phoneNumber: 821054678921,
   },
   {
-    id: 2,
-    name: "Amelia",
-    address: "5250 Parker Rd. Allentown, California 35522",
-    phoneNumber: "+82 1054678921",
+    id: "2",
+    receiverName: "Ameila",
+    address1: "5250 Parker Rd. Allentown",
+    city: "California",
+    postalCode: 35522,
+    phoneNumber: 821054678921,
   },
   {
-    id: 3,
-    name: "Laura",
-    address: "4140 Parker Rd. Allentown, New Mexico 31134",
-    phoneNumber: "+82 1054653921",
+    id: "3",
+    receiverName: "Muhammadali",
+    address1: "5250 Parker Rd. Allentown",
+    city: "New York",
+    postalCode: 23451,
+    phoneNumber: 821057012806,
   },
 ];
 
-const AddressList = ({ select }: { select: boolean }) => {
-  const [selectedAddress, setSelectedAddress] = useState(() => 1);
-  const selectAddress = (value: any) => {
+const AddressList = ({ select }: AddressListTypes) => {
+  const [selectedAddress, setSelectedAddress] = useState(() => "1");
+  const selectAddress = (value: string) => {
     setSelectedAddress(value);
   };
 
@@ -32,7 +39,7 @@ const AddressList = ({ select }: { select: boolean }) => {
     <div className="address-book">
       {addresses.length !== 0 && (
         <div className="address-book__items">
-          {addresses.map((item) => (
+          {addresses.map((item: AddressItemTypes) => (
             <AddressItem
               key={item.id}
               {...item}
@@ -52,5 +59,9 @@ const AddressList = ({ select }: { select: boolean }) => {
     </div>
   );
 };
+
+interface AddressListTypes {
+  select: boolean;
+}
 
 export default AddressList;

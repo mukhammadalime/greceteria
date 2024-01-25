@@ -1,19 +1,12 @@
 import { useState } from "react";
 import AddAddressModal from "../modals/AddAddressModal";
+import { AddressItemTypes } from "../../utils/types";
 
-const AddressItem = (props: {
-  selectAddress: (id: number) => void;
-  name: string;
-  address: string;
-  phoneNumber: string;
-  select: boolean;
-  id: number;
-  selectedAddress: any;
-}) => {
+const AddressItem = (props: Combined) => {
   const [addressModalShown, setAddressModalShown] = useState(() => false);
 
-  const selectAddress = (e: any) => {
-    props.selectAddress(Number(e.target.dataset.id));
+  const selectAddress = (e: React.MouseEvent<HTMLSpanElement>) => {
+    props.selectAddress((e.target as HTMLSpanElement).dataset.id!);
   };
 
   return (
@@ -25,9 +18,9 @@ const AddressItem = (props: {
         />
       )}
 
-      <div className="address-book__item" key={props.name}>
-        <h5>{props.name}</h5>
-        <p>{props.address}</p>
+      <div className="address-book__item" key={props.id}>
+        <h5>{props.receiverName}</h5>
+        <p>{`${props.address1}, ${props.address2}, ${props.city}, ${props.postalCode}, `}</p>
         <span>{props.phoneNumber}</span>
         {/* It is for dashboard and settings pages */}
         {!props.select && (
@@ -52,5 +45,13 @@ const AddressItem = (props: {
     </>
   );
 };
+
+interface PropsTypes {
+  selectAddress: (id: string) => void;
+  select: boolean;
+  selectedAddress: string;
+}
+
+interface Combined extends PropsTypes, AddressItemTypes {}
 
 export default AddressItem;

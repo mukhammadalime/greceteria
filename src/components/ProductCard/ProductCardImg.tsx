@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
+import { Link } from "react-router-dom";
 
 const ProductCardImg = (props: { image: string }) => {
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
@@ -11,14 +12,14 @@ const ProductCardImg = (props: { image: string }) => {
         <QuickViewModal closeQuickView={() => setShowQuickView(false)} />
       )}
       <div className="product-item__img-box">
-        <div>
+        <Link to="/products/details">
           <img
             className="product-item__img"
             src={`/assets/images/products/${props.image}`}
             alt=""
           />
           {/* <div className="stock-out product-item__stock-out">Out of stock</div> */}
-        </div>
+        </Link>
         <div className="favs">
           <div className="favs-item">
             <svg>
