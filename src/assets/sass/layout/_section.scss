@@ -1,6 +1,14 @@
 .section-xl {
   padding: 8rem 0;
   background-color: linear-gradient(180deg, #f2f5f3 20.01%, #ffffff 100%);
+
+  @media (max-width: 768px) {
+    padding: 5rem 0;
+  }
+
+  @media (max-width: 600px) {
+    padding: 3rem 0;
+  }
 }
 
 .section-lg {

@@ -1,6 +1,7 @@
 .form {
   display: grid;
   row-gap: 1.2rem;
+
   &-wrapper {
     position: relative;
     width: 52rem;
@@ -18,6 +19,16 @@
       font-size: 3.2rem;
       font-weight: 600;
       text-transform: capitalize;
+    }
+
+    @media (max-width: 600px) {
+      width: unset;
+      padding: 1.8rem;
+
+      h6 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
     }
   }
 
@@ -107,6 +118,7 @@
 
   &-verification {
     margin-bottom: 1rem;
+    justify-content: center;
 
     input {
       width: 6rem !important;
@@ -188,5 +200,24 @@
     transform: translateY(-50%);
     right: 0;
     top: 1rem;
+  }
+}
+
+/////////////////////////////
+/// FORM RESPONSIVE
+.form {
+  @media (max-width: 600px) {
+    &-verification {
+      margin-bottom: 0;
+
+      input {
+        width: 4rem !important;
+        height: 4rem !important;
+      }
+    }
+
+    &-verification-box h6 {
+      margin-bottom: 0;
+    }
   }
 }
