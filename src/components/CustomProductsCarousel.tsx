@@ -113,29 +113,27 @@ const CustomProductsCarousel = ({ text }: { text: string }) => {
     <div className="section-sm">
       <div className="container">
         <SectionHead text={text} />
-        <div className="all-products">
-          <Swiper
-            grabCursor={true}
-            modules={[Autoplay]}
-            slidesPerView="auto"
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-            }}
-          >
-            {products.map((product) => (
-              <SwiperSlide key={product.name} style={{ width: "24rem" }}>
-                <ProductCard
-                  key={product.name}
-                  images={product.images}
-                  discountPrice={product.discountedPrice}
-                  price={product.price}
-                  name={product.name}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+        <Swiper
+          grabCursor={true}
+          modules={[Autoplay]}
+          slidesPerView="auto"
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.name} style={{ width: "24rem" }}>
+              <ProductCard
+                key={product.name}
+                images={product.images}
+                discountPrice={product.discountedPrice}
+                price={product.price}
+                name={product.name}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );

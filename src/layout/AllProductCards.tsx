@@ -31,7 +31,10 @@ const AllProductCards = () => {
     <>
       <div className="section-md">
         <div className="container">
-          <div className="section__head" style={{ position: "relative" }}>
+          <div
+            className="section__head all-products__section-head"
+            style={{ position: "relative" }}
+          >
             <h2>All Products</h2>
             <PaginationButtons
               pageCount={pageCount}

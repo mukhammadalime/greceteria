@@ -11,14 +11,17 @@ const Footer = () => {
             <h4>Groceteria</h4>
             <p>
               Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis
-              dui, eget bibendum magna congue nec.
+              dui.
             </p>
             <div className="footer__brand-contact">
               <span>+821057012806</span> or <span>groceteria@gmail.com</span>
             </div>
           </div>
-          <FooterNavigation text="My Account" />
-          <FooterNavigation text="My Help" />
+          <div className="footer__navigation-container">
+            <FooterNavigation text="My Account" />
+            <FooterNavigation text="My Help" />
+          </div>
+
           <FooterMobile />
         </div>
         <div className="footer__bottom">

@@ -13,10 +13,16 @@ const myHelpsItems = [
   { name: "About Us", link: "/about-us" },
 ];
 
-const FooterNavigation = ({ text }: { text: string }) => {
+const FooterNavigation = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
   let items = text === "My Account" ? myAccountItems : myHelpsItems;
   return (
-    <ul className="footer__navigation">
+    <ul className={`footer__navigation ${className}`}>
       <li className="footer__navigation--title">{text}</li>
       {items.map((item, i) => (
         <li className="footer__navigation--link" key={i}>
