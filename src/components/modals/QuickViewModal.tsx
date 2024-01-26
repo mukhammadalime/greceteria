@@ -16,16 +16,11 @@ const QuickViewOverlay = (props: { closeQuickView: () => void }) => {
       <div className="product__info">
         <div className="product__info--item">
           <div className="product__info--title">
-            <span>
-              {/* {props.brandName ? [props.brandName] : ""} */}
-              [California]
-            </span>
-            Almond
-            <span>
-              {/* {props.features ? props.features : ""}{" "} */}
-              Newly updated 400g
-              {/* {props.weight ? props.weight : ""}{" "} */}
-            </span>
+            {/* {props.brandName ? [props.brandName] : ""} */}
+            [California] Almond
+            {/* {props.features ? props.features : ""}{" "} */} Newly updated
+            400g
+            {/* {props.weight ? props.weight : ""}{" "} */}
           </div>
           <div className="product__info--ratings">
             <RatingsStars ratingsAverage={3.7} ratingsQuantity={12} />
