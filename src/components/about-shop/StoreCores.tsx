@@ -6,7 +6,7 @@ const motos: MotoItemTypes[] = [
   { id: 1, motoText: "Sed in metus pellentesque." },
   {
     id: 2,
-    motoText: "Fusce et ex commodo, aliquam nulla efficitur, tempus lorem.",
+    motoText: "Fusce et ex commodo, aliquam nulla efficitur.",
   },
   { id: 3, motoText: "Maecenas ut nunc fringilla erat varius." },
 ];

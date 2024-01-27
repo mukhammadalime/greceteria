@@ -75,7 +75,6 @@
       font-weight: 600;
       font-size: 4.6rem;
       line-height: 6.72rem;
-      width: 60.7rem;
       margin-bottom: 1.5rem;
     }
 
@@ -127,9 +126,83 @@
     margin-top: 1.5rem !important;
   }
 }
+//// HERO RESPONSIVE
+.hero {
+  @media (max-width: 1000px) {
+    &__text {
+      h5 {
+        font-size: 4rem;
+        line-height: 4.7rem;
+      }
+
+      p {
+        font-size: 1.6rem;
+      }
+    }
+
+    &__img {
+      height: 41rem;
+    }
+  }
+
+  @media (max-width: 850px) {
+    &__text {
+      h5 {
+        font-size: 3.5rem;
+        line-height: 4.7rem;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 1.4rem;
+      }
+    }
+
+    &__img {
+      height: 34rem;
+    }
+
+    &__info {
+      margin-top: 0.8rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: unset;
+    row-gap: 3rem;
+
+    &__img {
+      height: 41rem;
+      width: 92%;
+      margin: 0 auto;
+      grid-row: 2/3;
+    }
+  }
+
+  @media (max-width: 600px) {
+    row-gap: 2rem;
+    &__text {
+      h5 {
+        font-size: 2.5rem;
+        // line-height: 4.7rem;
+      }
+
+      p {
+        font-size: 1.3rem;
+      }
+    }
+
+    &__img {
+      height: 34rem;
+    }
+  }
+}
 
 .hero-2 {
   background: linear-gradient(180deg, #f2f2f2 0%, #ffffff 100%);
+
+  @media (max-width: 768px) {
+  }
 }
 
 .team {
@@ -248,6 +321,24 @@
   }
 }
 
+//// TEAM RESPONSIVE
+.team {
+  @media (max-width: 768px) {
+    &__header {
+      margin-bottom: 2.5rem;
+      h2 {
+        font-size: 3rem;
+        line-height: unset;
+      }
+      p {
+        font-size: 1.5rem;
+        max-width: 64rem;
+        width: unset;
+      }
+    }
+  }
+}
+
 .team-member-carousel {
   width: 30.4rem;
 }
@@ -331,4 +422,7 @@
 
 .client-reviews-carousel {
   width: 41.6rem;
+  @media (max-width: 600px) {
+    width: 35.6rem;
+  }
 }
