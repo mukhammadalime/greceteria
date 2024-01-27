@@ -296,6 +296,7 @@
   &__top {
     @media (max-width: 768px) {
       padding: 1.5rem 0;
+      padding-bottom: 0;
     }
   }
 
@@ -303,7 +304,7 @@
     @media (max-width: 768px) {
       gap: 1.5rem;
       display: grid;
-      grid-template-columns: min-content repeat(2, 1fr);
+      grid-template-columns: min-content 1fr max-content;
     }
   }
 

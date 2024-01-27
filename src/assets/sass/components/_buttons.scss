@@ -26,6 +26,10 @@
   font-size: 1.4rem;
   line-height: 1.68rem;
   padding: 1.4rem 3.2rem;
+
+  @media (max-width: 600px) {
+    padding: 1rem 2.4rem;
+  }
 }
 
 .button-lg {

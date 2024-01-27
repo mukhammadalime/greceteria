@@ -30,7 +30,7 @@ const ProductCardDetails = (props: {
         </div>
 
         <div className="product-item__actions">
-          <div className="counter">
+          <div className="counter counter-s">
             <div className="decrement">-</div>
             <div className="input">0</div>
             <div className="increment">+</div>

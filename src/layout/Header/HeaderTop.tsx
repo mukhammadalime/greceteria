@@ -38,19 +38,19 @@ const HeaderTop = () => {
             </form>
             <div className="header__cart">
               <div className="header__cart--liked">
-                <div>
+                <Link to="/wishlist">
                   <svg>
                     <use href="/assets/icons/icons.svg#icon-heart"></use>
                   </svg>
-                </div>
+                </Link>
               </div>
               <div className="header__cart--bag">
-                <div className="cart-bag">
+                <Link to="/my-cart" className="cart-bag">
                   <svg>
                     <use href="/assets/icons/icons.svg#icon-shopping-cart"></use>
                   </svg>
                   <span className="items-number">2</span>
-                </div>
+                </Link>
               </div>
               <div className="header__cart--auth">
                 <div className="header__cart--not-logged">

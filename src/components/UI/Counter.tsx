@@ -1,9 +1,13 @@
+import { useMediaQuery } from "react-responsive";
+
 const Counter = () => {
+  const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
+
   return (
-    <div className="counter counter-lg">
-      <div className="decrement decrement-lg">-</div>
-      <div className="input input-lg">0</div>
-      <div className="increment increment-lg">+</div>
+    <div className={`counter${isMobile ? " counter-s" : ""}`}>
+      <div className="decrement">-</div>
+      <div className="input">0</div>
+      <div className="increment">+</div>
     </div>
   );
 };

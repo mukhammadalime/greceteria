@@ -1,3 +1,6 @@
 Tasks To Complete 
 - Make all pages responsive
 - Connect login/signup with backend
+
+Issues
+- filter options in scroll
