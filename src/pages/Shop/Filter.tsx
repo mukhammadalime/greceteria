@@ -40,24 +40,52 @@ const Filter = () => {
       <div className="filter">
         <div className="container">
           <div className="filter__top">
-            <FilterOptions options={categoryOptions} title="Select Category" />
-            <FilterOptions options={priceOptions} title="Select Price" />
-            <FilterOptions options={ratingOptions} title="Select Rating" />
-            <FilterOptions options={sortOptions} title="Sort By: Latest" />
-            {/* <button
+            <FilterOptions
+              options={categoryOptions}
+              title="Select Category"
+              orderNumber={1}
+            />
+            <FilterOptions
+              options={priceOptions}
+              title="Select Price"
+              orderNumber={2}
+            />
+            <FilterOptions
+              options={ratingOptions}
+              title="Select Rating"
+              orderNumber={3}
+            />
+            <FilterOptions
+              options={sortOptions}
+              title="Sort By: Latest"
+              orderNumber={4}
+            />
+            <button
               className="button add-button"
               onClick={() => setAddProductModal(true)}
               children="Add Product"
-            /> */}
+            />
           </div>
         </div>
-        <div className="filter__bottom">
-          <div className="container">
+        <div className="container">
+          <div className="filter__bottom">
             <div className="filter__bottom--main">
               <div className="active__filters">
                 <h5>Active Filters:</h5>
                 <div className="active__filter">
                   Vegetables
+                  <CloseIcon />
+                </div>
+                <div className="active__filter">
+                  Min $10 - Max $20
+                  <CloseIcon />
+                </div>
+                <div className="active__filter">
+                  Min $10 - Max $20
+                  <CloseIcon />
+                </div>
+                <div className="active__filter">
+                  Min $10 - Max $20
                   <CloseIcon />
                 </div>
                 <div className="active__filter">

@@ -5,6 +5,11 @@
   transition: all 0.3s linear;
   border-radius: 0.5rem;
 
+  // TODO: I need to find a way to fix this
+  @media (min-width: 600px) {
+    max-width: 37.5rem;
+  }
+
   &:hover {
     border: 1px solid #2c742f;
     transition: all 0.3s linear;
@@ -36,7 +41,7 @@
         height: 25rem;
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 527px) {
         height: 30rem;
       }
     }

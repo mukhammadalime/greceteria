@@ -5,6 +5,18 @@
     column-gap: 2rem;
     padding: 3rem 0;
 
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
     .add-button {
       justify-self: right;
     }
@@ -18,17 +30,45 @@
     &--main {
       display: flex;
       justify-content: space-between;
+      overflow-x: scroll;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      & {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
       .active__filters {
         display: flex;
         align-items: center;
         column-gap: 2rem;
+
         h5 {
           font-size: 1.4rem;
           color: #808080;
           text-transform: capitalize;
           font-weight: 400;
+          min-width: max-content;
         }
       }
+    }
+  }
+
+  &__result {
+    margin-left: 2rem;
+    min-width: max-content;
+  }
+}
+
+//////////////////////////////////
+/// FILTER RESPONSIVE
+.filter {
+  @media (max-width: 800px) {
+    &__top {
+      padding: 1.5rem 0;
     }
   }
 }
@@ -39,6 +79,7 @@
   color: #1a1a1a;
   display: flex;
   align-items: center;
+  min-width: max-content;
 
   svg {
     color: #9a9caa;
@@ -70,7 +111,7 @@
 
 .choose {
   min-width: 17.6rem;
-  position: relative;
+
   .chosen {
     padding: 1.2rem 1.5rem;
     font-size: 1.4rem;
