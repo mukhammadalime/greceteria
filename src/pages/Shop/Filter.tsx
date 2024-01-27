@@ -43,22 +43,22 @@ const Filter = () => {
             <FilterOptions
               options={categoryOptions}
               title="Select Category"
-              orderNumber={1}
+              className="choose-order-1"
             />
             <FilterOptions
               options={priceOptions}
               title="Select Price"
-              orderNumber={2}
+              className="choose-order-2"
             />
             <FilterOptions
               options={ratingOptions}
               title="Select Rating"
-              orderNumber={3}
+              className="choose-order-3"
             />
             <FilterOptions
               options={sortOptions}
               title="Sort By: Latest"
-              orderNumber={4}
+              className="choose-order-4"
             />
             <button
               className="button add-button"

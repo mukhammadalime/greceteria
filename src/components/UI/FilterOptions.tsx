@@ -3,11 +3,11 @@ import React, { useRef, useState } from "react";
 const FilterOptions = ({
   options,
   title,
-  orderNumber,
+  className,
 }: {
   options: string[];
   title: string;
-  orderNumber?: number;
+  className: string;
 }) => {
   const [option, setOption] = useState<string | null>(title);
   const btnRef = useRef<HTMLDivElement>(null);
@@ -28,9 +28,7 @@ const FilterOptions = ({
     setShowOptions((prevState) => !prevState);
 
     if (showOptions) return;
-    const chooseBox = document.querySelector(
-      `.choose-order-${orderNumber}`
-    ) as HTMLDivElement;
+    const chooseBox = document.querySelector(`.${className}`) as HTMLDivElement;
 
     const chooseBoxPosition = chooseBox.getBoundingClientRect();
     const coordinates = {
@@ -41,11 +39,7 @@ const FilterOptions = ({
   };
 
   return (
-    <div
-      className={`choose choose-order-${orderNumber}${
-        showOptions ? " options-open" : ""
-      }`}
-    >
+    <div className={`choose ${className}${showOptions ? " options-open" : ""}`}>
       <div className="chosen" onClick={onOpenOptionsHandler} ref={btnRef}>
         {option}
         <img src="/assets/icons/arrow-down-icon.svg" alt="" ref={imgRef} />

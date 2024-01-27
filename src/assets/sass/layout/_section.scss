@@ -25,6 +25,14 @@
 
 .section-md {
   padding: 4rem 0;
+
+  @media (max-width: 900px) {
+    padding: 2.5rem 0;
+  }
+
+  @media (max-width: 600px) {
+    padding: 2rem 0;
+  }
 }
 .section-sm {
   padding: 3rem 0;

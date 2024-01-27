@@ -114,8 +114,16 @@ const OrderHistory = () => {
             {/* Order History */}
             <div className="admin-order-history">
               <div className="filter__top">
-                <FilterOptions options={priceOptions} title="Select Price" />
-                <FilterOptions options={sortOptions} title="Sort By: Status" />
+                <FilterOptions
+                  options={priceOptions}
+                  title="Select Price"
+                  className=""
+                />
+                <FilterOptions
+                  options={sortOptions}
+                  title="Sort By: Status"
+                  className=""
+                />
                 <div className="date-filter">
                   <input type="date" />
                 </div>

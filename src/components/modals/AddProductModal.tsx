@@ -46,7 +46,11 @@ const AddProductOverlay = (props: {
         <div className="form-inputs form-inputs-2">
           <div className="input">
             <label>Select Category*</label>
-            <FilterOptions options={categoryOptions} title="Select Category" />
+            <FilterOptions
+              options={categoryOptions}
+              title="Select Category"
+              className=""
+            />
           </div>
           <TextInput label="Product weight" placeholder="Weight (250g)" />
           <TextInput label="Product price*" placeholder="Price" />

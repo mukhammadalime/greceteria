@@ -40,7 +40,11 @@ const OrderDetailsContent = (props: { forAdmin: boolean }) => {
           </div>
           <div className="update-order__item">
             <h2>Update Order: </h2>
-            <FilterOptions options={statusOptions} title="Received" />
+            <FilterOptions
+              options={statusOptions}
+              title="Received"
+              className=""
+            />
           </div>
         </div>
       )}

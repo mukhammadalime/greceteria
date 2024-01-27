@@ -5,7 +5,6 @@
   transition: all 0.3s linear;
   border-radius: 0.8rem;
   overflow: hidden;
-  max-width: 41.5rem;
   text-decoration: none;
   display: block;
 
@@ -15,9 +14,14 @@
   }
 
   &__img-box {
+    height: 32.5rem;
     width: 100%;
     overflow: hidden;
     position: relative;
+
+    // @media (max-width: 600px) {
+    //   height: 25rem;
+    // }
 
     &:hover {
       .news-card__img {
@@ -54,15 +58,14 @@
   }
 
   &__img {
-    height: 32.5rem;
     width: 100%;
+    height: 100%;
     object-fit: cover;
     transition: all 0.3s linear;
     cursor: pointer;
-
-    @media (max-width: 600px) {
-      height: 25rem;
-    }
+    // object-fit: cover;
+    // object-fit: contain;
+    // object-fit: fill;
   }
 
   &__content {
@@ -91,11 +94,10 @@
 }
 
 .all-news {
-  display: flex;
+  display: grid;
   column-gap: 2.4rem;
   row-gap: 2.4rem;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  grid-template-columns: repeat(auto-fit, minmax(33rem, 1fr));
 }
 
 //// NEWS DETAILS
@@ -187,12 +189,34 @@
 }
 
 .news-page {
-  .section__head {
-    display: grid;
-    grid-template-columns: max-content 1fr max-content;
-    justify-content: left;
-    position: relative;
+  @media (max-width: 768px) {
+    padding: 1.5rem 0;
+  }
+
+  &__header-left {
+    display: flex;
     column-gap: 1.5rem;
+  }
+
+  .section__head {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 1.5rem;
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    @media (max-width: 768px) {
+      margin-bottom: 2rem;
+    }
 
     .header__search {
       width: 20rem;

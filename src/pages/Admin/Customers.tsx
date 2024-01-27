@@ -123,7 +123,7 @@ const UsersList = () => {
           <div className="customers">
             <div className="container">
               <div className="filter__top">
-                <FilterOptions options={sortOptions} title="Sort By: Status" />
+                <FilterOptions options={sortOptions} title="Sort By: Status"  className=""/>
               </div>
               <div className="order-history">
                 <div className="order-history__header">
