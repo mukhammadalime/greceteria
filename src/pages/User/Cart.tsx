@@ -6,26 +6,36 @@ import SectionHead from "../../components/UI/SectionHeader";
 
 const Cart = () => {
   return (
-    <div className="section-md wishlist cart">
+    <div className="section-md">
       <div className="container">
         <SectionHead text="My Shopping Cart" />
-        <div className="wishlist__content cart__content">
-          <div className="cart__table">
-            <CartHeader />
-            <div className="wishlist__main">
-              <CartItem />
-              <CartItem />
-              <CartItem />
-              {/* <div className="wishlist-cart__empty">
-                <h2>No products yet</h2>
-              </div> */}
+
+        <div className="cart__content-container">
+          <div className="cart__content">
+            <div className="cart__content--main">
+              <CartHeader />
+
+              <div className="cart__items-container">
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+              </div>
             </div>
-            <div className="cart__actions">
+            <div className="cart__action">
               <Link to="/shop" className="button button-md return-to-shop">
                 Return To Shop
               </Link>
             </div>
+
+            {/* <div className="cart__content--empty">
+            <h2>No products yet</h2>
+          </div> */}
           </div>
+
           <BillCard />
         </div>
       </div>

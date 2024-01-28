@@ -13,27 +13,28 @@ const CartItem = () => {
           closeModal={() => setWarningModal(false)}
         />
       )}
-      <div className="wishlist__item cart__item">
-        <div className="table-1">
-          <div className="table__img">
+
+      <div className="cart__item">
+        <div className="cart__item--product">
+          <div>
             <img src="/assets/images/products/almond-1.jpeg" alt="" />
           </div>
           <h5>Almond</h5>
         </div>
-        <div className="table-2">
+        <div className="cart__item--price">
           <p>$14.99</p>
         </div>
-        <div className="table-3">
+
+        <div className="cart__item--counter">
           <Counter />
         </div>
-        <div className="table-4">
+        <div className="cart__item--subtotal">
           <p>$70.00</p>
         </div>
-        <div
-          className="delete-item table-5"
-          onClick={() => setWarningModal(true)}
-        >
-          <img src="/assets/icons/delete-icon.svg" alt="" />
+        <div className="cart__item--delete">
+          <div onClick={() => setWarningModal(true)}>
+            <img src="/assets/icons/delete-icon.svg" alt="" />
+          </div>
         </div>
       </div>
     </>
