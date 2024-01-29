@@ -111,7 +111,7 @@ interface customersTypes {
   status: string;
 }
 
-const UsersList = () => {
+const Customers = () => {
   const { handlePageClick, pageCount, currentItems } = usePaginate(customers);
 
   return (
@@ -123,7 +123,11 @@ const UsersList = () => {
           <div className="customers">
             <div className="container">
               <div className="filter__top">
-                <FilterOptions options={sortOptions} title="Sort By: Status"  className=""/>
+                <FilterOptions
+                  options={sortOptions}
+                  title="Sort By: Status"
+                  className=""
+                />
               </div>
               <div className="order-history">
                 <div className="order-history__header">
@@ -164,4 +168,4 @@ const UsersList = () => {
   );
 };
 
-export default UsersList;
+export default Customers;

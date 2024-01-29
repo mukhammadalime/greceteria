@@ -53,7 +53,7 @@ const HeaderTop = () => {
                 </Link>
               </div>
               <div className="header__cart--auth">
-                <div className="header__cart--not-logged">
+                {/* <div className="header__cart--not-logged">
                   <Link to="/auth/login" className="login-btn">
                     Sign in
                   </Link>
@@ -68,11 +68,11 @@ const HeaderTop = () => {
                   className="header__not-logged--responsive"
                 >
                   <PersonAddAltIcon />
-                </Link>
-
-                {/* <Link to="/my-dashboard" className="header__cart--user">
-                  <img src="/assets/images/users/default.jpg" alt="User" />
                 </Link> */}
+
+                <Link to="/my-dashboard" className="header__cart--user">
+                  <img src="/assets/images/users/default.jpg" alt="User" />
+                </Link>
               </div>
             </div>
           </div>

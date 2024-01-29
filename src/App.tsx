@@ -22,6 +22,7 @@ import OrderDetails from "./pages/User/OrderDetails";
 import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/Admin/Categories";
+import Customers from "./pages/Admin/Customers";
 
 function App() {
   return (
@@ -48,7 +49,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/orders/:orderId" element={<OrderDetails />} />
         <Route path="/statistics" element={<Statistics />} />
-        <Route path="/customers" element={<CustomerDetails />} />
+        <Route path="/customers" element={<Customers />} />
         <Route path="/customers/:customerId" element={<CustomerDetails />} />
         <Route path="/categories" element={<Categories />} />
 

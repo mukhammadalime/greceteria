@@ -75,7 +75,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
     <div className="dashboard__nav">
       <h5>Navigation</h5>
       <ul>
-        {[...navAdminItems, ...navUserItems].map((item) => (
+        {navUserItems.map((item) => (
           <Link
             to={item.link}
             key={item.name}

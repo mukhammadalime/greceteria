@@ -185,6 +185,10 @@
   }
 
   @media (max-width: 600px) {
+    &__items-container {
+      margin-left: 9rem;
+    }
+
     &__head {
       min-width: 9rem;
       grid-template-rows: 9.15rem 2.85rem 4.6rem 2.85rem 3rem;
