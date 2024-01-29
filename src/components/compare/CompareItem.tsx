@@ -1,4 +1,4 @@
-import OptionsBox from "./OptionsBox";
+import ActionsBox from "./ActionsBox";
 import { Link } from "react-router-dom";
 import RatingsStars from "../UI/RatingsStars";
 
@@ -20,7 +20,7 @@ const CompareItem = (props: {
             alt=""
           />
         </Link>
-        <OptionsBox />
+        <ActionsBox />
       </div>
       <div className="compare-item__main">
         <h2 className="compare-item__title">

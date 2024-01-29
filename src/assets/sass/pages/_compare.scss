@@ -1,16 +1,14 @@
 .compare {
   &-list {
     list-style: none;
-    display: flex;
-    column-gap: 2.4rem !important;
-    row-gap: 2.4rem !important;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    flex-direction: unset !important;
+    display: grid;
+    column-gap: 2.4rem;
+    row-gap: 2.4rem;
+    grid-template-columns: repeat(auto-fit, minmax(33rem, 1fr));
   }
 
   &-item {
-    max-width: 41.5rem;
+    // max-width: 41.5rem;
     display: grid;
     row-gap: 1rem;
     border-radius: 0.8rem;
@@ -109,16 +107,18 @@
     justify-self: right;
     transition: all 0.3s linear;
   }
-
-  &-open {
-    ul {
-      display: grid !important;
-    }
-  }
 }
 
-.options-list {
-  position: unset !important;
-  margin-top: 0 !important;
-  width: 13rem !important;
+.options-box__icon-open {
+  visibility: visible;
+}
+
+.actionsBoxModal-container {
+  background-color: unset !important;
+}
+
+.actionsBoxItems {
+  display: unset;
+  width: 13rem;
+  z-index: 100;
 }
