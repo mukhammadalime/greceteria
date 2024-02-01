@@ -67,8 +67,8 @@ const Filter = () => {
             />
           </div>
         </div>
-        <div className="container">
-          <div className="filter__bottom">
+        <div className="filter__bottom">
+          <div className="container">
             <div className="filter__bottom--main">
               <div className="active__filters">
                 <h5>Active Filters:</h5>

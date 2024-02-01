@@ -1,7 +1,7 @@
 import { useState } from "react";
 import usePaginate from "../../hooks/usePaginate";
 import WarningModal from "../../components/modals/WarningModal";
-import { OrderTable } from "../../components/orders/OrderTable";
+import { OrdersTable } from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import PaginationButtons from "../../components/UI/PaginationButtons";
 
@@ -167,7 +167,7 @@ const CustomerDetails = () => {
                   </div>
 
                   <div className="order-history__main">
-                    <OrderTable orders={currentItems} notHeader={true} text={""} />
+                    <OrdersTable orders={currentItems} text={""} />
                   </div>
                 </div>
               </div>

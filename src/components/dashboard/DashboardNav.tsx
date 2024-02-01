@@ -8,6 +8,7 @@ import DashboardIcon from "../UI/Icons/DashboardIcon";
 import StatisticsIcon from "../UI/Icons/StatisticsIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
+import { useState } from "react";
 
 const navUserItems = [
   {
@@ -71,9 +72,17 @@ const navAdminItems = [
 ];
 
 const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
+  const [navOpen, setNavOpen] = useState<boolean>(() => false);
+
   return (
-    <div className="dashboard__nav">
-      <h5>Navigation</h5>
+    <div className={`dashboard__nav${navOpen ? " nav-open" : ""}`}>
+      <div
+        className="dashboard__nav--head"
+        onClick={() => setNavOpen((prev) => !prev)}
+      >
+        <h5>Navigation</h5>
+        <img src="/assets/icons/arrow-down-icon.svg" alt="" />
+      </div>
       <ul>
         {navUserItems.map((item) => (
           <Link

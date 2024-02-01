@@ -124,12 +124,6 @@
   }
 }
 
-.admin-order-history {
-  .filter__top {
-    padding-top: 0 !important;
-  }
-}
-
 .date-filter {
   input {
     padding: 1.2rem 1.5rem;
@@ -178,9 +172,6 @@
     .table__item {
       grid-template-columns: 1.2fr 1.7fr 1.2fr 1fr 1fr;
     }
-  }
-  .filter__top {
-    padding-top: 0 !important;
   }
 }
 

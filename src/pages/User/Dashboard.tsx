@@ -1,4 +1,4 @@
-import { OrderTable } from "../../components/orders/OrderTable";
+import { OrdersTable } from "../../components/orders/OrdersTable";
 import UserDetails from "../../components/dashboard/UserDetails";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 
@@ -47,10 +47,8 @@ const Dashboard = () => {
         <div className="dashboard">
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
-            <div className="container">
-              <UserDetails />
-              <OrderTable orders={orders} text={""} />
-            </div>
+            <UserDetails />
+            <OrdersTable orders={orders} text={""} />
           </div>
         </div>
       </div>

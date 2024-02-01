@@ -1,7 +1,5 @@
-import usePaginate from "../hooks/usePaginate";
-import { OrderTable } from "../components/orders/OrderTable";
+import { OrdersTable } from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
-import PaginationButtons from "../components/UI/PaginationButtons";
 import FilterOptions from "../components/UI/FilterOptions";
 
 const sortOptions = [
@@ -102,17 +100,15 @@ const orders = [
 ];
 
 const OrderHistory = () => {
-  const { handlePageClick, pageCount, currentItems } = usePaginate(orders);
-
   return (
     <>
       <div className="section-sm">
         <div className="container">
-          <div className="order-history-page">
+          <div className="order-history-page dashboard">
             <DashboardNav activeNavItem="Order History" />
 
             {/* Order History */}
-            <div className="admin-order-history">
+            <div className="dashboard__main">
               <div className="filter__top">
                 <FilterOptions
                   options={priceOptions}
@@ -131,24 +127,7 @@ const OrderHistory = () => {
                   <input type="month" />
                 </div>
               </div>
-
-              <div className="order-history">
-                <div className="order-history__header">
-                  <h2>Order History</h2>
-                  <PaginationButtons
-                    pageCount={pageCount}
-                    handlePageClick={handlePageClick}
-                  />
-                </div>
-
-                <div className="order-history__main">
-                  <OrderTable
-                    orders={currentItems}
-                    notHeader={true}
-                    text={""}
-                  />
-                </div>
-              </div>
+              <OrdersTable orders={orders} text="Order History" />
             </div>
           </div>
         </div>

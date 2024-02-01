@@ -1,4 +1,4 @@
-import { OrderTable } from "../../components/orders/OrderTable";
+import { OrdersTable } from "../../components/orders/OrdersTable";
 import OrdersByStatus from "../../components/admin/OrdersByStatus";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
           <div className="dashboard__main">
             <div className="container">
               <OrdersByStatus />
-              <OrderTable orders={orders} text="Today's Orders" />
+              <OrdersTable orders={orders} text="Today's Orders" />
             </div>
           </div>
         </div>

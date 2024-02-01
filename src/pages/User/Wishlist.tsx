@@ -9,12 +9,14 @@ const Wishlist = () => {
         <div className="container">
           <SectionHead text="My Wishlist" />
           <div className="wishlist__items">
-            {/* <div className="wishlist-cart__empty">
+            <div>
+              {/* <div className="wishlist-cart__empty">
                 <h2>No wishlisted products yet</h2>
               </div> */}
-            <WishlistedItem />
-            <WishlistedItem />
-            <WishlistedItem />
+              <WishlistedItem />
+              <WishlistedItem />
+              <WishlistedItem />
+            </div>
           </div>
         </div>
       </div>

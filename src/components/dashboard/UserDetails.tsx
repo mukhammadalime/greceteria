@@ -21,9 +21,9 @@ const UserDetails = () => {
             <h5>Laura Wilson</h5>
             <p>laurawilson</p>
             <p>laurawilson@gmail.com</p>
-            <Link to="/settings" className="user__details--edit">
+            <div className="user__details--edit">
               <Link to="/settings">Edit Profile </Link>
-            </Link>
+            </div>
           </div>
         </div>
         <div className="user__details--address-book">
