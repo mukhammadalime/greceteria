@@ -196,18 +196,6 @@
         text-decoration: none;
       }
     }
-
-    &--address-book {
-      overflow: hidden;
-      border: 1px solid #e5e5e5;
-      border-radius: 0.8rem;
-      height: min-content;
-
-      .address-book__items {
-        overflow-y: scroll !important;
-        height: 20.3rem !important;
-      }
-    }
   }
 }
 
@@ -219,45 +207,6 @@
       &--left {
         padding: 1.4rem;
         justify-content: center;
-      }
-    }
-  }
-
-  @media (max-width: 800px) {
-    &__details {
-      &--address-book {
-        .address-book {
-          &__header {
-            font-size: 1.3rem;
-            padding: 1rem;
-            text-align: center;
-          }
-
-          &__item {
-            padding: 1rem;
-            h5 {
-              font-size: 1.4rem;
-            }
-
-            p {
-              font-size: 1.3rem;
-              margin-bottom: 0.5rem;
-            }
-
-            span {
-              font-size: 1.3rem;
-            }
-
-            h2 {
-              font-size: 1.3rem;
-            }
-          }
-          &__bottom {
-            padding: 1rem;
-            font-size: 1.3rem;
-            text-align: center;
-          }
-        }
       }
     }
   }
@@ -404,6 +353,7 @@
   @media (max-width: 600px) {
     &__header {
       height: 4.5rem;
+      padding: 0 1.5rem;
 
       h2 {
         font-size: 1.8rem;

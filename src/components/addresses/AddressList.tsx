@@ -29,7 +29,12 @@ const addresses: AddressItemTypes[] = [
   },
 ];
 
-const AddressList = ({ select }: AddressListTypes) => {
+const AddressList = ({
+  select,
+  filledButton,
+  onOpenAddressModal,
+  headerTwo,
+}: AddressListTypes) => {
   const [selectedAddress, setSelectedAddress] = useState(() => "1");
   const selectAddress = (value: string) => {
     setSelectedAddress(value);
@@ -37,6 +42,10 @@ const AddressList = ({ select }: AddressListTypes) => {
 
   return (
     <div className="address-book">
+      <div className={`address-book__header${headerTwo ? "-2" : ""}`}>
+        Shipping Addresses
+      </div>
+
       {addresses.length !== 0 && (
         <div className="address-book__items">
           {addresses.map((item: AddressItemTypes) => (
@@ -56,12 +65,27 @@ const AddressList = ({ select }: AddressListTypes) => {
           <p className="no-addresses">No addresses yet</p>
         </div>
       )}
+
+      <div className="address-book__bottom">
+        {filledButton ? (
+          <button
+            className="button button-md"
+            onClick={onOpenAddressModal}
+            children="Add New Address"
+          />
+        ) : (
+          <span onClick={onOpenAddressModal}>Add New Address</span>
+        )}
+      </div>
     </div>
   );
 };
 
 interface AddressListTypes {
   select: boolean;
+  filledButton: boolean;
+  onOpenAddressModal?: () => void;
+  headerTwo?: boolean;
 }
 
 export default AddressList;

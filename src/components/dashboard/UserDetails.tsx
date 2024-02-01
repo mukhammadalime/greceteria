@@ -26,15 +26,11 @@ const UserDetails = () => {
             </div>
           </div>
         </div>
-        <div className="user__details--address-book">
-          <div className="address-book__header">Shipping Addresses</div>
-          <AddressList select={false} />
-          <div className="address-book__bottom">
-            <span onClick={() => setAddressModalShown(true)}>
-              Add New Address
-            </span>
-          </div>
-        </div>
+        <AddressList
+          select={false}
+          onOpenAddressModal={() => setAddressModalShown(true)}
+          filledButton={false}
+        />
       </div>
     </>
   );

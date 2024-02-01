@@ -2,22 +2,6 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   column-gap: 2.4rem;
-
-  &__address-book {
-    overflow: hidden;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.8rem;
-
-    .address-book__header {
-      padding: 1.6rem 2.4rem;
-      border-bottom: 1px solid #e5e5e5;
-      text-transform: capitalize;
-      color: #1a1a1a;
-      line-height: unset !important;
-      font-size: 2rem;
-      font-weight: 500;
-    }
-  }
 }
 
 .additional {

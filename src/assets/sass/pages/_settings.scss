@@ -1,18 +1,7 @@
 .settings {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  column-gap: 2rem;
-
-  &__main {
-    .container {
-      padding: 0 !important;
-    }
-  }
-
   .account-settings {
     border: 1px solid #e5e5e5;
     border-radius: 0.8rem;
-    margin-bottom: 3.5rem;
 
     &__form {
       display: grid;
@@ -54,32 +43,14 @@
   }
 
   .user-addresses {
-    margin-bottom: 3.5rem;
-    overflow: hidden;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.8rem;
-
     .address-book__items {
-      overflow-y: unset;
-      min-height: 8rem;
       height: auto;
-    }
-
-    .address-book__header {
-      padding: 1.6rem 2.4rem;
-      border-bottom: 1px solid #e5e5e5;
-      text-transform: capitalize;
-      color: #1a1a1a;
-      line-height: unset !important;
-      font-size: 2rem;
-      font-weight: 500;
     }
   }
 
   .user-password {
     border: 1px solid #e5e5e5;
     border-radius: 0.8rem;
-    margin-bottom: 3.5rem;
 
     &__form {
       padding: 2.4rem;
@@ -93,7 +64,56 @@
 
       .new-passwords {
         display: flex;
-        column-gap: 2rem;
+        gap: 2rem;
+      }
+    }
+  }
+}
+
+////////////////////////////
+/// SETTINGS RESPONSIVE
+.settings {
+  @media (max-width: 600px) {
+    .account-settings {
+      &__form {
+        grid-template-columns: unset;
+        gap: 2rem;
+        padding: 1.2rem 1.8rem;
+      }
+
+      &__inputs {
+        grid-row: 2/3;
+
+        button {
+          font-size: 1.3rem;
+          margin-top: 0.5rem;
+        }
+      }
+
+      &__photo {
+        grid-row: 1/2;
+        row-gap: 1.5rem;
+
+        img {
+          height: 18rem;
+          width: 18rem;
+        }
+      }
+    }
+
+    .user-password {
+      .address-form__header {
+        padding: 1.2rem 1.8rem;
+        font-size: 1.7rem;
+      }
+
+      &__form {
+        padding: 1.2rem 1.8rem;
+
+        .new-passwords {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
       }
     }
   }

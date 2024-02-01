@@ -135,7 +135,7 @@ const CustomerDetails = () => {
                     <p>laurawilson@gmail.com</p>
                   </div>
                 </div>
-                <div className="user__details--address-book">
+                <div className="address-book">
                   <div className="address-book__header">Shipping Addresses</div>
                   <div className="address-book__items">
                     {addresses.map((item) => (

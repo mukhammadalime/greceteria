@@ -3,7 +3,7 @@ import TextInput from "../UI/Inputs/TextInput";
 const AccountSettings = () => {
   return (
     <div className="account-settings">
-      <div className="address-form__header">Account Settings</div>
+      <div className="address-book__header-2">Account Settings</div>
       <div className="account-settings__form">
         <form className="account-settings__inputs">
           <TextInput label="Name" defaultValue="Laura" placeholder={""} />

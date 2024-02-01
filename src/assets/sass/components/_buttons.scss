@@ -53,10 +53,15 @@
   color: #00b207;
   background-color: transparent;
   border: 2px solid #00b207;
+
   &:hover {
     color: #2c742f;
     border-color: #2c742f;
     background-color: transparent;
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.8rem 1.8rem;
   }
 }
 

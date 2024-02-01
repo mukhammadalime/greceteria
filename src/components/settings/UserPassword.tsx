@@ -3,7 +3,7 @@ import PasswordInput from "../UI/Inputs/PasswordInput";
 const UserPassword = () => {
   return (
     <div className="user-password">
-      <div className="address-form__header">Change Password</div>
+      <div className="address-book__header-2">Change Password</div>
       <form className="user-password__form">
         <PasswordInput label="Current Password*" />
         <div className="new-passwords">

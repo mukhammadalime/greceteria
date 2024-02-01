@@ -20,8 +20,10 @@ const AddressItem = (props: Combined) => {
 
       <div className="address-book__item" key={props.id}>
         <h5>{props.receiverName}</h5>
-        <p>{`${props.address1}, ${props.address2}, ${props.city}, ${props.postalCode}, `}</p>
-        <span>{props.phoneNumber}</span>
+        <p>{`${props.address1}, ${props.address2 ? props.address2 : ""}, ${
+          props.city
+        }, ${props.postalCode}, `}</p>
+        <span>+{props.phoneNumber}</span>
         {/* It is for dashboard and settings pages */}
         {!props.select && (
           <h2

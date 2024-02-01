@@ -1,7 +1,9 @@
 /// ADDRESS
 .address-book {
   width: 100%;
-  height: min-content;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.8rem;
 
   &__header {
     padding: 1.5rem 2rem;
@@ -12,6 +14,16 @@
     color: #999999;
     letter-spacing: 0.03em;
     border-bottom: 1px solid #e5e5e5;
+  }
+
+  &__header-2 {
+    padding: 1.6rem 2.4rem;
+    border-bottom: 1px solid #e5e5e5;
+    text-transform: capitalize;
+    color: #1a1a1a;
+    line-height: unset !important;
+    font-size: 2rem;
+    font-weight: 500;
   }
 
   &__items {
@@ -86,6 +98,7 @@
     border: 1px solid #e5e5e5;
     border-radius: 50%;
   }
+
   .selected {
     &::after {
       content: "";
@@ -125,4 +138,52 @@
   min-height: 8rem !important;
   height: auto !important;
   overflow-y: unset;
+}
+
+////////////////////////////////
+/// ADDRESS BOOK RESPONSIVE
+.address-book {
+  @media (max-width: 800px) {
+    &__header {
+      font-size: 1.3rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    &__header-2 {
+    }
+
+    &__item {
+      padding: 1rem;
+      h5 {
+        font-size: 1.4rem;
+      }
+
+      p {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      span {
+        font-size: 1.3rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    &__bottom {
+      padding: 1rem;
+      font-size: 1.3rem;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    &__header-2 {
+      padding: 1.2rem 1.8rem;
+      font-size: 1.7rem;
+    }
+  }
 }

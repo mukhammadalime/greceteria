@@ -18,26 +18,21 @@ const Settings = () => {
       )}
       <div className="section-lg">
         <div className="container">
-          <div className="settings">
+          <div className="settings dashboard">
             <DashboardNav activeNavItem="Settings" />
-            <div className="settings__main">
-              <div className="container">
-                <AccountSettings />
-                {/* /////////////////////////////////// */}
-                <div className="user-addresses">
-                  <div className="address-book__header">Shipping Addresses</div>
-                  <AddressList select={false} />
-                  <div className="address-book__bottom">
-                    <button
-                      className="button button-md"
-                      onClick={() => setAddressModalShown(true)}
-                      children="Add New Address"
-                    />
-                  </div>
-                </div>
-                {/* /////////////////////////////////// */}
-                <UserPassword />
+            <div className="dashboard__main">
+              <AccountSettings />
+              {/* /////////////////////////////////// */}
+              <div className="user-addresses">
+                <AddressList
+                  select={false}
+                  onOpenAddressModal={() => setAddressModalShown(true)}
+                  filledButton={true}
+                  headerTwo
+                />
               </div>
+              {/* /////////////////////////////////// */}
+              <UserPassword />
             </div>
           </div>
         </div>
