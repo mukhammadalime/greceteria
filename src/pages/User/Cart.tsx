@@ -12,19 +12,17 @@ const Cart = () => {
 
         <div className="cart__content-container">
           <div className="cart__content">
-            <div className="cart__content--main">
-              <CartHeader />
-
-              <div className="cart__items-container">
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-              </div>
+            <div className="cart__content--table">
+              <table>
+                <CartHeader />
+                <tbody>
+                  <CartItem />
+                  <CartItem />
+                  <CartItem />
+                </tbody>
+              </table>
             </div>
+
             <div className="cart__action">
               <Link to="/shop" className="button button-md return-to-shop">
                 Return To Shop

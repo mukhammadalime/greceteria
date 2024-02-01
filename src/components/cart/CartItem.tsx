@@ -14,29 +14,30 @@ const CartItem = () => {
         />
       )}
 
-      <div className="cart__item">
-        <div className="cart__item--product">
+      <tr className="cart__item">
+        <td className="cart__item--product">
           <div>
             <img src="/assets/images/products/almond-1.jpeg" alt="" />
           </div>
-          <h5>Almond</h5>
-        </div>
-        <div className="cart__item--price">
-          <p>$14.99</p>
-        </div>
+          <h5>Beef shank boneless</h5>
+        </td>
 
-        <div className="cart__item--counter">
+        <td className="cart__item--price">
+          <p>$14.99</p>
+        </td>
+
+        <td className="cart__item--counter">
           <Counter />
-        </div>
-        <div className="cart__item--subtotal">
+        </td>
+        <td className="cart__item--subtotal">
           <p>$70.00</p>
-        </div>
-        <div className="cart__item--delete">
+        </td>
+        <td className="cart__item--delete">
           <div onClick={() => setWarningModal(true)}>
             <img src="/assets/icons/delete-icon.svg" alt="" />
           </div>
-        </div>
-      </div>
+        </td>
+      </tr>
     </>
   );
 };
