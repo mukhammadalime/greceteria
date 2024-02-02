@@ -5,7 +5,7 @@ const CartHeader = () => {
     <thead>
       <tr>
         {items.map((item) => (
-          <th>{item}</th>
+          <th key={item}>{item}</th>
         ))}
       </tr>
     </thead>

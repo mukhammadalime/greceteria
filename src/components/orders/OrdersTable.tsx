@@ -52,8 +52,8 @@ export const OrdersTable = ({
         <table className="table">
           <OrdersTableHeader />
           <tbody>
-            {currentItems.map((order: any) => (
-              <tr className="table__item" key={order.id}>
+            {currentItems.map((order: any, i: number) => (
+              <tr className="table__item" key={i}>
                 <td>{order.id}</td>
                 <td>{order.date}</td>
                 <td>

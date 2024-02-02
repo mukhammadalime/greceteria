@@ -41,6 +41,10 @@
   font-size: 1.6rem;
   line-height: 1.92rem;
   padding: 1.6rem 4rem;
+
+  @media (max-width: 900px) {
+    padding: 1.4rem 3rem;
+  }
 }
 
 .button-disable {

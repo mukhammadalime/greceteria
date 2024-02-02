@@ -11,7 +11,10 @@ const OrderedItem = () => {
             alt=""
           />
         </Link>
-        <h5>Almond California / 5</h5>
+        <div>
+          <h5>Almond California</h5>
+          <span>5x</span>
+        </div>
       </div>
       <h6 className="ordered__item--price">$70.00</h6>
     </div>

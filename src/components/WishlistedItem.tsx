@@ -5,7 +5,7 @@ const WishlistedItem = () => {
         <div className="wishlist__item--image">
           <img src="/assets/images/products/almond-1.jpeg" alt="" />
         </div>
-        <h5>Almond</h5>
+        <h5>Beef shank boneless</h5>
       </div>
       <div className="wishlist__item--price">
         <p>

@@ -19,7 +19,7 @@ const Checkout = () => {
           <div className="checkout">
             <div>
               <AddressList
-                select={false}
+                select={true}
                 onOpenAddressModal={() => setAddressModalShown(true)}
                 filledButton={true}
                 headerTwo

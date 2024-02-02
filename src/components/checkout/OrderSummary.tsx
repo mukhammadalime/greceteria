@@ -11,6 +11,8 @@ const OrderSummary = () => {
           <div className="ordered">
             <OrderedItem />
             <OrderedItem />
+            <OrderedItem />
+            <OrderedItem />
           </div>
           <div className="bill-card__detail">
             <p>Subtotal:</p>
