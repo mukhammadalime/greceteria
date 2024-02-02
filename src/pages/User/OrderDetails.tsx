@@ -8,19 +8,17 @@ const OrderDetails = () => {
   return (
     <div className="section-sm">
       <div className="container">
-        <div className="order-details-container">
+        <div className="dashboard">
           <DashboardNav activeNavItem="Order History" />
 
           <div className="order-details">
-            <div className="container">
-              <div className="order-details__info">
-                <div className="order-details__header">
-                  <h2>Order Details</h2>
-                  <span onClick={() => navigate(-1)}>Back To List</span>
-                </div>
-                <OrderDetailsContent forAdmin={false} />
-                <OrderedItemsTable />
+            <div className="order-details__info">
+              <div className="order-details__header">
+                <h2>Order Details</h2>
+                <span onClick={() => navigate(-1)}>Back To List</span>
               </div>
+              <OrderDetailsContent forAdmin={true} />
+              <OrderedItemsTable />
             </div>
           </div>
         </div>

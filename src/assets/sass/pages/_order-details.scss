@@ -1,9 +1,5 @@
-.order-details-container {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-}
-
 .order-details {
+  display: grid;
   &__info {
     position: relative;
     border-radius: 0.8rem;
@@ -16,6 +12,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.6rem 2.4rem;
+    border-bottom: 1px solid #e5e5e5;
 
     h2 {
       color: #1a1a1a;
@@ -36,7 +33,7 @@
       margin: 2.4rem;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      column-gap: 3rem;
+      gap: 2rem;
     }
   }
 
@@ -102,15 +99,14 @@
     overflow: hidden;
 
     &__header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
+      display: flex;
       justify-content: space-between;
+      height: 5rem;
+      padding: 0 2rem;
       border-bottom: 1px solid #e5e5e5;
     }
 
     &__item {
-      padding: 1.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -177,6 +173,151 @@
       }
     }
   }
+
+  &__table {
+    overflow-x: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    table {
+      width: 100%;
+      border-spacing: 0;
+
+      .table__header {
+        height: 4.5rem;
+        background-color: #f2f2f2;
+        color: #212529;
+        display: grid;
+        grid-template-columns:
+          minmax(22rem, 1fr) minmax(8rem, 1fr)
+          minmax(10rem, 1fr) minmax(10rem, 1fr);
+        gap: 1rem;
+        align-items: center;
+        padding: 0 1.5rem;
+
+        th {
+          color: #4d4d4d;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          font-weight: 500;
+          font-size: 1.4rem;
+        }
+      }
+
+      .table__item {
+        padding: 1rem 1.5rem;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns:
+          minmax(22rem, 1fr) minmax(8rem, 1fr)
+          minmax(10rem, 1fr) minmax(10rem, 1fr);
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        text-align: center;
+
+        &:last-child {
+          border-bottom: unset;
+        }
+
+        &--img {
+          display: flex;
+          align-items: center;
+          column-gap: 1rem;
+
+          img {
+            height: 7rem;
+            width: 7rem;
+            border-radius: 0.3rem;
+          }
+
+          h5 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #1a1a1a;
+            text-align: left;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 13rem;
+            white-space: nowrap;
+          }
+        }
+
+        td {
+          font-size: 1.4rem;
+          font-weight: 400;
+          color: #333333;
+        }
+      }
+    }
+  }
+}
+
+//////////////////////////////////////
+/// ORDER DETAILS RESPONSIVE
+.order-details {
+  @media (max-width: 1000px) {
+    &__content {
+      &--main {
+        grid-template-columns: unset;
+      }
+    }
+  }
+
+  @media (max-width: 800px) {
+    &__header {
+      padding: 1rem 1.5rem;
+    }
+
+    &__content {
+      &--main {
+        margin: 1.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    &__header {
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      span {
+        font-size: 1.4rem;
+      }
+    }
+
+    &__address {
+      h4 {
+        padding: 1rem 1.5rem;
+      }
+      &--item {
+        padding: 1rem 1.5rem;
+        row-gap: 0.3rem;
+      }
+    }
+
+    &__date {
+      padding: 1rem 1.5rem;
+    }
+
+    .total-payment {
+      &__header {
+        padding: 0 1.5rem;
+        height: 4rem;
+      }
+      &__content {
+        padding: 1rem 1.5rem;
+      }
+    }
+  }
 }
 
 ///// ORDER STATUS
@@ -186,6 +327,7 @@
   grid-template-columns: repeat(4, 1fr);
   max-width: 88rem;
   margin: 2.4rem auto;
+  padding: 0 1rem;
 
   &__border {
     position: absolute;
@@ -208,6 +350,7 @@
       transition: all 0.6s linear;
     }
   }
+
   &__item {
     position: relative;
     display: flex;
@@ -227,6 +370,8 @@
 
       span {
         display: none;
+        height: 2rem;
+        width: 2rem;
       }
 
       p {
@@ -246,6 +391,46 @@
   }
 }
 
+//////////////////////////////////////
+/// PROGRESS BAR RESPONSIVE
+.progress-bar {
+  @media (max-width: 800px) {
+    margin: 1.5rem auto;
+  }
+
+  @media (max-width: 500px) {
+    &__item {
+      &--ball {
+        width: 3rem;
+        height: 3rem;
+
+        span,
+        svg {
+          height: 1.7rem;
+          width: 1.7rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+        }
+      }
+
+      h2 {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  @media (max-width: 400px) {
+    padding: 0 0.5rem;
+    &__item {
+      h2 {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
 .active-status {
   h2 {
     font-weight: 500;
@@ -257,68 +442,10 @@
     span {
       display: block;
       color: #fff;
-      margin-bottom: -0.2rem;
     }
 
     p {
       display: none;
-    }
-  }
-}
-
-/// ORDER ITEMS
-.table {
-  &__header {
-    display: grid;
-    height: 4.5rem;
-    background-color: #f2f2f2;
-    color: #212529;
-    display: grid;
-    grid-template-columns: 1.7fr 0.7fr 1fr 1fr;
-
-    h4 {
-      color: #4d4d4d;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      font-weight: 500;
-      font-size: 1.4rem;
-      padding: 1.2rem 2.4rem;
-    }
-  }
-
-  &__item {
-    display: grid;
-    grid-template-columns: 1.7fr 0.7fr 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px solid #e5e5e5;
-
-    &:last-child {
-      border-bottom: unset;
-    }
-
-    &--img {
-      padding: 1.2rem 2.4rem;
-      display: flex;
-      align-items: center;
-      column-gap: 1rem;
-      img {
-        height: 7rem;
-        width: 7rem;
-        border-radius: 0.3rem;
-      }
-
-      h5 {
-        font-size: 1.4rem;
-        font-weight: 400;
-        color: #1a1a1a;
-      }
-    }
-
-    p {
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: #333333;
-      padding: 1.2rem 2.4rem;
     }
   }
 }

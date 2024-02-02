@@ -1,30 +1,36 @@
 const OrderedItemsTable = () => {
   return (
-    <div className="table">
-      <div className="table__header">
-        <h4>Product</h4>
-        <h4>Price</h4>
-        <h4>Quantity</h4>
-        <h4>Subtotal</h4>
-      </div>
-      <div className="table__item">
-        <div className="table__item--img">
-          <img src="/assets/images/products/almond-1.jpeg" alt="" />
-          <h5>Almond</h5>
-        </div>
-        <p>$14.00</p>
-        <p>x5</p>
-        <p>$70.00</p>
-      </div>
-      <div className="table__item">
-        <div className="table__item--img">
-          <img src="/assets/images/products/almond-1.jpeg" alt="" />
-          <h5>Almond</h5>
-        </div>
-        <p>$14.00</p>
-        <p>x5</p>
-        <p>$70.00</p>
-      </div>
+    <div className="order-details__table">
+      <table>
+        <thead>
+          <tr className="table__header">
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="table__item">
+            <td className="table__item--img">
+              <img src="/assets/images/products/almond-1.jpeg" alt="" />
+              <h5>Beef California</h5>
+            </td>
+            <td>$14.00</td>
+            <td>x5</td>
+            <td>$70.00</td>
+          </tr>
+          <tr className="table__item">
+            <td className="table__item--img">
+              <img src="/assets/images/products/almond-1.jpeg" alt="" />
+              <h5>Beef California</h5>
+            </td>
+            <td>$14.00</td>
+            <td>x5</td>
+            <td>$70.00</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

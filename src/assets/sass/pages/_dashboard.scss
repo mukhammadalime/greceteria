@@ -130,9 +130,13 @@
 
   @media (max-width: 600px) {
     grid-template-columns: unset;
-    &__nav--head {
-      h5 {
-        font-size: 1.7rem;
+    &__nav {
+      max-height: 5rem;
+      &--head {
+        height: 5rem;
+        h5 {
+          font-size: 1.7rem;
+        }
       }
     }
   }
