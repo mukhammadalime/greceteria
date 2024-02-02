@@ -27,7 +27,7 @@ const NewsDetails = () => {
           closeModal={() => setAddNewsModal(false)}
         />
       )}
-      <div className="section-lg">
+      <div className="section-md">
         <div className="container">
           <div className="news">
             <div className="news__header">

@@ -1,6 +1,12 @@
 Tasks To Complete 
-- Make all pages responsive
 - Connect login/signup with backend
+- Contact us responsive
+- All modals responsive
+- Loading data as it is requested in pagination?
 
 Issues
 - filter options in scroll
+- Product cart in customerProductsCarousel in small screen size
+- All Products section head when there are many pages in pagination buttons
+- Remove img scaling in news and other things except product cart
+- One product left condition in the last page of the pagination in shop page

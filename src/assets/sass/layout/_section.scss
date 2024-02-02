@@ -36,6 +36,9 @@
 }
 .section-sm {
   padding: 3rem 0;
+  @media (max-width: 600px) {
+    padding: 1.5rem 0;
+  }
 }
 
 .section__head {

@@ -3,8 +3,8 @@
     display: grid;
     align-items: center;
     grid-template-columns: 1.05fr 1fr;
-    margin: 5rem 0;
-    column-gap: 2.5rem;
+    margin: 4rem 0;
+    gap: 2.5rem;
   }
 
   /// DETAILS SIDE
@@ -94,15 +94,15 @@
     &--action {
       display: flex;
       align-items: center;
+      gap: 1rem;
+      width: 100%;
 
       .add-to-cart {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40%;
         font-size: 1.4rem;
-        padding: 1.4rem 3.2rem;
-        margin-right: 1.2rem;
+        padding: 1.3rem 2.5rem;
 
         &:hover {
           background-color: #2c742f;
@@ -167,10 +167,104 @@
   }
 }
 
+////////////////////////////////
+/// PRODUCT DETAILS RESPONSIVE
+.product {
+  @media (max-width: 900px) {
+    &__content {
+      gap: 2rem;
+    }
+
+    &__info {
+      &--item {
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  @media (max-width: 800px) {
+    &__content {
+      margin: 2.5rem 0;
+      gap: 1rem;
+    }
+
+    &__info {
+      &--title {
+        font-size: 1.7rem;
+      }
+      &--price {
+        del {
+          font-size: 1.7rem;
+        }
+
+        h2 {
+          font-size: 2rem;
+        }
+      }
+
+      &--share {
+        margin-bottom: 0.7rem;
+      }
+
+      &--action {
+        .wishlist {
+          height: 4.7rem;
+          width: 4.7rem;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__content {
+      grid-template-columns: unset;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    &__info {
+      &--action {
+        .add-to-cart {
+          height: 3.5rem;
+        }
+
+        .wishlist {
+          height: 3.5rem;
+          width: 3.5rem;
+
+          svg {
+            height: 1.7rem;
+            width: 1.7rem;
+          }
+        }
+      }
+    }
+  }
+}
+
 /// PRODUCT IMAGES
 .product__gallery {
   position: relative;
   height: 46.3rem;
+
+  @media (max-width: 900px) {
+    height: 40rem;
+  }
+  @media (max-width: 800px) {
+    height: 36rem;
+  }
+
+  @media (max-width: 768px) {
+    height: 42rem;
+  }
+  @media (max-width: 550px) {
+    height: 36rem;
+  }
+
+  @media (max-width: 450px) {
+    height: 33rem;
+  }
 }
 
 .slide__stock-out {
@@ -256,6 +350,27 @@
       font-weight: 400;
     }
   }
+
+  @media (max-width: 768px) {
+    &__header {
+      margin-bottom: 1.4rem;
+    }
+
+    .review {
+      padding: 1rem 0;
+
+      &__top {
+        margin-bottom: 0.6rem;
+      }
+    }
+  }
+  @media (max-width: 600px) {
+    &__header {
+      h4 {
+        font-size: 1.3rem;
+      }
+    }
+  }
 }
 
 .add-review {
@@ -295,7 +410,6 @@
   &__content {
     max-width: 60rem;
     margin: 0 auto;
-    padding-bottom: 2rem;
 
     p {
       font-size: 1.4rem;

@@ -50,12 +50,19 @@
   top: 50%;
   left: 2rem;
   transform: translateY(-60%);
+  @media (max-width: 500px) {
+    left: 1rem;
+  }
 }
 
 .next-page {
   top: 50%;
   right: 2rem;
   transform: translateY(-60%);
+
+  @media (max-width: 500px) {
+    right: 1rem;
+  }
 }
 
 .container-dots {
