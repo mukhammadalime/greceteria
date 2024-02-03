@@ -1,8 +1,12 @@
 .form-inputs {
   width: 100%;
   display: flex;
-  column-gap: 2rem;
+  gap: 2rem;
   margin-bottom: 1.6rem;
+
+  @media (max-width: 768px) {
+    gap: 1.2rem;
+  }
 }
 
 .input {
@@ -88,15 +92,23 @@
   display: grid;
   grid-template-rows: min-content 1fr min-content;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   .form-inputs-2 {
     display: grid;
-    column-gap: 2rem;
     grid-template-columns: repeat(4, 1fr);
   }
 
   .form-inputs-4 {
     display: grid;
-    column-gap: 2rem;
     grid-template-columns: max-content 1fr max-content;
   }
 
@@ -119,6 +131,38 @@
     color: red;
     font-weight: 500;
     font-size: 1.5rem;
+  }
+}
+
+///////////////////////////
+/// ADD PRODUCT MODAL RESPONSIVE
+.add-product-form {
+  @media (max-width: 850px) {
+    width: 100vw;
+  }
+
+  @media (max-width: 650px) {
+    .form-inputs-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .form-inputs-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 450px) {
+    .form-inputs {
+      grid-template-columns: unset;
+    }
+    .form-inputs-2 {
+      grid-template-columns: unset;
+    }
+    .form-inputs-4 {
+      grid-template-columns: unset;
+    }
   }
 }
 
@@ -152,10 +196,18 @@
     font-size: 1.4rem;
     font-weight: 400;
   }
+
   em {
     font-size: 1rem;
     font-weight: 400;
     color: #666666;
+  }
+
+  @media (max-width: 650px) {
+    width: 80%;
+  }
+  @media (max-width: 450px) {
+    width: 95%;
   }
 }
 

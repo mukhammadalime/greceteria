@@ -30,9 +30,13 @@ const AddProductOverlay = (props: {
   );
 
   const onSelectFile = (e: any) => {
-    const selectedFiles = Array.from(e.target.files);
-    // const imagesArray = selectedFiles.map((file) => URL.createObjectURL(file));
-    // setUploadedImages((prevState) => prevState.concat(imagesArray));
+    const selectedFiles = (e.target as HTMLInputElement).files!;
+    let imagesArray: string[] = [];
+    for (let i = 0; i < selectedFiles.length; i++) {
+      imagesArray.push(URL.createObjectURL(selectedFiles[i]));
+    }
+
+    setUploadedImages((prevState) => [...prevState, ...imagesArray]);
   };
 
   return (
