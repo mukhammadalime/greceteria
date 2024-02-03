@@ -22,7 +22,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="section-lg">
+    <div className="section-md">
       <div className="container">
         <div className="contact">
           <div className="contact__left">
