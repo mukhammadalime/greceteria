@@ -27,6 +27,21 @@ const ratingOptions = ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐",
 const Filter = () => {
   const [addProductModal, setAddProductModal] = useState(() => false);
 
+  const [filtersOpen, setFiltersOpen] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+
+  // This function opens the requested filter and closed other remaining open filters
+  const onOpenHandler = (num: number) => {
+    const array = [...filtersOpen];
+    filtersOpen.fill(false);
+    filtersOpen[num] = !array[num];
+    setFiltersOpen([...filtersOpen]);
+  };
+
   return (
     <>
       {addProductModal && (
@@ -43,22 +58,26 @@ const Filter = () => {
             <FilterOptions
               options={categoryOptions}
               title="Select Category"
-              className="choose-order-1"
+              onOpenHandler={onOpenHandler.bind(null, 0)}
+              open={filtersOpen[0]}
             />
             <FilterOptions
               options={priceOptions}
               title="Select Price"
-              className="choose-order-2"
+              onOpenHandler={onOpenHandler.bind(null, 1)}
+              open={filtersOpen[1]}
             />
             <FilterOptions
               options={ratingOptions}
               title="Select Rating"
-              className="choose-order-3"
+              onOpenHandler={onOpenHandler.bind(null, 2)}
+              open={filtersOpen[2]}
             />
             <FilterOptions
               options={sortOptions}
               title="Sort By: Latest"
-              className="choose-order-4"
+              onOpenHandler={onOpenHandler.bind(null, 3)}
+              open={filtersOpen[3]}
             />
             <button
               className="button add-button"

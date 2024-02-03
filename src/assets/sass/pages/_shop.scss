@@ -1,23 +1,12 @@
 .filter {
   &__top {
-    display: grid;
-    grid-template-columns: repeat(4, max-content) 1fr;
-    column-gap: 2rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
     padding: 3rem 0;
-    overflow-x: scroll;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Hide scrollbar for IE, Edge and Firefox */
-    & {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-    }
 
     .add-button {
-      justify-self: right;
+      padding: 0;
     }
   }
 
@@ -70,6 +59,12 @@
       padding: 1.5rem 0;
     }
   }
+
+  @media (max-width: 600px) {
+    &__top {
+      gap: 1.5rem;
+    }
+  }
 }
 
 .active__filter {
@@ -110,6 +105,11 @@
 
 .choose {
   min-width: 17.6rem;
+  position: relative;
+
+  @media (max-width: 500px) {
+    flex: 1;
+  }
 
   .chosen {
     padding: 1.2rem 1.5rem;
@@ -136,7 +136,7 @@
 }
 
 .options {
-  width: 17.6rem;
+  width: 100%;
   position: absolute;
   list-style: none;
   font-size: 1.4rem;
@@ -171,7 +171,7 @@
 
 .options-open {
   ul {
-    display: grid !important;
+    display: grid;
   }
   img {
     transform: rotate(180deg);

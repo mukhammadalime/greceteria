@@ -1,8 +1,3 @@
 Tasks To Complete 
 - Connect login/signup with backend
-- Contact us responsive
-- All modals responsive
 - Loading data as it is requested in pagination?
-
-Issues
-- filter options in scroll

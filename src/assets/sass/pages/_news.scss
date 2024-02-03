@@ -167,7 +167,16 @@
 
   &__filter {
     display: flex;
-    column-gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    white-space: nowrap;
+
+    // .header__search,
+    // .date-filter {
+    //   @media (max-width: 550px) {
+    //     flex: 1;
+    //   }
+    // }
   }
 }
 
@@ -194,24 +203,9 @@
     display: flex;
     justify-content: space-between;
     column-gap: 1.5rem;
-    overflow-x: scroll;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Hide scrollbar for IE, Edge and Firefox */
-    & {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-    }
 
     @media (max-width: 768px) {
       margin-bottom: 2rem;
-    }
-
-    .header__search {
-      width: 20rem;
     }
   }
 }

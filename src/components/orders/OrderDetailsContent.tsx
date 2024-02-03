@@ -1,9 +1,12 @@
 import OrderStatusBar from "./OrderStatusBar";
 import OrderDetailsPayment from "./OrderDetailsPayment";
 import FilterOptions from "../UI/FilterOptions";
+import { useState } from "react";
 const statusOptions = ["Received", "Processing", "On The Way", "Delivered"];
 
 const OrderDetailsContent = (props: { forAdmin: boolean }) => {
+  const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
+
   return (
     <div className="order-details__content">
       <div className="order-details__content--main">
@@ -43,7 +46,8 @@ const OrderDetailsContent = (props: { forAdmin: boolean }) => {
             <FilterOptions
               options={statusOptions}
               title="Received"
-              className=""
+              onOpenHandler={() => setOptionsOpen((prev) => !prev)}
+              open={optionsOpen}
             />
           </div>
         </div>

@@ -28,6 +28,7 @@ const AddProductOverlay = (props: {
   const [uploadedImages, setUploadedImages] = useState(() =>
     props.images ? props.images : []
   );
+  const [selectCategoryOpen, setSelectCategoryOpen] = useState(false);
 
   const onSelectFile = (e: any) => {
     const selectedFiles = (e.target as HTMLInputElement).files!;
@@ -53,7 +54,8 @@ const AddProductOverlay = (props: {
             <FilterOptions
               options={categoryOptions}
               title="Select Category"
-              className=""
+              onOpenHandler={() => setSelectCategoryOpen((prev) => !prev)}
+              open={selectCategoryOpen}
             />
           </div>
           <TextInput label="Product weight" placeholder="Weight (250g)" />

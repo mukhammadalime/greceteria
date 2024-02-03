@@ -1,56 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 const FilterOptions = ({
   options,
   title,
-  className,
+  onOpenHandler,
+  open,
 }: {
   options: string[];
   title: string;
-  className: string;
+  onOpenHandler: () => void;
+  open: boolean;
 }) => {
   const [option, setOption] = useState<string | null>(title);
-  const btnRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [showOptions, setShowOptions] = useState<boolean>(() => false);
-
-  const [optionsCoordinates, setOptionsCoordinates] = useState({
-    left: 0,
-    top: 0,
-  });
 
   const setOptionHandler = (e: React.MouseEvent) => {
     setOption((e.target as HTMLElement).textContent);
-    setShowOptions(false);
+    onOpenHandler();
   };
 
   const onOpenOptionsHandler = () => {
-    setShowOptions((prevState) => !prevState);
-
-    if (showOptions) return;
-    const chooseBox = document.querySelector(`.${className}`) as HTMLDivElement;
-
-    const chooseBoxPosition = chooseBox.getBoundingClientRect();
-    const coordinates = {
-      left: chooseBoxPosition.left,
-      top: chooseBoxPosition.top,
-    };
-    setOptionsCoordinates(coordinates);
+    onOpenHandler();
   };
 
   return (
-    <div className={`choose ${className}${showOptions ? " options-open" : ""}`}>
-      <div className="chosen" onClick={onOpenOptionsHandler} ref={btnRef}>
+    <div className={`choose${open ? " options-open" : ""}`}>
+      <div className="chosen" onClick={onOpenOptionsHandler}>
         {option}
-        <img src="/assets/icons/arrow-down-icon.svg" alt="" ref={imgRef} />
+        <img src="/assets/icons/arrow-down-icon.svg" alt="" />
       </div>
-      <ul
-        className="options"
-        style={{
-          left: optionsCoordinates.left,
-          top: optionsCoordinates.top + 42,
-        }}
-      >
+      <ul className="options">
         {options.map((item) => (
           <li key={item} className="options__item" onClick={setOptionHandler}>
             {item}

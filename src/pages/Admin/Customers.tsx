@@ -3,6 +3,7 @@ import usePaginate from "../../hooks/usePaginate";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import PaginationButtons from "../../components/UI/PaginationButtons";
 import FilterOptions from "../../components/UI/FilterOptions";
+import { useState } from "react";
 
 const sortOptions = [
   "Sort by: Active",
@@ -113,6 +114,7 @@ interface customersTypes {
 
 const Customers = () => {
   const { handlePageClick, pageCount, currentItems } = usePaginate(customers);
+  const [sortOpen, setSortOpen] = useState(false);
 
   return (
     <div className="section-sm">
@@ -125,7 +127,8 @@ const Customers = () => {
               <FilterOptions
                 options={sortOptions}
                 title="Sort By: Status"
-                className=""
+                onOpenHandler={() => setSortOpen((prev) => !prev)}
+                open={sortOpen}
               />
             </div>
 

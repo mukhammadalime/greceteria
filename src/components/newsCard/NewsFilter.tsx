@@ -5,6 +5,7 @@ const sortOptions = ["Sort by: Newest", "Sort by: Oldest"];
 
 const NewsFilter = () => {
   const [addNewsModal, setAddNewsModal] = useState(() => false);
+  const [sortOpen, setSortOpen] = useState(false);
 
   return (
     <>
@@ -15,7 +16,7 @@ const NewsFilter = () => {
         />
       )}
       <div className="section__head">
-        <div className="news-page__header-left">
+        <div className="news__filter">
           <div className="header__search">
             <input type="text" placeholder="Search for news" />
             <img
@@ -24,26 +25,25 @@ const NewsFilter = () => {
               alt="Search Icon"
             />
           </div>
-          <div className="news__filter">
-            <FilterOptions
-              options={sortOptions}
-              title="Sort By: Newest"
-              className="choose-news-filter"
-            />
-            <div className="date-filter">
-              <input type="date" />
-            </div>
-            <div className="date-filter">
-              <input type="month" />
-            </div>
+          <FilterOptions
+            options={sortOptions}
+            title="Sort By: Newest"
+            onOpenHandler={() => setSortOpen((prev) => !prev)}
+            open={sortOpen}
+          />
+          <div className="date-filter">
+            <input type="date" />
           </div>
-        </div>
+          <div className="date-filter">
+            <input type="month" />
+          </div>
 
-        <button
-          className="button add-button"
-          onClick={() => setAddNewsModal(true)}
-          children="Add News"
-        />
+          <button
+            className="button add-button"
+            onClick={() => setAddNewsModal(true)}
+            children="Add News"
+          />
+        </div>
       </div>
     </>
   );

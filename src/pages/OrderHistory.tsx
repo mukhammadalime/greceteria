@@ -1,6 +1,7 @@
 import { OrdersTable } from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
 import FilterOptions from "../components/UI/FilterOptions";
+import { useState } from "react";
 
 const sortOptions = [
   "Sort by: Received",
@@ -714,6 +715,17 @@ const orders = [
 ];
 
 const OrderHistory = () => {
+  const [filtersOpen, setFiltersOpen] = useState<boolean[]>([false, false]);
+
+
+  // This function opens the requested filter and closed other remaining open filters.
+  const onOpenHandler = (num: number) => {
+    const array = [...filtersOpen];
+    filtersOpen.fill(false);
+    filtersOpen[num] = !array[num];
+    setFiltersOpen([...filtersOpen]);
+  };
+
   return (
     <>
       <div className="section-sm">
@@ -727,12 +739,14 @@ const OrderHistory = () => {
                 <FilterOptions
                   options={priceOptions}
                   title="Select Price"
-                  className=""
+                  onOpenHandler={onOpenHandler.bind(null, 0)}
+                  open={filtersOpen[0]}
                 />
                 <FilterOptions
                   options={sortOptions}
                   title="Sort By: Status"
-                  className=""
+                  onOpenHandler={onOpenHandler.bind(null, 1)}
+                  open={filtersOpen[1]}
                 />
                 <div className="date-filter">
                   <input type="date" />
