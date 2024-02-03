@@ -61,7 +61,7 @@ const HeaderBottom = () => {
         <div className="container">
           <div className="header__bottom--context">
             <ul className="header__nav">
-              {navUserItems.map((item) => (
+              {navAdminItems.map((item) => (
                 <li className="header__nav--link" key={item.name}>
                   <NavLink to={item.link} className="nav--link-item">
                     {item.name}

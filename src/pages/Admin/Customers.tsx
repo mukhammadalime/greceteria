@@ -14,7 +14,7 @@ const customers = [
   {
     id: "#123",
     name: "Laura Wilson",
-    email: "laurawilson@gmail.com ",
+    email: "laurawilson2324wdaw@gmail.com ",
     phoneNumber: "+821057012806",
     numOfProducts: 5,
     status: "Active",
@@ -121,44 +121,59 @@ const Customers = () => {
           <DashboardNav activeNavItem="Customers" />
 
           <div className="customers">
-            <div className="container">
-              <div className="filter__top">
-                <FilterOptions
-                  options={sortOptions}
-                  title="Sort By: Status"
-                  className=""
+            <div className="filter__top">
+              <FilterOptions
+                options={sortOptions}
+                title="Sort By: Status"
+                className=""
+              />
+            </div>
+
+            <div className="order-history">
+              <div className="order-history__header">
+                <h2>Customer List (1234)</h2>
+                <PaginationButtons
+                  pageCount={pageCount}
+                  handlePageClick={handlePageClick}
                 />
               </div>
-              <div className="order-history">
-                <div className="order-history__header">
-                  <h2>Customer List (1234)</h2>
-                  <PaginationButtons
-                    pageCount={pageCount}
-                    handlePageClick={handlePageClick}
-                  />
-                </div>
-                <div className="order-history__table">
-                  <div className="table__header">
-                    <div className="table__header--item">Name</div>
-                    <div className="table__header--item">Email</div>
-                    <div className="table__header--item">Telephone</div>
-                    <div className="table__header--item">Status</div>
-                  </div>
-                  {/* <div className="order-history__empty">
-          <h2>No Customers found</h2>
-        </div> */}
-                  {currentItems.map((item: customersTypes) => (
-                    <div className="table__item" key={item.id}>
-                      <p>{item.name}</p>
-                      <p>{item.email}</p>
-                      <p>{item.phoneNumber}</p>
-                      <p>{item.status}</p>
-                      <Link to="/customers/details" className="view-details">
-                        View Details
-                      </Link>
-                    </div>
-                  ))}
-                </div>
+
+              <div className="order-history__table">
+                <table className="table">
+                  <thead>
+                    <tr className="table__header">
+                      <th className="table__header--item">NAME</th>
+                      <th className="table__header--item">EMAIL</th>
+                      <th className="table__header--item">TELEPHONE</th>
+                      <th className="table__header--item">STATUS</th>
+                      <th className="table__header--item"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentItems.map((customer: customersTypes, i: number) => (
+                      <tr className="table__item" key={i}>
+                        <td>{customer.name}</td>
+                        <td>
+                          <p>{customer.email}</p>
+                        </td>
+                        <td>{customer.phoneNumber}</td>
+                        <td>{customer.status}</td>
+                        <td>
+                          <Link
+                            to="/customers/details"
+                            className="view-details"
+                          >
+                            View Details
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* <div className="order-history__empty">
+                  <h2>No Customers found</h2>
+                </div> */}
               </div>
             </div>
           </div>

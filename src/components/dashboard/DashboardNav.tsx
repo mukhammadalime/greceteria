@@ -84,7 +84,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
         <img src="/assets/icons/arrow-down-icon.svg" alt="" />
       </div>
       <ul>
-        {navUserItems.map((item) => (
+        {navAdminItems.map((item) => (
           <Link
             to={item.link}
             key={item.name}

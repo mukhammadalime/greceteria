@@ -17,6 +17,19 @@ const OrderStatistics = () => {
         </div>
       </div>
       <div className="orders-stat__item">
+        <h2>This Week Revenue</h2>
+        <div className="orders-stat__img">
+          <img src="/assets/icons/money-icon.svg" alt="" />
+          <span>$5500.00</span>
+        </div>
+        <div className="orders-stat__statistics">
+          <ArrowCircleIcon />
+          <p>
+            5% <span>than Yesterday</span>
+          </p>
+        </div>
+      </div>
+      <div className="orders-stat__item">
         <h2>This month Revenue</h2>
         <div className="orders-stat__img">
           <img src="/assets/icons/money-icon.svg" alt="" />

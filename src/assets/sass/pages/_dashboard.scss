@@ -6,10 +6,6 @@
   &__main {
     display: grid;
     gap: 2rem;
-
-    .container {
-      padding: 0 !important;
-    }
   }
 
   &__nav {
@@ -187,6 +183,16 @@
         font-size: 1.4rem;
         font-weight: 400;
         color: #808080;
+
+        &:last-child {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          svg {
+            cursor: pointer;
+          }
+        }
       }
     }
     &--edit {
@@ -234,7 +240,6 @@
 
   &__table {
     overflow-x: scroll;
-
     &::-webkit-scrollbar {
       display: none;
     }
@@ -293,6 +298,7 @@
   }
 
   .table {
+    width: 100%;
     border-spacing: 0;
 
     &__header {
@@ -400,15 +406,18 @@
   }
 
   &__main {
-    display: flex;
-    column-gap: 2.4rem;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    row-gap: 2.4rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(19.6rem, 1fr));
+
+    .category__item {
+      width: unset;
+    }
   }
 
   .category__item {
     position: relative;
+
     button {
       position: absolute;
       padding: 0;

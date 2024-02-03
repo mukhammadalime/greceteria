@@ -47,10 +47,8 @@ const AdminDashboard = () => {
         <div className="dashboard">
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
-            <div className="container">
-              <OrdersByStatus />
-              <OrdersTable orders={orders} text="Today's Orders" />
-            </div>
+            <OrdersByStatus />
+            <OrdersTable orders={orders} text="Today's Orders" />
           </div>
         </div>
       </div>

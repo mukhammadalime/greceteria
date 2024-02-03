@@ -1,9 +1,8 @@
-import { useState } from "react";
-import usePaginate from "../../hooks/usePaginate";
+import { useRef, useState } from "react";
 import WarningModal from "../../components/modals/WarningModal";
 import { OrdersTable } from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
-import PaginationButtons from "../../components/UI/PaginationButtons";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const addresses = [
   {
@@ -110,7 +109,12 @@ const orders = [
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
-  const { handlePageClick, pageCount, currentItems } = usePaginate(orders);
+  const emailRef = useRef<HTMLParagraphElement>(null);
+
+  const copyEmailHandler = () => {
+    const email = emailRef.current?.textContent;
+    navigator.clipboard.writeText(email!);
+  };
 
   return (
     <>
@@ -125,14 +129,17 @@ const CustomerDetails = () => {
           <div className="dashboard">
             <DashboardNav activeNavItem="Customers" />
 
-            <div className="customer-details">
+            <div className="customer-details dashboard__main">
               <div className="user__details">
                 <div className="user__details--left">
                   <img src="/assets/images/users/default.jpg" alt="" />
                   <div className="user__details--info">
                     <h5>Laura Wilson</h5>
                     <p>laurawilson</p>
-                    <p>laurawilson@gmail.com</p>
+                    <p ref={emailRef}>
+                      <ContentCopyIcon onClick={copyEmailHandler} />
+                      laurawilson@gmail.com
+                    </p>
                   </div>
                 </div>
                 <div className="address-book">
@@ -156,21 +163,7 @@ const CustomerDetails = () => {
                   Make me Manager
                 </button>
               </div>
-              <div className="cutomer-orders">
-                <div className="order-history">
-                  <div className="order-history__header">
-                    <h2>Order History</h2>
-                    <PaginationButtons
-                      pageCount={pageCount}
-                      handlePageClick={handlePageClick}
-                    />
-                  </div>
-
-                  <div className="order-history__main">
-                    <OrdersTable orders={currentItems} text={""} />
-                  </div>
-                </div>
-              </div>
+              <OrdersTable orders={orders} text={""} />
             </div>
           </div>
         </div>
