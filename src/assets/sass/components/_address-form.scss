@@ -54,6 +54,10 @@
 ////////////////////////////
 /// ADDRESS FORM RESPONSIVE
 .address-form {
+  @media (max-width: 850px) {
+    width: 95%;
+  }
+
   @media (max-width: 768px) {
     &__header {
       padding: 1.2rem 1.5rem;
@@ -65,6 +69,14 @@
 
     &__bottom {
       padding: 1.2rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 450px) {
+    &__main {
+      .form-inputs {
+        flex-direction: column;
+      }
     }
   }
 }

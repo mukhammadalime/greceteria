@@ -73,7 +73,7 @@ const NewsDetails = () => {
               </p>
               <button
                 className="button edit-news"
-                // onClick={() => setAddNewsModal(true)}
+                onClick={() => setAddNewsModal(true)}
                 children="Edit News"
               />
             </div>

@@ -155,6 +155,18 @@
   }
 }
 
+//////////////////////////////
+/// CART MODAL RESPONSIVE
+.cart-modal {
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 450px) {
+    width: 100vw;
+  }
+}
+
 // SPINNER
 .spinner {
   width: min-content;

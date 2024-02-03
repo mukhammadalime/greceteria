@@ -23,12 +23,6 @@
     //   height: 25rem;
     // }
 
-    &:hover {
-      .news-card__img {
-        transform: scale(1.1);
-      }
-    }
-
     .date {
       position: absolute;
       left: 2.4rem;
@@ -63,9 +57,7 @@
     object-fit: cover;
     transition: all 0.3s linear;
     cursor: pointer;
-    // object-fit: cover;
-    // object-fit: contain;
-    // object-fit: fill;
+    object-fit: cover;
   }
 
   &__content {

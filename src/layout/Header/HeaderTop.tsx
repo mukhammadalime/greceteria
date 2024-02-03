@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import CartModal from "../../components/modals/CartModal";
 
 const HeaderTop = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [cartOpen, setCartOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -12,6 +14,8 @@ const HeaderTop = () => {
         onCloseSidebar={() => setSidebarOpen(false)}
         open={sidebarOpen}
       />
+
+      {cartOpen && <CartModal closeCartModal={() => setCartOpen(false)} />}
 
       <div className="header__top">
         <div className="container">
@@ -45,12 +49,12 @@ const HeaderTop = () => {
                 </Link>
               </div>
               <div className="header__cart--bag">
-                <Link to="/my-cart" className="cart-bag">
-                  <svg>
+                <div className="cart-bag">
+                  <svg onClick={() => setCartOpen(true)}>
                     <use href="/assets/icons/icons.svg#icon-shopping-cart"></use>
                   </svg>
                   <span className="items-number">2</span>
-                </Link>
+                </div>
               </div>
               <div className="header__cart--auth">
                 {/* <div className="header__cart--not-logged">

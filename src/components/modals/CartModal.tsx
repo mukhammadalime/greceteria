@@ -33,10 +33,18 @@ const CartOverLay = (props: { closeCartModal: () => void }) => {
           <span>$24.00</span>
         </div>
         <form className="cart-modal__form">
-          <Link to="/checkout" className="button button-lg cart__checkout">
+          <Link
+            to="/checkout"
+            className="button button-lg cart__checkout"
+            onClick={props.closeCartModal}
+          >
             Checkout
           </Link>
-          <Link to="/my-cart" className="button button-lg go-to-cart">
+          <Link
+            to="/my-cart"
+            className="button button-lg go-to-cart"
+            onClick={props.closeCartModal}
+          >
             Go To Cart
           </Link>
         </form>

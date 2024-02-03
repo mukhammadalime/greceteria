@@ -42,12 +42,12 @@ const AllProductCards = () => {
             />
           </div>
           <div className="all-products">
-            {currentItems.map((item: productItemTypes) => (
+            {currentItems.map((item: productItemTypes, i: number) => (
               <ProductCard
                 images={item.images}
                 discountPrice={item.discountedPrice}
                 price={item.price}
-                key={item.name}
+                key={i}
                 name={item.name}
               />
             ))}

@@ -2,6 +2,7 @@ import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";
 import RightArrowIcon from "./UI/Icons/RightArrowIcon";
+import { Link } from "react-router-dom";
 
 const CategoryItems = [
   {
@@ -69,10 +70,10 @@ const Categories = () => {
           style={{ justifyContent: "space-between" }}
         >
           <h2>Shop By Categories</h2>
-          <div className="view-all">
+          <Link to="/shop" className="view-all">
             View All
             <RightArrowIcon />
-          </div>
+          </Link>
         </div>
         <div className="category__main">
           <Swiper
