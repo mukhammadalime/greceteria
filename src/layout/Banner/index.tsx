@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import RightArrowIcon from "../../components/UI/Icons/RightArrowIcon";
 
 const Banner = () => {
@@ -15,10 +16,10 @@ const Banner = () => {
             <p className="banner__shipping">
               Free shipping on your over 50$ order. We deliver, you enjoy!
             </p>
-            <div className="banner__shop-now button">
+            <Link to="/shop" className="banner__shop-now button">
               Shop Now
               <RightArrowIcon />
-            </div>
+            </Link>
           </div>
           <div className="banner__photo">
             <img src="/assets/images/banner/banner-1.jpeg" alt="banner" />

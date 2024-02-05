@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import CompareItem from "../../components/compare/CompareItem";
+import { AuthContext } from "../../store/AuthContext";
+import LoginFirst from "../../components/LoginFirst";
 
 const products = [
   {
@@ -40,6 +43,9 @@ const products = [
 ];
 
 const Compare = () => {
+  const { state } = useContext(AuthContext);
+  if (state.user === null) return <LoginFirst />;
+
   return (
     <div className="section-lg">
       <div className="container">

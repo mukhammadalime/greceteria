@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CartModal from "../../components/modals/CartModal";
+import { AuthContext } from "../../store/AuthContext";
 
 const HeaderTop = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
+
+  const { state } = useContext(AuthContext);
 
   return (
     <>
@@ -57,26 +60,32 @@ const HeaderTop = () => {
                 </div>
               </div>
               <div className="header__cart--auth">
-                {/* <div className="header__cart--not-logged">
-                  <Link to="/auth/login" className="login-btn">
-                    Sign in
-                  </Link>
-                  <span> / </span>
-                  <Link to="/auth/signup" className="login-btn">
-                    Sign up
-                  </Link>
-                </div>
+                {state.user === null && (
+                  <>
+                    <div className="header__cart--not-logged">
+                      <Link to="/auth/login" className="login-btn">
+                        Sign in
+                      </Link>
+                      <span> / </span>
+                      <Link to="/auth/signup" className="login-btn">
+                        Sign up
+                      </Link>
+                    </div>
 
-                <Link
-                  to="/auth/login"
-                  className="header__not-logged--responsive"
-                >
-                  <PersonAddAltIcon />
-                </Link> */}
+                    <Link
+                      to="/auth/login"
+                      className="header__not-logged--responsive"
+                    >
+                      <PersonAddAltIcon />
+                    </Link>
+                  </>
+                )}
 
-                <Link to="/my-dashboard" className="header__cart--user">
-                  <img src="/assets/images/users/default.jpg" alt="User" />
-                </Link>
+                {state.user !== null && (
+                  <Link to="/my-dashboard" className="header__cart--user">
+                    <img src="/assets/images/users/default.jpg" alt="User" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

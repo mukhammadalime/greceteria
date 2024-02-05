@@ -221,3 +221,27 @@
     }
   }
 }
+
+.login-first {
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  &__content {
+    margin: 0 1.5rem;
+
+    h2 {
+      font-weight: 500;
+      font-size: 2.3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .header__cart--not-logged {
+      @media (max-width: 600px) {
+        display: unset;
+      }
+    }
+  }
+}

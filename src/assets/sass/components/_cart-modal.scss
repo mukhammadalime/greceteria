@@ -170,8 +170,11 @@
 // SPINNER
 .spinner {
   width: min-content;
-  height: min-content;
+  height: 50vh;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .quick-view {

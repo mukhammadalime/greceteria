@@ -3,8 +3,14 @@ import BillCard from "../../components/cart/BillCard";
 import CartItem from "../../components/cart/CartItem";
 import CartHeader from "../../components/cart/CartHeader";
 import SectionHead from "../../components/UI/SectionHeader";
+import LoginFirst from "../../components/LoginFirst";
+import { useContext } from "react";
+import { AuthContext } from "../../store/AuthContext";
 
 const Cart = () => {
+  const { state } = useContext(AuthContext);
+  if (state.user === null) return <LoginFirst />;
+
   return (
     <div className="section-md">
       <div className="container">

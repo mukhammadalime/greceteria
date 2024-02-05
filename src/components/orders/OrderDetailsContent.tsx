@@ -1,10 +1,13 @@
 import OrderStatusBar from "./OrderStatusBar";
 import OrderDetailsPayment from "./OrderDetailsPayment";
 import FilterOptions from "../UI/FilterOptions";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../store/AuthContext";
 const statusOptions = ["Received", "Processing", "On The Way", "Delivered"];
 
-const OrderDetailsContent = (props: { forAdmin: boolean }) => {
+const OrderDetailsContent = () => {
+  const { state } = useContext(AuthContext);
+
   const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
 
   return (
@@ -35,7 +38,7 @@ const OrderDetailsContent = (props: { forAdmin: boolean }) => {
 
       <OrderStatusBar />
 
-      {props.forAdmin && (
+      {state.user && state.user.role !== "user" && (
         <div className="update-order">
           <div className="order-status">
             <h2>Order Status: </h2>

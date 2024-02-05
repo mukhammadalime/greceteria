@@ -1,6 +1,10 @@
 import { OrdersTable } from "../../components/orders/OrdersTable";
 import UserDetails from "../../components/dashboard/UserDetails";
 import DashboardNav from "../../components/dashboard/DashboardNav";
+import OrdersByStatus from "../../components/admin/OrdersByStatus";
+import { useContext } from "react";
+import { AuthContext } from "../../store/AuthContext";
+import LoginFirst from "../../components/LoginFirst";
 
 const orders = [
   {
@@ -41,6 +45,9 @@ const orders = [
 ];
 
 const Dashboard = () => {
+  const { state } = useContext(AuthContext);
+  if (state.user === null) return <LoginFirst />;
+
   return (
     <div className="section-sm ">
       <div className="container">
@@ -48,6 +55,7 @@ const Dashboard = () => {
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
             <UserDetails />
+            {state.user && state.user.role !== "user" && <OrdersByStatus />}
             <OrdersTable orders={orders} text={""} />
           </div>
         </div>

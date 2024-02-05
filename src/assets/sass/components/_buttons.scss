@@ -14,9 +14,17 @@
   outline: none;
   border: none;
 
+  &:disabled {
+    cursor: not-allowed;
+    &:active {
+      transform: unset;
+    }
+  }
+
   &:hover {
     background-color: #2c742f;
   }
+
   &:active {
     transform: scale(0.95);
   }

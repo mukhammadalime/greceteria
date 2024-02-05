@@ -20,7 +20,8 @@ const FooterNavigation = ({
   text: string;
   className?: string;
 }) => {
-  let items = text === "My Account" ? myAccountItems : myHelpsItems;
+  const items = text === "My Account" ? myAccountItems : myHelpsItems;
+
   return (
     <ul className={`footer__navigation ${className}`}>
       <li className="footer__navigation--title">{text}</li>

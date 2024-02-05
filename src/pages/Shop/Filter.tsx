@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CloseIcon from "../../components/UI/Icons/CloseIcon";
 import FilterOptions from "../../components/UI/FilterOptions";
 import AddProductModal from "../../components/modals/AddProductModal";
+import { AuthContext } from "../../store/AuthContext";
 
 const categoryOptions = [
   "Water and Drinks",
@@ -25,6 +26,7 @@ const sortOptions = ["Sort by: Latest", "Sort by: Newest", "Sort by: Trending"];
 const ratingOptions = ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"];
 
 const Filter = () => {
+  const { state } = useContext(AuthContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
 
   const [filtersOpen, setFiltersOpen] = useState<boolean[]>([
@@ -79,11 +81,13 @@ const Filter = () => {
               onOpenHandler={onOpenHandler.bind(null, 3)}
               open={filtersOpen[3]}
             />
-            <button
-              className="button add-button"
-              onClick={() => setAddProductModal(true)}
-              children="Add Product"
-            />
+            {state.user && state.user.role !== "user" && (
+              <button
+                className="button add-button"
+                onClick={() => setAddProductModal(true)}
+                children="Add Product"
+              />
+            )}
           </div>
         </div>
         <div className="filter__bottom">

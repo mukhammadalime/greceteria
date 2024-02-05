@@ -16,44 +16,80 @@ import Cart from "./pages/User/Cart";
 import Compare from "./pages/User/Compare";
 import Checkout from "./pages/User/Checkout";
 import Dashboard from "./pages/User/Dashboard";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
 import Settings from "./pages/User/Settings";
 import OrderDetails from "./pages/User/OrderDetails";
 import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/Admin/Categories";
 import Customers from "./pages/Admin/Customers";
+import { useContext } from "react";
+import { AuthContext } from "./store/AuthContext";
+import { ToastContainer, Flip } from "react-toastify";
+import CartIcon from "./components/UI/Icons/CartIcon";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+
   return (
     <LayoutWrapper>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        style={{ fontSize: "1.5rem" }}
+        pauseOnFocusLoss={false}
+        newestOnTop={true}
+        transition={Flip}
+        draggablePercent={60}
+        icon={<CartIcon />}
+      />
+
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/news" element={<NewsPage />} />
+        <Route path="/my-cart" element={<Cart />} />
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/my-dashboard" element={<Dashboard />} />
+        <Route path="/orders" element={<OrderHistory />} />
+
         <Route path="/shop" element={<Shop />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/customer-center" element={<CustomerCenter />} />
         <Route path="/terms-privacy" element={<TermsAndPrivacy />} />
-        <Route path="/news" element={<NewsPage />} />
-        <Route path="/news/:newsId" element={<NewsDetails />} />
-
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/my-cart" element={<Cart />} />
-        <Route path="/compare" element={<Compare />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/customer-center" element={<CustomerCenter />} />
         <Route path="/products/:productId" element={<ProductDetails />} />
-        <Route path="/my-dashboard" element={<Dashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/orders" element={<OrderHistory />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/orders/:orderId" element={<OrderDetails />} />
-        <Route path="/statistics" element={<Statistics />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/customers/:customerId" element={<CustomerDetails />} />
-        <Route path="/categories" element={<Categories />} />
 
-        <Route path="/auth/*" element={<Auth />} />
+        {/* User logged in routes */}
+        {user !== null && (
+          <>
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/news/:newsId" element={<NewsDetails />} />
+            <Route path="/orders/:orderId" element={<OrderDetails />} />
+          </>
+        )}
+
+        {user === null && <Route path="/auth/*" element={<Auth />} />}
+
+        {/* Admin and Manager routes */}
+        {user && user.role === "admin" && (
+          <>
+            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route
+              path="/customers/:customerId"
+              element={<CustomerDetails />}
+            />
+            <Route path="/categories" element={<Categories />} />
+          </>
+        )}
+
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </LayoutWrapper>
   );

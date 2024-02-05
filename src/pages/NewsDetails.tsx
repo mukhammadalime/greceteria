@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddNewsModal from "../components/modals/AddNewsModal";
 import SwiperSlider from "../components/UI/Slider/SwiperSlider";
 import SocialShareModal from "../components/modals/SocialShareModal";
+import { AuthContext } from "../store/AuthContext";
 
 const images = [
   "/assets/images/products/almond-1.jpeg",
@@ -9,6 +10,7 @@ const images = [
 ];
 
 const NewsDetails = () => {
+  const { state } = useContext(AuthContext);
   const [shareModal, setShareModal] = useState(() => false);
   const [addNewsModal, setAddNewsModal] = useState(() => false);
 
@@ -71,11 +73,14 @@ const NewsDetails = () => {
                 Ut in vivamus luctus ullamcorper? Donec class tempus quisque
                 neque
               </p>
-              <button
-                className="button edit-news"
-                onClick={() => setAddNewsModal(true)}
-                children="Edit News"
-              />
+
+              {state.user && state.user.role !== "user" && (
+                <button
+                  className="button edit-news"
+                  onClick={() => setAddNewsModal(true)}
+                  children="Edit News"
+                />
+              )}
             </div>
           </div>
         </div>

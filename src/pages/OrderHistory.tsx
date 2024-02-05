@@ -1,7 +1,9 @@
 import { OrdersTable } from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
 import FilterOptions from "../components/UI/FilterOptions";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../store/AuthContext";
+import LoginFirst from "../components/LoginFirst";
 
 const sortOptions = [
   "Sort by: Received",
@@ -716,7 +718,7 @@ const orders = [
 
 const OrderHistory = () => {
   const [filtersOpen, setFiltersOpen] = useState<boolean[]>([false, false]);
-
+  const { state } = useContext(AuthContext);
 
   // This function opens the requested filter and closed other remaining open filters.
   const onOpenHandler = (num: number) => {
@@ -726,41 +728,41 @@ const OrderHistory = () => {
     setFiltersOpen([...filtersOpen]);
   };
 
-  return (
-    <>
-      <div className="section-sm">
-        <div className="container">
-          <div className="order-history-page dashboard">
-            <DashboardNav activeNavItem="Order History" />
+  if (state.user === null) return <LoginFirst />;
 
-            {/* Order History */}
-            <div className="dashboard__main">
-              <div className="filter__top">
-                <FilterOptions
-                  options={priceOptions}
-                  title="Select Price"
-                  onOpenHandler={onOpenHandler.bind(null, 0)}
-                  open={filtersOpen[0]}
-                />
-                <FilterOptions
-                  options={sortOptions}
-                  title="Sort By: Status"
-                  onOpenHandler={onOpenHandler.bind(null, 1)}
-                  open={filtersOpen[1]}
-                />
-                <div className="date-filter">
-                  <input type="date" />
-                </div>
-                <div className="date-filter">
-                  <input type="month" />
-                </div>
+  return (
+    <div className="section-sm">
+      <div className="container">
+        <div className="order-history-page dashboard">
+          <DashboardNav activeNavItem="Order History" />
+
+          {/* Order History */}
+          <div className="dashboard__main">
+            <div className="filter__top">
+              <FilterOptions
+                options={priceOptions}
+                title="Select Price"
+                onOpenHandler={onOpenHandler.bind(null, 0)}
+                open={filtersOpen[0]}
+              />
+              <FilterOptions
+                options={sortOptions}
+                title="Sort By: Status"
+                onOpenHandler={onOpenHandler.bind(null, 1)}
+                open={filtersOpen[1]}
+              />
+              <div className="date-filter">
+                <input type="date" />
               </div>
-              <OrdersTable orders={orders} text="Order History" />
+              <div className="date-filter">
+                <input type="month" />
+              </div>
             </div>
+            <OrdersTable orders={orders} text="Order History" />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

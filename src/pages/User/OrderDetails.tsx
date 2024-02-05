@@ -17,7 +17,7 @@ const OrderDetails = () => {
                 <h2>Order Details</h2>
                 <span onClick={() => navigate(-1)}>Back To List</span>
               </div>
-              <OrderDetailsContent forAdmin={true} />
+              <OrderDetailsContent />
               <OrderedItemsTable />
             </div>
           </div>

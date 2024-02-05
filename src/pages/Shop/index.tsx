@@ -6,6 +6,7 @@ import ProductCard from "../../components/productCard";
 
 const Shop = () => {
   const { handlePageClick, pageCount, currentItems } = usePaginate(products);
+
   return (
     <>
       <Filter />

@@ -8,7 +8,10 @@ import DashboardIcon from "../UI/Icons/DashboardIcon";
 import StatisticsIcon from "../UI/Icons/StatisticsIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
+import { AuthActionKind, AuthContext } from "../../store/AuthContext";
+import { toast } from "react-toastify";
 
 const navUserItems = [
   {
@@ -41,7 +44,7 @@ const navUserItems = [
 const navAdminItems = [
   {
     name: "Dashboard",
-    link: "/admin-dashboard",
+    link: "/my-dashboard",
     icon: <DashboardIcon />,
   },
   {
@@ -73,6 +76,25 @@ const navAdminItems = [
 
 const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const [navOpen, setNavOpen] = useState<boolean>(() => false);
+  const { state, dispatch } = useContext(AuthContext);
+
+  const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
+
+  const onLogoutHandler = async () => {
+    try {
+      await axios({
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.user?.token}`,
+        },
+        url: "http://localhost:8000/api/v1/users/logout",
+      });
+
+      dispatch({ type: AuthActionKind.LOGOUT });
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+    }
+  };
 
   return (
     <div className={`dashboard__nav${navOpen ? " nav-open" : ""}`}>
@@ -84,7 +106,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
         <img src="/assets/icons/arrow-down-icon.svg" alt="" />
       </div>
       <ul>
-        {navAdminItems.map((item) => (
+        {navItems.map((item) => (
           <Link
             to={item.link}
             key={item.name}
@@ -96,7 +118,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
             <p>{item.name}</p>
           </Link>
         ))}
-        <li className="dashboard__nav--item">
+        <li className="dashboard__nav--item" onClick={onLogoutHandler}>
           <span>
             <LogoutIcon />
           </span>

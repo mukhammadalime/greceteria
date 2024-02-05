@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import FilterOptions from "../UI/FilterOptions";
 import AddNewsModal from "../modals/AddNewsModal";
+import { AuthContext } from "../../store/AuthContext";
 const sortOptions = ["Sort by: Newest", "Sort by: Oldest"];
 
 const NewsFilter = () => {
+  const { state } = useContext(AuthContext);
+
   const [addNewsModal, setAddNewsModal] = useState(() => false);
   const [sortOpen, setSortOpen] = useState(false);
 
@@ -38,11 +41,13 @@ const NewsFilter = () => {
             <input type="month" />
           </div>
 
-          <button
-            className="button add-button"
-            onClick={() => setAddNewsModal(true)}
-            children="Add News"
-          />
+          {state.user && state.user.role !== "user" && (
+            <button
+              className="button add-button"
+              onClick={() => setAddNewsModal(true)}
+              children="Add News"
+            />
+          )}
         </div>
       </div>
     </>

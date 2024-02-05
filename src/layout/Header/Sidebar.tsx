@@ -7,6 +7,8 @@ import AnnouncementIcon from "@mui/icons-material/Announcement";
 import CompareIcon from "../../components/UI/Icons/CompareIcon";
 import Groups2Icon from "@mui/icons-material/Groups2";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../store/AuthContext";
 
 const navUserItems = [
   {
@@ -75,6 +77,10 @@ const navAdminItems = [
 ];
 
 const Sidebar = ({ onCloseSidebar, open }: SidebarTypes) => {
+  const { state } = useContext(AuthContext);
+
+  const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
+
   return (
     <div className={`sidebar${open ? " open" : ""}`}>
       <div className="sidebar__top">
@@ -85,7 +91,7 @@ const Sidebar = ({ onCloseSidebar, open }: SidebarTypes) => {
       </div>
 
       <div className="sidebar__items">
-        {navAdminItems.map((item) => (
+        {navItems.map((item) => (
           <Link
             to={item.link}
             className="sidebar__item"

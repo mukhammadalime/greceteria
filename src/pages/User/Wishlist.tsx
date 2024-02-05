@@ -1,8 +1,14 @@
 import WishlistedItem from "../../components/WishlistedItem";
 import CustomProductsCarousel from "../../components/CustomProductsCarousel";
 import SectionHead from "../../components/UI/SectionHeader";
+import { useContext } from "react";
+import { AuthContext } from "../../store/AuthContext";
+import LoginFirst from "../../components/LoginFirst";
 
 const Wishlist = () => {
+  const { state } = useContext(AuthContext);
+  if (state.user === null) return <LoginFirst />;
+
   return (
     <>
       <div className="section-md wishlist">

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ProductActions from "./ProductActions";
 import RatingsStars from "../UI/RatingsStars";
 import AddProductModal from "../modals/AddProductModal";
 import SocialShareModal from "../modals/SocialShareModal";
 import Slider from "../UI/Slider";
+import { AuthContext } from "../../store/AuthContext";
 
 const images = [
   "/assets/images/products/almond-1.jpeg",
@@ -14,6 +15,7 @@ const images = [
 ];
 
 const ProductInfo = (props: any) => {
+  const { state } = useContext(AuthContext);
   const [shareModal, setShareModal] = useState(() => false);
   const [addProductModal, setAddProductModal] = useState(() => false);
 
@@ -39,11 +41,13 @@ const ProductInfo = (props: any) => {
             <Slider images={images} />
             <div className="product__info">
               <div className="product__info--item">
-                <button
-                  className="button edit-news"
-                  onClick={() => setAddProductModal(!shareModal)}
-                  children="Edit Product"
-                />
+                {state.user && state.user.role !== "user" && (
+                  <button
+                    className="button edit-news"
+                    onClick={() => setAddProductModal(!shareModal)}
+                    children="Edit Product"
+                  />
+                )}
                 <div className="product__info--title">
                   {/* {props.brandName ? [props.brandName] : ""} */}
                   [California] Almond
