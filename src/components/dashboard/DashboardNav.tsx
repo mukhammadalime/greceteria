@@ -91,6 +91,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
       });
 
       dispatch({ type: AuthActionKind.LOGOUT });
+      localStorage.removeItem("user");
     } catch (err: any) {
       toast.error(err.response.data.message);
     }

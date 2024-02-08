@@ -6,14 +6,15 @@ export interface User {
   photo: string;
   role: string;
   status: string;
-  addresses: AddressItem[];
+  addresses: AddressItemTypes[];
   token: string;
+  phoneNumber: string;
 }
 
-export interface AddressItem {
+export interface AddressItemTypes {
   _id: string;
   name: string;
-  phoneNumber: number;
+  phoneNumber: string;
   city: string;
   address1: string;
   address2?: string;

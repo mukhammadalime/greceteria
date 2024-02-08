@@ -1,39 +1,13 @@
 import { useState } from "react";
 import AddressItem from "./AddressItem";
-import { AddressItemTypes } from "../../utils/types";
-
-const addresses: AddressItemTypes[] = [
-  {
-    id: "1",
-    receiverName: "Laura Wilson",
-    address1: "4140 Parker Rd. Allentown",
-    city: "New Mexico",
-    postalCode: 31134,
-    phoneNumber: 821054678921,
-  },
-  {
-    id: "2",
-    receiverName: "Ameila",
-    address1: "5250 Parker Rd. Allentown",
-    city: "California",
-    postalCode: 35522,
-    phoneNumber: 821054678921,
-  },
-  {
-    id: "3",
-    receiverName: "Muhammadali",
-    address1: "5250 Parker Rd. Allentown",
-    city: "New York",
-    postalCode: 23451,
-    phoneNumber: 821057012806,
-  },
-];
+import { AddressItemTypes } from "../../utils/user-types";
 
 const AddressList = ({
   select,
   filledButton,
   onOpenAddressModal,
   headerTwo,
+  addresses,
 }: AddressListTypes) => {
   const [selectedAddress, setSelectedAddress] = useState(() => "1");
   const selectAddress = (value: string) => {
@@ -46,15 +20,15 @@ const AddressList = ({
         Shipping Addresses
       </div>
 
-      {addresses.length !== 0 && (
+      {addresses?.length !== 0 && (
         <div className="address-book__items">
           {addresses.map((item: AddressItemTypes) => (
             <AddressItem
-              key={item.id}
-              {...item}
+              key={item._id}
+              addressItem={item}
               select={select}
               selectedAddress={selectedAddress}
-              selectAddress={selectAddress}
+              selectAddressHandler={selectAddress}
             />
           ))}
         </div>
@@ -86,6 +60,7 @@ interface AddressListTypes {
   filledButton: boolean;
   onOpenAddressModal?: () => void;
   headerTwo?: boolean;
+  addresses: AddressItemTypes[] | [];
 }
 
 export default AddressList;

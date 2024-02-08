@@ -13,9 +13,7 @@ const ActionsBox = () => {
   }>({ left: 0, top: 0 });
 
   const onToggleActionsBoxHandler = () => {
-    console.log("HEllo");
     setShowActionsBox((prevState) => !prevState);
-    console.log("showActionsBox:", showActionsBox);
     if (showActionsBox) return;
 
     const optionsBox = document.querySelector(".options-box")!;

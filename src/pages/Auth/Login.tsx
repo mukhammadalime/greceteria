@@ -28,9 +28,7 @@ const LoginForm = () => {
       dispatch({ type: AuthActionKind.LOGIN_START });
 
       const { data } = await axios({
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         method: "POST",
         url: "http://localhost:8000/api/v1/users/login",
         data: { username, password },
@@ -41,13 +39,18 @@ const LoginForm = () => {
         payload: { token: data.token, ...data.user },
       });
 
-      if (location.search !== "") navigate(`/${location.search.split("=")[1]}`);
+      if (location.search.startsWith("?next-page"))
+        navigate(`/${location.search.split("=")[1]}`);
       else navigate("/home");
     } catch (err: any) {
       dispatch({
         type: AuthActionKind.LOGIN_FAILURE,
         error: err.response.data.message,
       });
+
+      if (err.response.data.message.startsWith("Your account")) {
+        navigate(`/auth/verify?username=${username}`);
+      }
 
       toast.error(err.response.data.message);
     }
@@ -81,7 +84,11 @@ const LoginForm = () => {
               ref={passwordRef}
             />
             <div className="form__content">
-              <h4 onClick={() => navigate("/auth/forgot-password")}>
+              <h4
+                onClick={() =>
+                  navigate(`/auth/forgot-password${location.search}`)
+                }
+              >
                 Forgot you password?
               </h4>
             </div>
@@ -90,7 +97,10 @@ const LoginForm = () => {
             </button>
             <div className="form__signup">
               Don't have account?{" "}
-              <Link to="/auth/signup" className="form__signup--text">
+              <Link
+                to={`/auth/signup${location.search}`}
+                className="form__signup--text"
+              >
                 Sing up
               </Link>
             </div>

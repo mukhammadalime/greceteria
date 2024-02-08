@@ -54,7 +54,7 @@ const Dashboard = () => {
         <div className="dashboard">
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
-            <UserDetails />
+            <UserDetails user={state.user} />
             {state.user && state.user.role !== "user" && <OrdersByStatus />}
             <OrdersTable orders={orders} text={""} />
           </div>

@@ -3,6 +3,16 @@
   grid-template-columns: 2fr 1fr;
   gap: 2rem;
 
+  .address-book__item {
+    p {
+      margin-right: 6rem;
+
+      @media (max-width: 600px) {
+        margin-right: 4rem;
+      }
+    }
+  }
+
   @media (max-width: 768px) {
     grid-template-columns: unset;
     .order__summary {

@@ -78,6 +78,67 @@
     height: 2rem;
     cursor: pointer;
   }
+
+  /// For third-party phone number input
+
+  .PhoneInput--focus {
+    .PhoneInputCountry {
+      .PhoneInputCountryIcon {
+        box-shadow: 0 0 0 1px #00b207, inset 0 0 0 1px #00b207;
+      }
+      .PhoneInputCountrySelectArrow {
+        border-color: #00b207;
+      }
+    }
+  }
+
+  .PhoneInput {
+    &:hover {
+      .PhoneInputCountry {
+        .PhoneInputCountryIcon {
+          box-shadow: 0 0 0 1px #00b207, inset 0 0 0 1px #00b207;
+          transition: all 0.3s linear;
+
+          // .PhoneInputCountryIconImg {
+          //   width: 2.35rem;
+          //   box-shadow: 0 0 0 0px #e5e5e5, inset 0 0 0 1px #e5e5e5;
+          // }
+        }
+        .PhoneInputCountrySelectArrow {
+          border-color: #00b207;
+          transition: all 0.3s linear;
+        }
+      }
+    }
+  }
+
+  .PhoneInputCountry {
+    .PhoneInputCountryIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2rem;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px #e5e5e5, inset 0 0 0 1px #e5e5e5;
+
+      // .PhoneInputCountryIconImg {
+      //   width: 2.35rem;
+      //   box-shadow: 0 0 0 0px #e5e5e5, inset 0 0 0 1px #e5e5e5;
+      // }
+
+      img {
+        object-fit: cover;
+      }
+    }
+    .PhoneInputCountrySelectArrow {
+      opacity: unset;
+      height: 0.6rem;
+      width: 0.6rem;
+      border-color: #e5e5e5;
+    }
+  }
 }
 
 .add-product-form {

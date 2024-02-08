@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddressList from "../../components/addresses/AddressList";
 import UserPassword from "../../components/settings/UserPassword";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import AddAddressModal from "../../components/modals/AddAddressModal";
 import AccountSettings from "../../components/settings/AccountSettings";
+import { AuthContext } from "../../store/AuthContext";
 
 const Settings = () => {
   const [addressModalShown, setAddressModalShown] = useState(false);
+  const { state } = useContext(AuthContext);
 
   return (
     <>
@@ -21,7 +23,7 @@ const Settings = () => {
           <div className="settings dashboard">
             <DashboardNav activeNavItem="Settings" />
             <div className="dashboard__main">
-              <AccountSettings />
+              <AccountSettings user={state.user} />
               {/* /////////////////////////////////// */}
               <div className="user-addresses">
                 <AddressList
@@ -29,6 +31,7 @@ const Settings = () => {
                   onOpenAddressModal={() => setAddressModalShown(true)}
                   filledButton={true}
                   headerTwo
+                  addresses={state.user?.addresses || []}
                 />
               </div>
               {/* /////////////////////////////////// */}

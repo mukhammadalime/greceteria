@@ -4,6 +4,8 @@
   overflow: hidden;
   border: 1px solid #e5e5e5;
   border-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
 
   &__header {
     padding: 1.5rem 2rem;
@@ -39,6 +41,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      text-wrap: nowrap;
     }
   }
 
@@ -68,7 +71,6 @@
       font-weight: 400;
       color: #666666;
       margin-bottom: 0.8rem;
-      margin-right: 6rem;
     }
     span {
       color: #1a1a1a;
@@ -136,9 +138,9 @@
 }
 
 .no-address-box {
-  min-height: 8rem !important;
-  height: auto !important;
+  min-height: 8rem;
   overflow-y: unset;
+  flex: 1;
 }
 
 ////////////////////////////////
@@ -187,9 +189,6 @@
     &__item {
       span {
         right: 1rem;
-      }
-      p {
-        margin-right: 4rem;
       }
     }
   }

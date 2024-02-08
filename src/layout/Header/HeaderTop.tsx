@@ -63,7 +63,7 @@ const HeaderTop = () => {
                 {state.user === null && (
                   <>
                     <div className="header__cart--not-logged">
-                      <Link to="/auth/login" className="login-btn">
+                      <Link to="/auth/signin" className="login-btn">
                         Sign in
                       </Link>
                       <span> / </span>
@@ -73,7 +73,7 @@ const HeaderTop = () => {
                     </div>
 
                     <Link
-                      to="/auth/login"
+                      to="/auth/signin"
                       className="header__not-logged--responsive"
                     >
                       <PersonAddAltIcon />
@@ -83,7 +83,7 @@ const HeaderTop = () => {
 
                 {state.user !== null && (
                   <Link to="/my-dashboard" className="header__cart--user">
-                    <img src="/assets/images/users/default.jpg" alt="User" />
+                    <img src={state.user.photo} alt="User" />
                   </Link>
                 )}
               </div>

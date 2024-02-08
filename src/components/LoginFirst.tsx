@@ -9,7 +9,7 @@ const LoginFirst = () => {
 
         <div className="header__cart--not-logged">
           <Link
-            to={`/auth/login${"?next-page=" + location.pathname.slice(1)}`}
+            to={`/auth/signin${"?next-page=" + location.pathname.slice(1)}`}
             className="login-btn"
           >
             Sign in

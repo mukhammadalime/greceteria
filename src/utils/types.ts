@@ -26,17 +26,6 @@ export interface TeamMemberTypes {
   image: string;
 }
 
-/// ADDRESS ITEM TYPES
-export interface AddressItemTypes {
-  id: string;
-  receiverName: string;
-  phoneNumber: number;
-  city: string;
-  address1: string;
-  address2?: string;
-  postalCode: number;
-}
-
 // SOCIAL SHAIR MODAL TYPES
 export interface SocialShareTypes {
   text: string;

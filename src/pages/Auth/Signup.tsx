@@ -1,34 +1,100 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { FormEvent, useContext, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
+import { AuthActionKind, AuthContext } from "../../store/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [agreement, setAgreement] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
+
+  const {
+    state: { loading },
+    dispatch,
+  } = useContext(AuthContext);
+
+  const onSignupHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const name = nameRef.current?.value;
+    const username = usernameRef.current?.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+    const passwordConfirm = passwordConfirmRef.current?.value;
+
+    if (
+      !username ||
+      !password ||
+      !name ||
+      !email ||
+      !passwordConfirm ||
+      !agreement
+    )
+      return;
+
+    try {
+      dispatch({ type: AuthActionKind.SIGNUP_START });
+
+      const { data } = await axios({
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        url: "http://localhost:8000/api/v1/users/signup",
+        data: { name, username, email, password, passwordConfirm },
+      });
+
+      dispatch({ type: AuthActionKind.SIGNUP_SUCCESS });
+
+      toast.success(data.message);
+
+      if (location.search !== "") {
+        navigate(`/auth/verify${location.search}&username=${data.username}`);
+      } else {
+        navigate(`/auth/verify?username=${data.username}`);
+      }
+    } catch (err: any) {
+      dispatch({
+        type: AuthActionKind.SIGNUP_FAILURE,
+        error: err.response.data.message,
+      });
+
+      toast.error(err.response.data.message);
+    }
+  };
 
   return (
     <div className="section-xl">
       <div className="container">
         <div className="form-wrapper">
           <h6>Create Account</h6>
-          <form className="form">
+          <form className="form" onSubmit={onSignupHandler}>
             <TextInput
               label="Your name*"
               placeholder="Laura Wilson"
               type="text"
+              ref={nameRef}
             />
             <TextInput
               label="Your username*"
               placeholder="laurawilson"
               type="text"
+              ref={usernameRef}
             />
             <TextInput
               label="Your email*"
               placeholder="laurawilson@example.com"
               type="email"
+              ref={emailRef}
             />
-            <PasswordInput label="Password*" />
-            <PasswordInput label="Confirm Password*" />
+            <PasswordInput label="Password*" ref={passwordRef} />
+            <PasswordInput label="Confirm Password*" ref={passwordConfirmRef} />
             <div className="form__content">
               <div className="form-check radio-input">
                 <input
@@ -42,12 +108,15 @@ const Signup = () => {
                 </label>
               </div>
             </div>
-            <Link to="/auth/verify" className="button form__button">
+            <button className="button form__button" disabled={loading && true}>
               Create Account
-            </Link>
+            </button>
             <div className="form__signup">
               Already have account?{" "}
-              <Link to="/auth/login" className="form__signup--text">
+              <Link
+                to={`/auth/signin${location.search}`}
+                className="form__signup--text"
+              >
                 Sign in
               </Link>
             </div>

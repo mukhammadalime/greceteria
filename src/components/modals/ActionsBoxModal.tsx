@@ -6,10 +6,7 @@ const Backdrop = (props: { closeModal: () => void }) => {
   return (
     <div
       className="modal-container actionsBoxModal-container"
-      onClick={() => {
-        console.log("BACLDROB CLICKED");
-        props.closeModal();
-      }}
+      onClick={() => props.closeModal()}
     />
   );
 };
@@ -24,7 +21,6 @@ const ActionsBox = ({
   coordinates: { left: number; top: number };
 }) => {
   const [showShareModal, setShowShareModal] = useState(() => false);
-  console.log("showShareModal:", showShareModal);
 
   return (
     <>
