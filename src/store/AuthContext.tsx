@@ -47,6 +47,10 @@ export enum AuthActionKind {
   UPDATE_ME_SUCCESS = "UPDATE_ME_SUCCESS",
   UPDATE_ME_FAILURE = "UPDATE_ME_FAILURE",
 
+  CHANGE_PASSWORD_START = "CHANGE_PASSWORD_START",
+  CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS",
+  CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE",
+
   LOGOUT = "LOGOUT",
 }
 
@@ -150,6 +154,14 @@ const AuthReducer = (
       localStorage.setItem("user", JSON.stringify(action.payload!));
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.UPDATE_ME_FAILURE:
+      return { ...state, loading: false, error: action.error! };
+
+    case AuthActionKind.CHANGE_PASSWORD_START:
+      return { ...state, loading: true, error: null };
+    case AuthActionKind.CHANGE_PASSWORD_SUCCESS:
+      localStorage.setItem("user", JSON.stringify(action.payload!));
+      return { ...state, user: action.payload!, loading: false, error: null };
+    case AuthActionKind.CHANGE_PASSWORD_FAILURE:
       return { ...state, loading: false, error: action.error! };
 
     default:
