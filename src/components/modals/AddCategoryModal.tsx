@@ -16,8 +16,9 @@ const AddCategoryOverlay = (props: {
     props.image ? props.image : ""
   );
 
-  const onSelectFile = (e: any) => {
-    const image = URL.createObjectURL(e.target.files[0]);
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = URL.createObjectURL((e.target as HTMLInputElement).files![0]);
+
     setUploadedImage(image);
   };
 

@@ -43,6 +43,10 @@ export enum AuthActionKind {
   CHECK_RESET_TOKEN_SUCCESS = "CHECK_RESET_TOKEN_SUCCESS",
   CHECK_RESET_TOKEN_FAILURE = "CHECK_RESET_TOKEN_FAILURE",
 
+  UPDATE_ME_START = "UPDATE_ME_START",
+  UPDATE_ME_SUCCESS = "UPDATE_ME_SUCCESS",
+  UPDATE_ME_FAILURE = "UPDATE_ME_FAILURE",
+
   LOGOUT = "LOGOUT",
 }
 
@@ -83,7 +87,9 @@ const AuthReducer = (
       localStorage.setItem("user", JSON.stringify(action.payload!));
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.GETME_FAILURE:
+      localStorage.removeItem("user");
       return { ...state, user: null, loading: false, error: action.error! };
+
     case AuthActionKind.LOGIN_START:
       return { ...state, user: null, loading: true, error: null };
     case AuthActionKind.LOGIN_SUCCESS:
@@ -138,6 +144,14 @@ const AuthReducer = (
     case AuthActionKind.CHECK_RESET_TOKEN_FAILURE:
       return { ...state, user: null, loading: false, error: action.error! };
 
+    case AuthActionKind.UPDATE_ME_START:
+      return { ...state, loading: true, error: null };
+    case AuthActionKind.UPDATE_ME_SUCCESS:
+      localStorage.setItem("user", JSON.stringify(action.payload!));
+      return { ...state, user: action.payload!, loading: false, error: null };
+    case AuthActionKind.UPDATE_ME_FAILURE:
+      return { ...state, loading: false, error: action.error! };
+
     default:
       return state;
   }
@@ -168,6 +182,7 @@ export const AuthContextProvider = ({
       const userData = { token: data.token, ...data.user };
       dispatch({ type: AuthActionKind.GETME_SUCCESS, payload: userData });
     } catch (err: any) {
+      console.log("err:", err);
       dispatch({
         type: AuthActionKind.GETME_FAILURE,
         error: err.response.data.message,
