@@ -29,7 +29,7 @@ const AddressItem = ({
         <p>{`${addressItem.address1}, ${
           addressItem.address2 ? addressItem.address2 : ""
         }, ${addressItem.city}, ${addressItem.postalCode}, `}</p>
-        <span>+{addressItem.phoneNumber}</span>
+        <span>{addressItem.phoneNumber}</span>
         {/* It is for dashboard and settings pages */}
         {!select && (
           <h2

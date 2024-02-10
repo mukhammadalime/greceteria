@@ -86,7 +86,7 @@ const AddNewsOverlay = (props: {
           </div>
         )}
       </div>
-      <ModalActions closeModal={props.closeModal} text={props.text} />
+      {/* <ModalActions closeModal={props.closeModal} text={props.text} /> */}
     </div>
   );
 };

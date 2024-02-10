@@ -51,7 +51,7 @@ const AddCategoryOverlay = (props: {
           </div>
         )}
       </div>
-      <ModalActions text={props.text} closeModal={props.closeModal} />
+      {/* <ModalActions text={props.text} closeModal={props.closeModal} /> */}
     </div>
   );
 };
