@@ -24,6 +24,26 @@
     .form-inputs:last-child {
       margin-bottom: unset;
     }
+
+    .weight-inputBox {
+      display: flex;
+      gap: 1rem;
+
+      .chosen,
+      .options {
+        text-transform: unset;
+      }
+
+      .chosen {
+        height: 100%;
+        width: 100%;
+      }
+      .choose {
+        min-width: max-content;
+        height: 5rem;
+        align-self: flex-end;
+      }
+    }
   }
 
   &__bottom {

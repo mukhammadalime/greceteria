@@ -31,12 +31,12 @@ export interface ProductItemTypes {
   description: string;
   discountPercent: number;
   store: string;
-  images: { imageUrl: string; cloudinaryId: string; _id: string }[];
+  images: ImageItemTypes[];
   inStock: boolean;
   ratingsAverage: number;
   ratingsQuantity: number;
   createdAt: Date;
-  category: { name: string };
+  category: { name: string; id: string };
   reviews: ReviewItemTypes[];
 }
 
@@ -52,5 +52,12 @@ export interface CategoryItemTypes {
   _id: string;
   name: string;
   numberOfProducts: number;
-  image: { imageUrl: string; cloudinaryId: string };
+  image: ImageItemTypes;
+}
+
+export interface ImageItemTypes {
+  imageUrl: string;
+  cloudinaryId?: string;
+  _id?: string;
+  name?: string;
 }

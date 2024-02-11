@@ -6,6 +6,7 @@ interface ProductsInitialStateTypes {
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
+  addOrUpdateOrDeleteLoading: boolean;
   error: string | null;
 }
 
@@ -18,6 +19,18 @@ export enum ProductActionKind {
   GET_PRODUCT_START = "GET_PRODUCT_START",
   GET_PRODUCT_SUCCESS = "GET_PRODUCT_SUCCESS",
   GET_PRODUCT_FAILURE = "GET_PRODUCT_FAILURE",
+
+  ADD_PRODUCT_START = "ADD_PRODUCT_START",
+  ADD_PRODUCT_SUCCESS = "ADD_PRODUCT_SUCCESS",
+  ADD_PRODUCT_FAILURE = "ADD_PRODUCT_FAILURE",
+
+  UPDATE_PRODUCT_START = "UPDATE_PRODUCT_START",
+  UPDATE_PRODUCT_SUCCESS = "UPDATE_PRODUCT_SUCCESS",
+  UPDATE_PRODUCT_FAILURE = "UPDATE_PRODUCT_FAILURE",
+
+  DELETE_PRODUCT_START = "DELETE_PRODUCT_START",
+  DELETE_PRODUCT_SUCCESS = "DELETE_PRODUCT_SUCCESS",
+  DELETE_PRODUCT_FAILURE = "DELETE_PRODUCT_FAILURE",
 }
 
 // An interface for our actions
@@ -32,6 +45,7 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   product: null,
   productsLoading: false,
   productLoading: false,
+  addOrUpdateOrDeleteLoading: false,
   error: null,
 };
 
@@ -81,6 +95,60 @@ const ProductReducer = (
         ...state,
         product: null,
         productLoading: false,
+        error: action.error!,
+      };
+
+    case ProductActionKind.ADD_PRODUCT_START:
+      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+    case ProductActionKind.ADD_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        products: [...state.products, action.payload as ProductItemTypes],
+        addOrUpdateOrDeleteLoading: false,
+        error: null,
+      };
+    case ProductActionKind.ADD_PRODUCT_FAILURE:
+      return {
+        ...state,
+        addOrUpdateOrDeleteLoading: false,
+        error: action.error!,
+      };
+
+    case ProductActionKind.UPDATE_PRODUCT_START:
+      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+    case ProductActionKind.UPDATE_PRODUCT_SUCCESS:
+      const updatedItemIndex = state.products.findIndex(
+        (item) => item.id === (action.payload as ProductItemTypes).id
+      );
+      const productsCopy: ProductItemTypes[] = [...state.products];
+      productsCopy[updatedItemIndex] = action.payload as ProductItemTypes;
+      return {
+        ...state,
+        products: productsCopy,
+        product: action.payload as ProductItemTypes,
+        addOrUpdateOrDeleteLoading: false,
+        error: null,
+      };
+    case ProductActionKind.UPDATE_PRODUCT_FAILURE:
+      return {
+        ...state,
+        addOrUpdateOrDeleteLoading: false,
+        error: action.error!,
+      };
+
+    case ProductActionKind.DELETE_PRODUCT_START:
+      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+    case ProductActionKind.DELETE_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        products: action.payload as ProductItemTypes[],
+        addOrUpdateOrDeleteLoading: false,
+        error: null,
+      };
+    case ProductActionKind.DELETE_PRODUCT_FAILURE:
+      return {
+        ...state,
+        addOrUpdateOrDeleteLoading: false,
         error: action.error!,
       };
 

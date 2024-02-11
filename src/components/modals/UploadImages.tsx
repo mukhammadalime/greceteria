@@ -11,6 +11,7 @@ const UploadImages = ({
       <p>Drag your images here (up to 10)</p>
       <em>(Only *.jpeg, *.jpg and *.png images will be accepted.)</em>
       <input
+        className="upload-image__input"
         type="file"
         accept="image/png, image/jpeg, image/jpg"
         multiple

@@ -23,7 +23,11 @@ const ModalActions = ({
             disabled={loading && true}
           />
         )}
-        <button className="button button-md" onClick={closeModal}>
+        <button
+          className="button button-md"
+          onClick={closeModal}
+          disabled={loading && true}
+        >
           Cancel
         </button>
       </div>

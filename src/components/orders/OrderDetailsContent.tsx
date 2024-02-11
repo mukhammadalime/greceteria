@@ -46,12 +46,12 @@ const OrderDetailsContent = () => {
           </div>
           <div className="update-order__item">
             <h2>Update Order: </h2>
-            <FilterOptions
+            {/* <FilterOptions
               options={statusOptions}
               title="Received"
               onOpenHandler={() => setOptionsOpen((prev) => !prev)}
               open={optionsOpen}
-            />
+            /> */}
           </div>
         </div>
       )}

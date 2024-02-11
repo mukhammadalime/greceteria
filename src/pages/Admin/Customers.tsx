@@ -124,12 +124,12 @@ const Customers = () => {
 
           <div className="customers">
             <div className="filter__top">
-              <FilterOptions
+              {/* <FilterOptions
                 options={sortOptions}
                 title="Sort By: Status"
                 onOpenHandler={() => setSortOpen((prev) => !prev)}
                 open={sortOpen}
-              />
+              /> */}
             </div>
 
             <div className="order-history">

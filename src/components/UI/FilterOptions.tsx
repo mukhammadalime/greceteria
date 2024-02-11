@@ -3,23 +3,28 @@ import React, { useState } from "react";
 const FilterOptions = ({
   options,
   title,
-  onOpenHandler,
+  onSelect,
+  onToggle,
   open,
+  defaultValue,
 }: {
-  options: string[];
+  options: { name: string; id: string }[];
   title: string;
-  onOpenHandler: () => void;
+  onSelect: (id: string) => void;
+  onToggle: () => void;
   open: boolean;
+  defaultValue?: string;
 }) => {
-  const [option, setOption] = useState<string | null>(title);
+  const [option, setOption] = useState<string | null>(defaultValue || title);
 
-  const setOptionHandler = (e: React.MouseEvent) => {
-    setOption((e.target as HTMLElement).textContent);
-    onOpenHandler();
+  const setOptionHandler = (name: string, id: string) => {
+    setOption(name);
+    onSelect(id);
+    onToggle();
   };
 
   const onOpenOptionsHandler = () => {
-    onOpenHandler();
+    onToggle();
   };
 
   return (
@@ -30,8 +35,12 @@ const FilterOptions = ({
       </div>
       <ul className="options">
         {options.map((item) => (
-          <li key={item} className="options__item" onClick={setOptionHandler}>
-            {item}
+          <li
+            key={item.id}
+            className="options__item"
+            onClick={setOptionHandler.bind(null, item.name, item.id)}
+          >
+            {item.name}
           </li>
         ))}
       </ul>

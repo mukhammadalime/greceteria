@@ -28,12 +28,12 @@ const NewsFilter = () => {
               alt="Search Icon"
             />
           </div>
-          <FilterOptions
+          {/* <FilterOptions
             options={sortOptions}
             title="Sort By: Newest"
             onOpenHandler={() => setSortOpen((prev) => !prev)}
             open={sortOpen}
-          />
+          /> */}
           <div className="date-filter">
             <input type="date" />
           </div>

@@ -29,16 +29,8 @@ const AllProductCards = ({ products }: { products: ProductItemTypes[] }) => {
             />
           </div>
           <div className="all-products">
-            {currentItems.map((item: ProductItemTypes, i: number) => (
-              <ProductCard
-                images={item.images}
-                discountPercent={item.discountPercent}
-                price={item.price}
-                inStock={item.inStock}
-                key={i}
-                name={item.name}
-                id={item.id}
-              />
+            {currentItems.map((item: ProductItemTypes) => (
+              <ProductCard item={item} key={item.id} />
             ))}
           </div>
         </div>

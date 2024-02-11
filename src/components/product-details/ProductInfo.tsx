@@ -6,17 +6,13 @@ import SocialShareModal from "../modals/SocialShareModal";
 import Slider from "../UI/Slider";
 import { AuthContext } from "../../store/AuthContext";
 import { ProductItemTypes } from "../../utils/user-types";
-
-const images = [
-  "/assets/images/products/almond-1.jpeg",
-  "/assets/images/products/almond.jpeg",
-  "/assets/images/products/chicken-legs-boneless.jpeg",
-  "/assets/images/products/chicken-legs.jpeg",
-  "/assets/images/products/chicken-breasts.jpeg",
-];
+import { CategoryContext } from "../../store/CategoryContext";
 
 const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
   const { state } = useContext(AuthContext);
+  const {
+    state: { categories },
+  } = useContext(CategoryContext);
   const [shareModal, setShareModal] = useState(() => false);
   const [addProductModal, setAddProductModal] = useState(() => false);
 
@@ -38,8 +34,12 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
       {addProductModal && (
         <AddProductModal
           text="Edit Product"
-          images={images}
+          images={product.images}
           closeModal={() => setAddProductModal(false)}
+          product={product}
+          categoryOptions={categories.map((i) => {
+            return { name: i.name, id: i._id };
+          })}
         />
       )}
 
@@ -70,7 +70,9 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
                 <div className="product__info--price">
                   {product.discountPercent && (
                     <>
-                      <del className="discounted-price">${product.price}</del>
+                      <del className="discounted-price">
+                        ${product.price.toFixed(2)}
+                      </del>
                       <h2>${discountedPrice.toFixed(2)}</h2>
                       <span className="sale-off">
                         {product.discountPercent}% Off

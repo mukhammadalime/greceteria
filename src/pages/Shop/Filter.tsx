@@ -6,28 +6,32 @@ import { AuthContext } from "../../store/AuthContext";
 import { CategoryContext } from "../../store/CategoryContext";
 import { ProductContext } from "../../store/ProductContext";
 
-const categoryOptions = [
-  "Water and Drinks",
-  "Fresh Fruit",
-  "Meat Products",
-  "Vegetables",
-  "Oil",
-  "Soda",
-  "Snacks",
-  "Beauty",
-];
 const priceOptions = [
-  "Min $5 -  Max $10",
-  "Min $10 - Max $20",
-  "Min $20 - Max $30",
-  "Min $30 - Max $40",
-  "Min $40 - Max $50",
+  { name: "Min $5 -  Max $10", id: "5-10" },
+  { name: "Min $10 - Max $20", id: "10-20" },
+  { name: "Min $20 - Max $30", id: "20-30" },
+  { name: "Min $30 - Max $40", id: "30-40" },
+  { name: "Min $40 - Max $50", id: "40-50" },
 ];
 
-const sortOptions = ["Sort by: Latest", "Sort by: Newest", "Sort by: Trending"];
-const ratingOptions = ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"];
+const sortOptions = [
+  { name: "Sort by: Latest", id: "latest" },
+  { name: "Sort by: Newest", id: "newest" },
+  { name: "Sort by: Trending", id: "trending" },
+];
+const ratingOptions = [
+  { name: "⭐⭐⭐⭐⭐", id: "5" },
+  { name: "⭐⭐⭐⭐", id: "4" },
+  { name: "⭐⭐⭐", id: "3" },
+  { name: "⭐⭐", id: "2" },
+  { name: "⭐", id: "1" },
+];
 
 const Filter = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedPrice, setSelectedPrice] = useState<string>("");
+  const [selectedSort, setSelectedSort] = useState<string>("");
+  const [selectedRating, setSelectedRating] = useState<string>("");
   const { state } = useContext(AuthContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
   const [filtersOpen, setFiltersOpen] = useState<boolean[]>([
@@ -58,7 +62,9 @@ const Filter = () => {
         <AddProductModal
           text="Add Product"
           closeModal={() => setAddProductModal(false)}
-          images={[]}
+          categoryOptions={categories.map((i) => {
+            return { name: i.name, id: i._id };
+          })}
         />
       )}
 
@@ -66,28 +72,34 @@ const Filter = () => {
         <div className="container">
           <div className="filter__top">
             <FilterOptions
-              options={categories.map((i) => i.name)}
+              options={categories.map((i) => {
+                return { name: i.name, id: i._id };
+              })}
               title="Select Category"
-              onOpenHandler={onOpenHandler.bind(null, 0)}
+              onToggle={onOpenHandler.bind(null, 0)}
+              onSelect={(id: string) => setSelectedCategory(id)}
               open={filtersOpen[0]}
             />
             <FilterOptions
               options={priceOptions}
               title="Select Price"
-              onOpenHandler={onOpenHandler.bind(null, 1)}
+              onToggle={onOpenHandler.bind(null, 1)}
               open={filtersOpen[1]}
+              onSelect={(id: string) => setSelectedPrice(id)}
             />
             <FilterOptions
               options={ratingOptions}
               title="Select Rating"
-              onOpenHandler={onOpenHandler.bind(null, 2)}
+              onToggle={onOpenHandler.bind(null, 2)}
               open={filtersOpen[2]}
+              onSelect={(id: string) => setSelectedRating(id)}
             />
             <FilterOptions
               options={sortOptions}
-              title="Sort By: Latest"
-              onOpenHandler={onOpenHandler.bind(null, 3)}
+              title="Sort By: ~~~~~"
+              onToggle={onOpenHandler.bind(null, 3)}
               open={filtersOpen[3]}
+              onSelect={(id: string) => setSelectedSort(id)}
             />
             {state.user && state.user.role !== "user" && (
               <button

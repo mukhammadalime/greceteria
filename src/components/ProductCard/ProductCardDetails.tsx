@@ -5,6 +5,7 @@ const ProductCardDetails = (props: {
   discountPercent: number;
   price: number;
   inStock: boolean;
+  ratingsAverage: number;
 }) => {
   return (
     <>
@@ -12,7 +13,10 @@ const ProductCardDetails = (props: {
         <div className="product-item__info">
           <h6 className="name">{props.name}</h6>
           <div className="product-item__ratings">
-            <RatingsStars ratingsAverage={4} notRatingsQuantity={true} />
+            <RatingsStars
+              ratingsAverage={props.ratingsAverage}
+              notRatingsQuantity={true}
+            />
           </div>
           <div className="price">
             {props.discountPercent ? (

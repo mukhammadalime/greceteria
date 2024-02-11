@@ -27,11 +27,11 @@ const ReviewsList = ({ reviews }: { reviews: ReviewItemTypes[] }) => {
         <div className="reviews__main">
           <div className="container">
             <div className="reviews">
-              {reviews.length > 0 &&
+              {reviews?.length > 0 &&
                 reviews.map((item) => (
                   <ReviewItem review={item} key={item._id} />
                 ))}
-              {reviews.length === 0 && (
+              {reviews?.length === 0 && (
                 <div className="reviews__empty">
                   <h2>No reviews yet</h2>
                 </div>

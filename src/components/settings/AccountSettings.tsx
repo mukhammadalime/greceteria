@@ -69,7 +69,7 @@ const AccountSettings = ({ user }: { user: User | null }) => {
     formData.append("username", username as string);
     formData.append("email", email as string);
     const userPhoto = photoRef.current?.files![0]
-      ? (photoRef.current?.files![0] as Blob)
+      ? (photoRef.current.files[0] as Blob)
       : "";
     formData.append("photo", userPhoto);
 

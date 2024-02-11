@@ -31,12 +31,7 @@ const Shop = () => {
               {currentItems.map((item: any) => (
                 <ProductCard
                   key={item._id}
-                  images={item.images}
-                  name={item.name}
-                  discountPercent={item.discountPrice}
-                  price={item.price}
-                  inStock={true}
-                  id={item._id}
+                  item={item}
                 />
               ))}
             </div>

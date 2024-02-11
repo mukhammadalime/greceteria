@@ -739,7 +739,7 @@ const OrderHistory = () => {
           {/* Order History */}
           <div className="dashboard__main">
             <div className="filter__top">
-              <FilterOptions
+              {/* <FilterOptions
                 options={priceOptions}
                 title="Select Price"
                 onOpenHandler={onOpenHandler.bind(null, 0)}
@@ -750,7 +750,7 @@ const OrderHistory = () => {
                 title="Sort By: Status"
                 onOpenHandler={onOpenHandler.bind(null, 1)}
                 open={filtersOpen[1]}
-              />
+              /> */}
               <div className="date-filter">
                 <input type="date" />
               </div>

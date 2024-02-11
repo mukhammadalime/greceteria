@@ -27,15 +27,7 @@ const CustomProductsCarousel = ({
         >
           {products.map((product: ProductItemTypes) => (
             <SwiperSlide key={product.name} style={{ width: "24rem" }}>
-              <ProductCard
-                key={product.name}
-                images={product.images}
-                discountPercent={product.discountPercent}
-                price={product.price}
-                name={product.name}
-                inStock={true}
-                id=""
-              />
+              <ProductCard key={product.id} item={product} />
             </SwiperSlide>
           ))}
         </Swiper>

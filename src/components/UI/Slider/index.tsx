@@ -1,11 +1,12 @@
 import { useState } from "react";
 import SilderButton from "./SilderButton";
+import { ImageItemTypes } from "../../../utils/user-types";
 
 export default function Slider({
   images,
   inStock,
 }: {
-  images: { imageUrl: string; cloudinaryId: string; _id: string }[];
+  images: ImageItemTypes[];
   inStock: boolean;
 }) {
   const [slideIndex, setSlideIndex] = useState(() => 0);
