@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../store/AuthContext";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
+import { CategoryContext } from "../store/CategoryContext";
 
 const HomePage = () => {
   const { state } = useContext(AuthContext);
@@ -15,10 +16,16 @@ const HomePage = () => {
     state: { products, productsLoading },
   } = useContext(ProductContext);
 
+  const {
+    state: { categories, categoriesLoading },
+  } = useContext(CategoryContext);
+
   return (
     <>
       <Banner />
-      <Categories />
+      {categoriesLoading && <LoadingSpinner />}
+      {!categoriesLoading && <Categories categories={categories} />}
+
       {productsLoading && <LoadingSpinner />}
 
       {!productsLoading && (

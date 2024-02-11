@@ -45,7 +45,7 @@ export const ProductContext = createContext<ProductContextTypes>({
   dispatch: () => {},
 });
 
-const AuthReducer = (
+const ProductReducer = (
   state: ProductsInitialStateTypes,
   action: ProductAction
 ): typeof INITIAL_STATE => {
@@ -94,7 +94,7 @@ export const ProductContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(ProductReducer, INITIAL_STATE);
 
   const values = {
     state,

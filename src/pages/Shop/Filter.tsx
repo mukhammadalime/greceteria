@@ -3,6 +3,8 @@ import CloseIcon from "../../components/UI/Icons/CloseIcon";
 import FilterOptions from "../../components/UI/FilterOptions";
 import AddProductModal from "../../components/modals/AddProductModal";
 import { AuthContext } from "../../store/AuthContext";
+import { CategoryContext } from "../../store/CategoryContext";
+import { ProductContext } from "../../store/ProductContext";
 
 const categoryOptions = [
   "Water and Drinks",
@@ -28,13 +30,19 @@ const ratingOptions = ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐",
 const Filter = () => {
   const { state } = useContext(AuthContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
-
   const [filtersOpen, setFiltersOpen] = useState<boolean[]>([
     false,
     false,
     false,
     false,
   ]);
+
+  const {
+    state: { categories },
+  } = useContext(CategoryContext);
+  const {
+    state: { products },
+  } = useContext(ProductContext);
 
   // This function opens the requested filter and closed other remaining open filters
   const onOpenHandler = (num: number) => {
@@ -58,7 +66,7 @@ const Filter = () => {
         <div className="container">
           <div className="filter__top">
             <FilterOptions
-              options={categoryOptions}
+              options={categories.map((i) => i.name)}
               title="Select Category"
               onOpenHandler={onOpenHandler.bind(null, 0)}
               open={filtersOpen[0]}
@@ -118,7 +126,7 @@ const Filter = () => {
               </div>
               <div className="filter__result">
                 <p>
-                  89
+                  {products.length}
                   <span>Products found.</span>
                 </p>
               </div>

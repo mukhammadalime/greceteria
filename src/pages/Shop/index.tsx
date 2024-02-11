@@ -1,38 +1,48 @@
 import Filter from "./Filter";
-import products from "../../data/products.json";
 import usePaginate from "../../hooks/usePaginate";
 import PaginationButtons from "../../components/UI/PaginationButtons";
 import ProductCard from "../../components/productCard";
+import { useContext } from "react";
+import { ProductContext } from "../../store/ProductContext";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
 const Shop = () => {
+  const {
+    state: { products, productsLoading },
+  } = useContext(ProductContext);
+
   const { handlePageClick, pageCount, currentItems } = usePaginate(products);
 
   return (
     <>
       <Filter />
-      <div className="section-md shop">
-        <div className="container">
-          <div className="shop__head">
-            <PaginationButtons
-              pageCount={pageCount}
-              handlePageClick={handlePageClick}
-            />
-          </div>
-          <div className="all-products">
-            {currentItems.map((item: any) => (
-              <ProductCard
-                key={item.name}
-                images={item.images}
-                name={item.name}
-                discountPercent={item.discountPrice}
-                price={item.price}
-                inStock={true}
-                id=""
+      {productsLoading && <LoadingSpinner />}
+
+      {!productsLoading && (
+        <div className="section-md shop">
+          <div className="container">
+            <div className="shop__head">
+              <PaginationButtons
+                pageCount={pageCount}
+                handlePageClick={handlePageClick}
               />
-            ))}
+            </div>
+            <div className="all-products">
+              {currentItems.map((item: any) => (
+                <ProductCard
+                  key={item._id}
+                  images={item.images}
+                  name={item.name}
+                  discountPercent={item.discountPrice}
+                  price={item.price}
+                  inStock={true}
+                  id={item._id}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

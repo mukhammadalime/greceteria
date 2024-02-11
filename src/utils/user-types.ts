@@ -47,3 +47,10 @@ export interface ReviewItemTypes {
   createdAt: Date;
   user: { name: string; photo: string; username: string };
 }
+
+export interface CategoryItemTypes {
+  _id: string;
+  name: string;
+  numberOfProducts: number;
+  image: { imageUrl: string; cloudinaryId: string };
+}
