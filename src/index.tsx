@@ -5,6 +5,7 @@ import "./assets/sass/main.scss";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./store/AuthContext";
+import { ProductContextProvider } from "./store/ProductContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,11 +13,13 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <AuthContextProvider>
-    <BrowserRouter>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </BrowserRouter>
+    <ProductContextProvider>
+      <BrowserRouter>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </BrowserRouter>
+    </ProductContextProvider>
   </AuthContextProvider>
 );
 

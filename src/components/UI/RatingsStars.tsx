@@ -16,7 +16,7 @@ const RatingsStars = (props: {
       >
         <Rating
           name="text-feedback"
-          value={4}
+          value={props.ratingsAverage}
           readOnly
           precision={0.1}
           emptyIcon={
@@ -26,7 +26,7 @@ const RatingsStars = (props: {
       </Box>
       {!props.notRatingsQuantity && (
         <li className="ratings__number">
-          <span>({props.ratingsAverage})</span>
+          <span>({props.ratingsQuantity})</span>
         </li>
       )}
     </ul>

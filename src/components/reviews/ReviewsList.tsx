@@ -2,8 +2,9 @@ import { useState } from "react";
 import ReviewItem from "./ReviewItem";
 import HoverRating from "../product-details/HoverRating";
 import ShippingPolicy from "../product-details/ShippingPolicy";
+import { ReviewItemTypes } from "../../utils/user-types";
 
-const ReviewsList = () => {
+const ReviewsList = ({ reviews }: { reviews: ReviewItemTypes[] }) => {
   const [toggleContent, setToggleContent] = useState(() => "Reviews");
 
   return (
@@ -26,9 +27,15 @@ const ReviewsList = () => {
         <div className="reviews__main">
           <div className="container">
             <div className="reviews">
-              <ReviewItem time="Today" />
-              <ReviewItem time="Yesterday" />
-              <ReviewItem time="30 April, 2022" />
+              {reviews.length > 0 &&
+                reviews.map((item) => (
+                  <ReviewItem review={item} key={item._id} />
+                ))}
+              {reviews.length === 0 && (
+                <div className="reviews__empty">
+                  <h2>No reviews yet</h2>
+                </div>
+              )}
             </div>
             <div className="add-review input">
               <label htmlFor="review">Add Review</label>

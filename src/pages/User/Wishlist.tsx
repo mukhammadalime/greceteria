@@ -27,7 +27,7 @@ const Wishlist = () => {
         </div>
       </div>
 
-      <CustomProductsCarousel text="Wanna add more to your wishlist?" />
+      {/* <CustomProductsCarousel text="Wanna add more to your wishlist?" /> */}
     </>
   );
 };

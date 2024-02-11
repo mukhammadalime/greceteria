@@ -5,6 +5,7 @@ import AddProductModal from "../modals/AddProductModal";
 import SocialShareModal from "../modals/SocialShareModal";
 import Slider from "../UI/Slider";
 import { AuthContext } from "../../store/AuthContext";
+import { ProductItemTypes } from "../../utils/user-types";
 
 const images = [
   "/assets/images/products/almond-1.jpeg",
@@ -14,10 +15,16 @@ const images = [
   "/assets/images/products/chicken-breasts.jpeg",
 ];
 
-const ProductInfo = (props: any) => {
+const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
   const { state } = useContext(AuthContext);
   const [shareModal, setShareModal] = useState(() => false);
   const [addProductModal, setAddProductModal] = useState(() => false);
+
+  let discountedPrice: number = 0;
+  if (product.discountPercent) {
+    discountedPrice =
+      product.price - (product.price / 100) * product.discountPercent;
+  }
 
   return (
     <>
@@ -35,10 +42,11 @@ const ProductInfo = (props: any) => {
           closeModal={() => setAddProductModal(false)}
         />
       )}
+
       <div className="product__details">
         <div className="container">
           <div className="product__content">
-            <Slider images={images} />
+            <Slider images={product.images} inStock={product.inStock} />
             <div className="product__info">
               <div className="product__info--item">
                 {state.user && state.user.role !== "user" && (
@@ -49,19 +57,28 @@ const ProductInfo = (props: any) => {
                   />
                 )}
                 <div className="product__info--title">
-                  {/* {props.brandName ? [props.brandName] : ""} */}
-                  [California] Almond
-                  {/* {props.features ? props.features : ""}{" "} */}
-                  Newly updated 400g
-                  {/* {props.weight ? props.weight : ""}{" "} */}
+                  {product.brandName ? `[${product.brandName}]` : ""}{" "}
+                  {product.name} {product.features ? product.features : ""}{" "}
+                  {product.weight ? product.weight : ""}
                 </div>
                 <div className="product__info--ratings">
-                  <RatingsStars ratingsAverage={3.7} ratingsQuantity={12} />
+                  <RatingsStars
+                    ratingsAverage={product.ratingsAverage}
+                    ratingsQuantity={product.ratingsQuantity}
+                  />
                 </div>
                 <div className="product__info--price">
-                  <del className="discounted-price">$48.00</del>
-                  <h2>$17.28</h2>
-                  <span className="sale-off">64% Off</span>
+                  {product.discountPercent && (
+                    <>
+                      <del className="discounted-price">${product.price}</del>
+                      <h2>${discountedPrice.toFixed(2)}</h2>
+                      <span className="sale-off">
+                        {product.discountPercent}% Off
+                      </span>
+                    </>
+                  )}
+
+                  {!product.discountPercent && <h2>${product.price}</h2>}
                 </div>
               </div>
               <div className="product__info--item">
@@ -74,14 +91,13 @@ const ProductInfo = (props: any) => {
                     alt=""
                   />
                 </div>
-                <p className="description">
-                  Class Aptent Taciti Sociosqu Ad Litora Torquent Per Conubia
-                  Nostra, Per Inceptos Himenaeos. Nulla Nibh Diam, Blandit Vel
-                  Consequat Nec, Ultrices Et Ipsum. Nulla Varius Magna A
-                  Consequat Pulvinar.
-                </p>
+                <p className="description">{product.description}</p>
               </div>
-              <ProductActions />
+              <ProductActions
+                category={product.category.name}
+                store={product.store}
+                inStock={product.inStock}
+              />
             </div>
           </div>
         </div>

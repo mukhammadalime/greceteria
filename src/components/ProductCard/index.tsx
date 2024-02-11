@@ -1,21 +1,28 @@
 import ProductCardDetails from "./ProductCardDetails";
 import ProductCardImg from "./ProductCardImg";
 
-interface ProductItemTypes {
-  images: string[];
+interface ProductCardItemTypes {
+  images: { imageUrl: string; cloudinaryId: string; _id: string }[];
   name: string;
-  discountPrice: number;
+  discountPercent: number;
   price: number;
+  inStock: boolean;
+  id: string;
 }
 
-const ProductCard = (props: ProductItemTypes) => {
+const ProductCard = (props: ProductCardItemTypes) => {
   return (
     <div className="product-item">
-      <ProductCardImg image={props.images[0]} />
+      <ProductCardImg
+        image={props.images[0].imageUrl}
+        inStock={props.inStock}
+        id={props.id}
+      />
       <ProductCardDetails
         name={props.name}
         price={props.price}
-        discountedPrice={props.discountPrice}
+        discountPercent={props.discountPercent}
+        inStock={props.inStock}
       />
     </div>
   );

@@ -1,29 +1,16 @@
 import { useEffect } from "react";
-import products from "../data/products.json";
 import ProductCard from "../components/productCard";
 import usePaginate from "../hooks/usePaginate";
 import PaginationButtons from "../components/UI/PaginationButtons";
+import { ProductItemTypes } from "../utils/user-types";
 
-interface productItemTypes {
-  name: string;
-  price: number;
-  weight: string;
-  brandName: string;
-  description: string;
-  category: string;
-  store: string;
-  images: string[];
-  discountedPrice: number;
-  inStock: boolean;
-}
-
-const AllProductCards = () => {
+const AllProductCards = ({ products }: { products: ProductItemTypes[] }) => {
   useEffect(() => {
     for (let i = products.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [products[i], products[j]] = [products[j], products[i]];
     }
-  }, []);
+  }, [products]);
 
   const { handlePageClick, pageCount, currentItems } = usePaginate(products);
 
@@ -42,13 +29,15 @@ const AllProductCards = () => {
             />
           </div>
           <div className="all-products">
-            {currentItems.map((item: productItemTypes, i: number) => (
+            {currentItems.map((item: ProductItemTypes, i: number) => (
               <ProductCard
                 images={item.images}
-                discountPrice={item.discountedPrice}
+                discountPercent={item.discountPercent}
                 price={item.price}
+                inStock={item.inStock}
                 key={i}
                 name={item.name}
+                id={item.id}
               />
             ))}
           </div>

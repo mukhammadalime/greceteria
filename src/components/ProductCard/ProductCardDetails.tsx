@@ -2,8 +2,9 @@ import RatingsStars from "../UI/RatingsStars";
 
 const ProductCardDetails = (props: {
   name: string;
-  discountedPrice: number;
+  discountPercent: number;
   price: number;
+  inStock: boolean;
 }) => {
   return (
     <>
@@ -14,10 +15,10 @@ const ProductCardDetails = (props: {
             <RatingsStars ratingsAverage={4} notRatingsQuantity={true} />
           </div>
           <div className="price">
-            {props.discountedPrice ? (
+            {props.discountPercent ? (
               <>
                 <span className="discounted-price">
-                  ${props.discountedPrice.toFixed(2)}
+                  ${props.discountPercent.toFixed(2)}
                 </span>
                 <del className="actual-price">${props.price.toFixed(2)}</del>
               </>
@@ -35,7 +36,9 @@ const ProductCardDetails = (props: {
             <div className="input">0</div>
             <div className="increment">+</div>
           </div>
-          <div className="add-to-cart">Add To Cart</div>
+          <button className="add-to-cart" disabled={!props.inStock && true}>
+            Add To Cart
+          </button>
         </div>
       </div>
     </>

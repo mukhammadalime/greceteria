@@ -24,8 +24,10 @@ const Shop = () => {
                 key={item.name}
                 images={item.images}
                 name={item.name}
-                discountPrice={item.discountPrice}
+                discountPercent={item.discountPrice}
                 price={item.price}
+                inStock={true}
+                id=""
               />
             ))}
           </div>

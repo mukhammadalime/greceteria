@@ -22,16 +22,46 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/Admin/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "./store/AuthContext";
 import { ToastContainer, Flip } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
+import { ProductActionKind, ProductContext } from "./store/ProductContext";
+import axios from "axios";
 
 function App() {
   const {
     state: { user },
   } = useContext(AuthContext);
+
+  const { dispatch } = useContext(ProductContext);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        dispatch({ type: ProductActionKind.GET_PRODUCTS_START });
+        const { data } = await axios({
+          headers: { "Content-Type": "application/json" },
+          method: "GET",
+          url: "http://localhost:8000/api/v1/products",
+        });
+
+        dispatch({
+          type: ProductActionKind.GET_PRODUCTS_SUCCESS,
+          payload: data.data,
+        });
+      } catch (err: any) {
+        console.log("err:", err);
+        dispatch({
+          type: ProductActionKind.GET_PRODUCTS_FAILURE,
+          error: err.response.data.message,
+        });
+      }
+    };
+
+    getProducts();
+  }, [dispatch]);
 
   return (
     <LayoutWrapper>

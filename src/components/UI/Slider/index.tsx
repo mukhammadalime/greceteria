@@ -1,8 +1,13 @@
 import { useState } from "react";
 import SilderButton from "./SilderButton";
-let ids = ["a", "b", "c", "d", "e"];
 
-export default function Slider({ images }: { images: string[] }) {
+export default function Slider({
+  images,
+  inStock,
+}: {
+  images: { imageUrl: string; cloudinaryId: string; _id: string }[];
+  inStock: boolean;
+}) {
   const [slideIndex, setSlideIndex] = useState(() => 0);
 
   const nextSlide = () => {
@@ -24,13 +29,15 @@ export default function Slider({ images }: { images: string[] }) {
       {images.map((image, index) => {
         return (
           <div
-            key={ids[index]}
+            key={image._id}
             className={slideIndex === index ? "slide active-anim" : "slide"}
           >
-            {/* <span className="stock-out slide__stock-out">Out of Stock</span> */}
+            {!inStock && (
+              <span className="stock-out slide__stock-out">Out of Stock</span>
+            )}
             <img
               className="gallery-image"
-              src={image}
+              src={image.imageUrl}
               alt=""
               draggable={false}
             />
@@ -48,10 +55,10 @@ export default function Slider({ images }: { images: string[] }) {
         <div className="container-dots">
           {Array.from({ length: images.length }).map((_, index) => (
             <div
-              key={ids[index]}
+              key={index}
               onClick={() => moveDot(index)}
               className={slideIndex === index ? "dot active" : "dot"}
-            ></div>
+            />
           ))}
         </div>
       )}

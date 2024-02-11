@@ -1,19 +1,27 @@
 import Counter from "../UI/Counter";
 
-const ProductActions = () => {
+const ProductActions = ({
+  category,
+  store,
+  inStock,
+}: {
+  category: string;
+  store: string;
+  inStock: boolean;
+}) => {
   return (
     <>
       <div className="product__info--item">
         <div className="product__info--action">
           <Counter />
-          <div className="button add-to-cart">
+          <button className="button add-to-cart" disabled={!inStock && true}>
             Add To Cart
             <span>
               <svg>
                 <use href="/assets/icons/icons.svg#icon-shopping-cart"></use>
               </svg>
             </span>
-          </div>
+          </button>
           <div className="wishlist">
             <svg>
               <use href="/assets/icons/icons.svg#icon-heart"></use>
@@ -24,10 +32,10 @@ const ProductActions = () => {
       <div className="product__info--item">
         <div className="product__info--last">
           <h5>
-            Category: <span>Vegetables</span>
+            Category: <span>{category}</span>
           </h5>
           <h5>
-            Store: <span>MK Grocery</span>
+            Store: <span>{store}</span>
           </h5>
         </div>
       </div>

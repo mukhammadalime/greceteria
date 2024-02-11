@@ -19,3 +19,31 @@ export interface AddressItemTypes {
   address2?: string;
   postalCode: number;
 }
+
+export interface ProductItemTypes {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  features: string;
+  weight: string;
+  brandName: string;
+  description: string;
+  discountPercent: number;
+  store: string;
+  images: { imageUrl: string; cloudinaryId: string; _id: string }[];
+  inStock: boolean;
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  createdAt: Date;
+  category: { name: string };
+  reviews: ReviewItemTypes[];
+}
+
+export interface ReviewItemTypes {
+  _id: string;
+  rating: number;
+  review: string;
+  createdAt: Date;
+  user: { name: string; photo: string; username: string };
+}
