@@ -14,7 +14,7 @@ const CustomProductsCarousel = ({
 }) => {
   return (
     <div className="section-sm">
-      <div className="container">
+      <div className="container custom-products-box">
         <SectionHead text={text} />
         <Swiper
           grabCursor={true}

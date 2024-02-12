@@ -79,8 +79,10 @@
 
 .news-card-swiper {
   width: 41.5rem;
+  margin-right: 2rem;
 
   @media (max-width: 600px) {
+    margin-right: 1.5rem;
     width: 35rem;
   }
 }
@@ -170,13 +172,6 @@
     flex-wrap: wrap;
     gap: 1.5rem;
     white-space: nowrap;
-
-    // .header__search,
-    // .date-filter {
-    //   @media (max-width: 550px) {
-    //     flex: 1;
-    //   }
-    // }
   }
 }
 

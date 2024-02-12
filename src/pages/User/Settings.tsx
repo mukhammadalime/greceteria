@@ -18,7 +18,7 @@ const Settings = () => {
           closeModal={() => setAddressModalShown(false)}
         />
       )}
-      <div className="section-lg">
+      <div className="section-sm">
         <div className="container">
           <div className="settings dashboard">
             <DashboardNav activeNavItem="Settings" />

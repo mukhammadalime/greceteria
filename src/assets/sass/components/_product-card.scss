@@ -189,3 +189,19 @@
     }
   }
 }
+
+.custom-products-box {
+  .swiper-slide {
+    width: 19.6rem;
+    margin-right: 2rem;
+
+    @media (max-width: 600px) {
+      margin-right: 1.5rem;
+      width: 30rem !important;
+    }
+
+    &:last-child {
+      margin-right: unset;
+    }
+  }
+}
