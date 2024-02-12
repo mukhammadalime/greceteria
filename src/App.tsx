@@ -20,7 +20,7 @@ import Settings from "./pages/User/Settings";
 import OrderDetails from "./pages/User/OrderDetails";
 import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
-import Categories from "./pages/Admin/Categories";
+import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./store/AuthContext";
@@ -29,6 +29,7 @@ import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
 import { ProductContext } from "./store/ProductContext";
 import { getProductsApi } from "./api/products";
+import ProductsByCategory from "./pages/User/ProductsByCategory";
 
 function App() {
   const {
@@ -65,6 +66,11 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/my-dashboard" element={<Dashboard />} />
         <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route
+          path="/categories/:categoryId"
+          element={<ProductsByCategory />}
+        />
 
         <Route path="/shop" element={<Shop />} />
         <Route path="/about-us" element={<AboutUs />} />
@@ -94,7 +100,6 @@ function App() {
               path="/customers/:customerId"
               element={<CustomerDetails />}
             />
-            <Route path="/categories" element={<Categories />} />
           </>
         )}
 

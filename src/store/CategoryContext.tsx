@@ -1,30 +1,46 @@
 import { createContext, useEffect, useReducer } from "react";
 import { CategoryItemTypes } from "../utils/user-types";
-import axios from "axios";
+import { getCategoriesApi } from "../api/categories";
 
 interface CategoryInitialStateTypes {
   categories: CategoryItemTypes[];
   categoriesLoading: boolean;
+  category: CategoryItemTypes | null;
+  categoryLoading: boolean;
   error: string | null;
 }
 
 // An enum with all the types of actions to use in our reducer
 export enum CategoryActionKind {
+  GET_CATEGORY_START = "GET_CATEGORY_START",
+  GET_CATEGORY_SUCCESS = "GET_CATEGORY_SUCCESS",
+  GET_CATEGORY_FAILURE = "GET_CATEGORY_FAILURE",
+
   GET_CATEGORIES_START = "GET_CATEGORIES_START",
   GET_CATEGORIES_SUCCESS = "GET_CATEGORIES_SUCCESS",
   GET_CATEGORIES_FAILURE = "GET_CATEGORIES_FAILURE",
+
+  ADD_OR_UPDATE_CATEGORY_START = "ADD_OR_UPDATE_CATEGORY_START",
+  ADD_OR_UPDATE_CATEGORY_SUCCESS = "ADD_OR_UPDATE_CATEGORY_SUCCESS",
+  ADD_OR_UPDATE_CATEGORY_FAILURE = "ADD_OR_UPDATE_CATEGORY_FAILURE",
+
+  DELETE_CATEGORY_START = "DELETE_CATEGORY_START",
+  DELETE_CATEGORY_SUCCESS = "DELETE_CATEGORY_SUCCESS",
+  DELETE_CATEGORY_FAILURE = "DELETE_CATEGORY_FAILURE",
 }
 
 // An interface for our actions
 export interface CategoryAction {
   type: CategoryActionKind;
-  payload?: CategoryItemTypes[] | [];
+  payload?: CategoryItemTypes | CategoryItemTypes[] | [];
   error?: string;
 }
 
 const INITIAL_STATE: CategoryInitialStateTypes = {
   categories: [],
+  category: null,
   categoriesLoading: false,
+  categoryLoading: false,
   error: null,
 };
 
@@ -47,12 +63,54 @@ const CategoryReducer = (
       return { ...state, categoriesLoading: true, error: null };
     case CategoryActionKind.GET_CATEGORIES_SUCCESS:
       return {
+        ...state,
         categories: action.payload as CategoryItemTypes[],
         categoriesLoading: false,
         error: null,
       };
     case CategoryActionKind.GET_CATEGORIES_FAILURE:
-      return { categories: [], categoriesLoading: false, error: action.error! };
+      return {
+        ...state,
+        categories: [],
+        categoriesLoading: false,
+        error: action.error!,
+      };
+
+    case CategoryActionKind.GET_CATEGORY_START:
+      return { ...state, category: null, categoryLoading: true, error: null };
+    case CategoryActionKind.GET_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        category: action.payload as CategoryItemTypes,
+        categoryLoading: false,
+        error: null,
+      };
+    case CategoryActionKind.GET_CATEGORY_FAILURE:
+      return { ...state, categoryLoading: false, error: action.error! };
+
+    case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_START:
+      return { ...state, categoryLoading: true, error: null };
+    case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        categories: action.payload as CategoryItemTypes[],
+        categoryLoading: false,
+        error: null,
+      };
+    case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_FAILURE:
+      return { ...state, categoryLoading: false, error: action.error! };
+
+    case CategoryActionKind.DELETE_CATEGORY_START:
+      return { ...state, categoryLoading: true, error: null };
+    case CategoryActionKind.DELETE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        categories: action.payload as CategoryItemTypes[],
+        categoryLoading: false,
+        error: null,
+      };
+    case CategoryActionKind.DELETE_CATEGORY_FAILURE:
+      return { ...state, categoryLoading: false, error: action.error! };
 
     default:
       return state;
@@ -66,27 +124,7 @@ export const CategoryContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(CategoryReducer, INITIAL_STATE);
 
-  const getCategories = async () => {
-    try {
-      dispatch({ type: CategoryActionKind.GET_CATEGORIES_START });
-      const { data } = await axios({
-        headers: { "Content-Type": "application/json" },
-        method: "GET",
-        url: "http://localhost:8000/api/v1/categories",
-      });
-
-      dispatch({
-        type: CategoryActionKind.GET_CATEGORIES_SUCCESS,
-        payload: data.data,
-      });
-    } catch (err: any) {
-      console.log("err:", err);
-      dispatch({
-        type: CategoryActionKind.GET_CATEGORIES_FAILURE,
-        error: err.response.data.message,
-      });
-    }
-  };
+  const getCategories = async () => await getCategoriesApi(dispatch);
 
   // Fetch user on every refresh to keep the user up to date with the database.
   useEffect(() => {

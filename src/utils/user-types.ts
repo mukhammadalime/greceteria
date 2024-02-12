@@ -53,6 +53,7 @@ export interface CategoryItemTypes {
   name: string;
   numberOfProducts: number;
   image: ImageItemTypes;
+  products?: ProductItemTypes[];
 }
 
 export interface ImageItemTypes {

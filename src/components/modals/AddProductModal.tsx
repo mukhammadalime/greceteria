@@ -67,9 +67,9 @@ const AddProductOverlay = ({
     setImagesHandler(e, setImagesForServer, setImagesForClient);
   };
 
-  const onAddOrUpdateOrDeleteProduct = async (
+  async function onAddOrUpdateOrDeleteProduct(
     actionType: "add" | "update" | "delete"
-  ) => {
+  ) {
     const productRefs = {
       nameRef,
       brandNameRef,
@@ -120,7 +120,7 @@ const AddProductOverlay = ({
         );
         break;
     }
-  };
+  }
 
   return (
     <div className="add-product-form">

@@ -404,31 +404,3 @@
     padding: 0;
   }
 }
-
-/// Categories
-.categories {
-  .section__head {
-    justify-content: space-between;
-  }
-
-  &__main {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(19.6rem, 1fr));
-
-    .category__item {
-      width: unset;
-    }
-  }
-
-  .category__item {
-    position: relative;
-
-    button {
-      position: absolute;
-      padding: 0;
-      top: 1rem;
-      left: 1rem;
-    }
-  }
-}

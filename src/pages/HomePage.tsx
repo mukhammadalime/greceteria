@@ -1,5 +1,5 @@
 import Banner from "../layout/banner";
-import Categories from "../components/CategoriesCarousel";
+import Categories from "../components/category/CategoriesCarousel";
 import AllProductCards from "../layout/AllProductCards";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import NewsCarousel from "../components/newsCard/NewsCarousel";

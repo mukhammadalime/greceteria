@@ -16,6 +16,7 @@
     padding: 2.4rem 0 2.4rem 0;
     transition: all 0.3s linear;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
       border: 1px solid #2c742f;
@@ -53,6 +54,49 @@
 
     &:last-child {
       margin-right: unset;
+    }
+  }
+}
+
+/// Categories
+.categories {
+  .section__head {
+    justify-content: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  &__main {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(19.6rem, 1fr));
+
+    .category__item {
+      width: unset;
+    }
+  }
+
+  .category__item {
+    position: relative;
+
+    button {
+      position: absolute;
+      padding: 0.5rem;
+      top: 1rem;
+      left: 1rem;
+    }
+  }
+}
+
+.products-by-category {
+  .no-products-found {
+    h2 {
+      font-size: 3rem;
+      font-weight: 500;
+      text-align: center;
+
+      @media (max-width: 600px) {
+        font-size: 2rem;
+      }
     }
   }
 }
