@@ -3,7 +3,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-const SwiperSlider = ({ images }: { images: string[] }) => {
+const NewsImagesSlider = ({ images }: { images: string[] }) => {
   return (
     <Swiper className="news-slider" pagination={true} modules={[Pagination]}>
       {images.map((image, i) => (
@@ -15,4 +15,4 @@ const SwiperSlider = ({ images }: { images: string[] }) => {
   );
 };
 
-export default SwiperSlider;
+export default NewsImagesSlider;

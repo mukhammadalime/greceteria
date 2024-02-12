@@ -3,7 +3,7 @@ import ProductActions from "./ProductActions";
 import RatingsStars from "../UI/RatingsStars";
 import AddProductModal from "../modals/AddProductModal";
 import SocialShareModal from "../modals/SocialShareModal";
-import Slider from "../UI/Slider";
+import ProductImagesSlider from "../UI/Slider/ProductImagesSlider";
 import { AuthContext } from "../../store/AuthContext";
 import { ProductItemTypes } from "../../utils/user-types";
 import { CategoryContext } from "../../store/CategoryContext";
@@ -46,7 +46,10 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
       <div className="product__details">
         <div className="container">
           <div className="product__content">
-            <Slider images={product.images} inStock={product.inStock} />
+            <ProductImagesSlider
+              images={product.images}
+              inStock={product.inStock}
+            />
             <div className="product__info">
               <div className="product__info--item">
                 {state.user && state.user.role !== "user" && (

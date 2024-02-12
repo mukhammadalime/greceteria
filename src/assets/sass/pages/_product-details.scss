@@ -249,6 +249,20 @@
 .product__gallery {
   position: relative;
   height: 46.3rem;
+  width: 100%;
+
+  .swiper-pagination-bullet-active {
+    background-color: #00b207;
+  }
+
+  .slide {
+    width: 100%;
+  }
+
+  &--stock-out {
+    position: absolute;
+    z-index: 100;
+  }
 
   @media (max-width: 900px) {
     height: 40rem;
@@ -267,11 +281,6 @@
   @media (max-width: 450px) {
     height: 33rem;
   }
-}
-
-.slide__stock-out {
-  position: absolute;
-  z-index: 100;
 }
 
 .gallery-image {

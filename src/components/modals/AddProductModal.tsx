@@ -56,7 +56,7 @@ const AddProductOverlay = ({
     product?.category ? product.category.id : ""
   );
   const [inStock, setInStock] = useState<string>(
-    product?.inStock ? String(product?.inStock) : "false"
+    product ? String(product?.inStock) : ""
   );
   const [selectedWeightType, setSelectedWeightType] = useState<string>(
     product?.weight ? product?.weight.replace(/[^a-zA-Z]+/g, "") : "kg"
@@ -154,7 +154,10 @@ const AddProductOverlay = ({
     formData.append("description", description as string);
     formData.append("features", features as string);
     formData.append("discountPercent", discountPercent as string);
-    formData.append("category", selectedCategory as string);
+    // This will be needed in the backend when changing the category of the product
+    if (product?.category.id !== selectedCategory)
+      formData.append("category", `New ${selectedCategory}` as string);
+    else formData.append("category", selectedCategory as string);
     formData.append("inStock", inStock ? inStock : "");
 
     if (actionType === "add") {
@@ -197,7 +200,6 @@ const AddProductOverlay = ({
         uploadedImagesForServer.length === 0 &&
         product?.images.length! > uploadedImagesForClient.length
       ) {
-        console.log("194");
         formData.append(
           "notDeletedImages",
           JSON.stringify(uploadedImagesForClient)
@@ -212,7 +214,6 @@ const AddProductOverlay = ({
             (item) => item.cloudinaryId !== undefined
           ).length
       ) {
-        console.log("209");
         for (let i = 0; i < uploadedImagesForServer.length; i++) {
           formData.append("images", uploadedImagesForServer[i] as Blob);
         }
@@ -227,7 +228,6 @@ const AddProductOverlay = ({
             (item) => item.cloudinaryId !== undefined
           ).length
       ) {
-        console.log("220");
         const notDeletedImages = uploadedImagesForClient.filter(
           (item) => item.cloudinaryId !== undefined
         );

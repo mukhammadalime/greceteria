@@ -42,13 +42,13 @@
       margin-top: 0.6rem;
     }
   }
-}
 
-.swiper-slide {
-  width: 19.6rem;
-  margin-right: 1.85%;
+  .swiper-slide {
+    width: 19.6rem;
+    margin-right: 1.85%;
 
-  &:last-child {
-    margin-right: unset;
+    &:last-child {
+      margin-right: unset;
+    }
   }
 }

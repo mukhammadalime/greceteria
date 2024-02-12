@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import AddNewsModal from "../components/modals/AddNewsModal";
-import SwiperSlider from "../components/UI/Slider/SwiperSlider";
+import NewsImagesSlider from "../components/UI/Slider/NewsImagesSlider";
 import SocialShareModal from "../components/modals/SocialShareModal";
 import { AuthContext } from "../store/AuthContext";
 
@@ -41,7 +41,7 @@ const NewsDetails = () => {
               </h4>
               <span>2 days ago</span>
             </div>
-            <SwiperSlider images={images} />
+            <NewsImagesSlider images={images} />
             <div className="news__title">
               <h5>5% discount for Eid al-Adha!</h5>
               <img
