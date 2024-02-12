@@ -1,9 +1,8 @@
 import TextInput from "../../components/UI/Inputs/TextInput";
 import { FormEvent, useContext, useRef } from "react";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import { toast } from "react-toastify";
-import axios from "axios";
+import { AuthContext } from "../../store/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../api/auth";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -14,30 +13,7 @@ const ForgotPassword = () => {
   const onForgotPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = emailRef.current?.value;
-
-    if (!email) return;
-
-    try {
-      dispatch({ type: AuthActionKind.FORGOT_PASSWORD_START });
-
-      const { data } = await axios({
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        url: "http://localhost:8000/api/v1/users/forgotPassword",
-        data: { email, searchLink: location.search },
-      });
-
-      dispatch({ type: AuthActionKind.FORGOT_PASSWORD_SUCCESS });
-
-      toast.success(data.message);
-    } catch (err: any) {
-      dispatch({
-        type: AuthActionKind.FORGOT_PASSWORD_FAILURE,
-        error: err.response.data.message,
-      });
-
-      toast.error(err.response.data.message);
-    }
+    await forgotPassword(dispatch, email, location);
   };
 
   return (

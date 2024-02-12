@@ -2,9 +2,8 @@ import { FormEvent, useContext, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { AuthContext } from "../../store/AuthContext";
+import { signup } from "../../api/auth";
 
 const Signup = () => {
   const [agreement, setAgreement] = useState(false);
@@ -30,43 +29,15 @@ const Signup = () => {
     const password = passwordRef.current?.value;
     const passwordConfirm = passwordConfirmRef.current?.value;
 
-    if (
-      !username ||
-      !password ||
-      !name ||
-      !email ||
-      !passwordConfirm ||
-      !agreement
-    )
-      return;
-
-    try {
-      dispatch({ type: AuthActionKind.SIGNUP_START });
-
-      const { data } = await axios({
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        url: "http://localhost:8000/api/v1/users/signup",
-        data: { name, username, email, password, passwordConfirm },
-      });
-
-      dispatch({ type: AuthActionKind.SIGNUP_SUCCESS });
-
-      toast.success(data.message);
-
-      if (location.search !== "") {
-        navigate(`/auth/verify${location.search}&username=${data.username}`);
-      } else {
-        navigate(`/auth/verify?username=${data.username}`);
-      }
-    } catch (err: any) {
-      dispatch({
-        type: AuthActionKind.SIGNUP_FAILURE,
-        error: err.response.data.message,
-      });
-
-      toast.error(err.response.data.message);
-    }
+    const userData = {
+      name,
+      username,
+      email,
+      password,
+      passwordConfirm,
+      agreement,
+    };
+    await signup(dispatch, userData, location, navigate);
   };
 
   return (

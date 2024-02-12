@@ -2,9 +2,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
 import { FormEvent, useContext, useRef } from "react";
-import axios from "axios";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import { toast } from "react-toastify";
+import { AuthContext } from "../../store/AuthContext";
+import { login } from "../../api/auth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -21,39 +20,7 @@ const LoginForm = () => {
     e.preventDefault();
     const username = userNameRef.current?.value;
     const password = passwordRef.current?.value;
-
-    if (!username || !password) return;
-
-    try {
-      dispatch({ type: AuthActionKind.LOGIN_START });
-
-      const { data } = await axios({
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        url: "http://localhost:8000/api/v1/users/login",
-        data: { username, password },
-      });
-
-      dispatch({
-        type: AuthActionKind.LOGIN_SUCCESS,
-        payload: { token: data.token, ...data.user },
-      });
-
-      if (location.search.startsWith("?next-page"))
-        navigate(`/${location.search.split("=")[1]}`);
-      else navigate("/home");
-    } catch (err: any) {
-      dispatch({
-        type: AuthActionKind.LOGIN_FAILURE,
-        error: err.response.data.message,
-      });
-
-      if (err.response.data.message.startsWith("Your account")) {
-        navigate(`/auth/verify?username=${username}`);
-      }
-
-      toast.error(err.response.data.message);
-    }
+    await login(dispatch, { username, password }, location, navigate);
   };
 
   return (

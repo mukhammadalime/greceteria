@@ -1,8 +1,7 @@
 import { FormEvent, useContext, useRef } from "react";
 import PasswordInput from "../UI/Inputs/PasswordInput";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { AuthContext } from "../../store/AuthContext";
+import { changeMyPassword } from "../../api/auth";
 
 const UserPassword = () => {
   const currentPasswordRef = useRef<HTMLInputElement>(null);
@@ -17,42 +16,13 @@ const UserPassword = () => {
   const onChangeMyPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const currentPassword = currentPasswordRef.current?.value;
-    const password = newPasswordRef.current?.value;
-    const passwordConfirm = newPasswordConfirmRef.current?.value;
-
-    if (!currentPassword || !password || !passwordConfirm) return;
-
-    try {
-      dispatch({ type: AuthActionKind.CHANGE_PASSWORD_START });
-
-      const { data } = await axios({
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        method: "PATCH",
-        url: "http://localhost:8000/api/v1/users/updateMyPassword",
-        data: { currentPassword, password, passwordConfirm },
-      });
-
-      dispatch({
-        type: AuthActionKind.CHANGE_PASSWORD_SUCCESS,
-        payload: { token: data.token, ...data.user },
-      });
-      toast.success("Your data's been successfully updated.");
-    } catch (err: any) {
-      dispatch({
-        type: AuthActionKind.CHANGE_PASSWORD_FAILURE,
-        error: err.response.data.message,
-      });
-
-      toast.error(err.response.data.message);
-    }
-
-    currentPasswordRef.current.value = "";
-    newPasswordRef.current.value = "";
-    newPasswordConfirmRef.current.value = "";
+    await changeMyPassword(
+      dispatch,
+      currentPasswordRef,
+      newPasswordRef,
+      newPasswordConfirmRef,
+      user?.token
+    );
   };
 
   return (

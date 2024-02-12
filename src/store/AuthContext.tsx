@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { User } from "../utils/user-types";
-import axios from "axios";
+import { getUserApi } from "../api/auth";
 
 interface AuthInitialStateTypes {
   user: User | null;
@@ -176,34 +176,11 @@ export const AuthContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
 
-  const getUser = async () => {
-    if (JSON.parse(localStorage.getItem("user")!) === null) return;
-    try {
-      dispatch({ type: AuthActionKind.GETME_START });
-      const { data } = await axios({
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("user")!).token
-          }`,
-        },
-        method: "GET",
-        url: "http://localhost:8000/api/v1/users/me",
-      });
-
-      const userData = { token: data.token, ...data.user };
-      dispatch({ type: AuthActionKind.GETME_SUCCESS, payload: userData });
-    } catch (err: any) {
-      console.log("err:", err);
-      dispatch({
-        type: AuthActionKind.GETME_FAILURE,
-        error: err.response.data.message,
-      });
-    }
-  };
+  const getUser = async () => await getUserApi(dispatch);
 
   // Fetch user on every refresh to keep the user up to date with the database.
   useEffect(() => {
+    console.log("Hellow");
     getUser();
   }, []);
 
