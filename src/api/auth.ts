@@ -37,7 +37,7 @@ export const login = async (
 ) => {
   const { username, password } = userData;
 
-  if (!username || !password) return;
+  if (!username || !password) toast.warning("Please fill in all the inputs.");
 
   try {
     dispatch({ type: AuthActionKind.LOGIN_START });
@@ -94,8 +94,9 @@ export const signup = async (
     !email ||
     !passwordConfirm ||
     !agreement
-  )
-    return;
+  ) {
+    return toast.warning("Please fill in all the inputs.");
+  }
 
   try {
     dispatch({ type: AuthActionKind.SIGNUP_START });
@@ -108,9 +109,7 @@ export const signup = async (
     });
 
     dispatch({ type: AuthActionKind.SIGNUP_SUCCESS });
-
     toast.success(data.message);
-
     if (location.search !== "") {
       navigate(`/auth/verify${location.search}&username=${data.username}`);
     } else {
@@ -133,7 +132,7 @@ export const verify = async (
   navigate: (arg0: string) => void
 ) => {
   if (!/^\d*$/.test(verificationCode)) {
-    return toast.error("Please enter only numbers");
+    return toast.warning("Please enter only numbers");
   }
 
   try {
@@ -151,7 +150,7 @@ export const verify = async (
       payload: { token: data.token, ...data.user },
     });
 
-    toast.error("You`ve successfully registered.");
+    toast.success("You`ve successfully registered.");
 
     if (location.search.startsWith("?next-page")) {
       navigate(`/${String(location.search.match(/(?<==\s*).*?(?=\s*&)/gs))}`);
@@ -161,7 +160,6 @@ export const verify = async (
       type: AuthActionKind.VERIFY_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 };
@@ -188,7 +186,6 @@ export const sendCodeAgain = async (
       type: AuthActionKind.SEND_V_CODE_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 
@@ -200,8 +197,7 @@ export const forgotPassword = async (
   email: string | undefined,
   location: { search: string }
 ) => {
-  if (!email) return;
-
+  if (!email) toast.warning("Please enter the email.");
   try {
     dispatch({ type: AuthActionKind.FORGOT_PASSWORD_START });
 
@@ -219,7 +215,6 @@ export const forgotPassword = async (
       type: AuthActionKind.FORGOT_PASSWORD_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 };
@@ -235,7 +230,8 @@ export const resetPassword = async (
   navigate: (arg0: string) => void
 ) => {
   const { password, passwordConfirm } = passwords;
-  if (!passwordConfirm || !password) return;
+  if (!passwordConfirm || !password)
+    toast.warning("Please fill in all the inputs.");
 
   try {
     dispatch({ type: AuthActionKind.RESET_PASSWORD_START });
@@ -262,7 +258,6 @@ export const resetPassword = async (
       type: AuthActionKind.RESET_PASSWORD_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 };
@@ -284,9 +279,7 @@ export const checkResetTokenExistApi = async (
         '. You will be redirected to the "Forgot password" page in 5 seconds.'
     );
 
-    setTimeout(() => {
-      navigate(`/auth/forgot-password${location.search}`);
-    }, 5000);
+    setTimeout(() => navigate(`/auth/forgot-password${location.search}`), 5000);
   }
 };
 
@@ -312,7 +305,7 @@ export const updateMe = async (
   // Check if phonenumber is in correct format.
   if (phoneNumber) {
     if (!validatePhoneNumber(phoneNumber, countryCode!)) {
-      toast.error("Please enter a valid phone number.");
+      toast.warning("Please enter a valid phone number.");
       return;
     }
   }
@@ -350,7 +343,6 @@ export const updateMe = async (
       type: AuthActionKind.UPDATE_ME_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 };
@@ -367,7 +359,7 @@ export const changeMyPassword = async (
   const passwordConfirm = newPasswordConfirmRef.current?.value;
 
   if (!currentPassword || !password || !passwordConfirm)
-    return toast.error("Please fill all the inputs.");
+    return toast.warning("Please fill in all the inputs.");
 
   try {
     dispatch({ type: AuthActionKind.CHANGE_PASSWORD_START });
@@ -392,7 +384,6 @@ export const changeMyPassword = async (
       type: AuthActionKind.CHANGE_PASSWORD_FAILURE,
       error: err.response.data.message,
     });
-
     toast.error(err.response.data.message);
   }
 

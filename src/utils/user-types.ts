@@ -36,7 +36,7 @@ export interface ProductItemTypes {
   ratingsAverage: number;
   ratingsQuantity: number;
   createdAt: Date;
-  category: { name: string; id: string };
+  category: { name: string; _id: string };
   reviews: ReviewItemTypes[];
 }
 

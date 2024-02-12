@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import ModalActions from "./ModalActions";
-import UploadImages from "./UploadImages";
+import UploadImagesInput from "./components/UploadImagesInput";
 import TextInput from "../UI/Inputs/TextInput";
 import nextId from "react-id-generator";
 
@@ -65,7 +65,7 @@ const AddNewsOverlay = (props: {
             </div>
           </div>
         </div>
-        <UploadImages onChange={onSelectFile} />
+        <UploadImagesInput onChange={onSelectFile} />
 
         {uploadedImages.length > 10 && <h3>You can upload up to 10 images!</h3>}
         {uploadedImages.length > 0 && (

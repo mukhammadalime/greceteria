@@ -141,7 +141,7 @@ const ProductReducer = (
     case ProductActionKind.DELETE_PRODUCT_SUCCESS:
       return {
         ...state,
-        products: action.payload as ProductItemTypes[],
+        products: state.products.filter((i) => i.id !== state.product?.id),
         addOrUpdateOrDeleteLoading: false,
         error: null,
       };

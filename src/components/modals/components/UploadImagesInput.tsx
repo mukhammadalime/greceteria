@@ -1,8 +1,4 @@
-const UploadImages = ({
-  onChange,
-}: {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) => {
+const UploadImagesInput = ({ onChange }: UploadImagesProps) => {
   return (
     <div className="upload-image">
       <span>
@@ -21,4 +17,8 @@ const UploadImages = ({
   );
 };
 
-export default UploadImages;
+interface UploadImagesProps {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default UploadImagesInput;

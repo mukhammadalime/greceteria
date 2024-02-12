@@ -101,15 +101,16 @@ const AuthReducer = (
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.LOGIN_FAILURE:
       return { ...state, user: null, loading: false, error: action.error! };
+
     case AuthActionKind.LOGOUT:
       return { ...state, user: null, loading: false, error: null };
 
     case AuthActionKind.SIGNUP_START:
-      return { ...state, user: null, loading: true, error: null };
+      return { ...state, loading: true, error: null };
     case AuthActionKind.SIGNUP_SUCCESS:
-      return { ...state, user: null, loading: false, error: null };
+      return { ...state, loading: false, error: null };
     case AuthActionKind.SIGNUP_FAILURE:
-      return { ...state, user: null, loading: false, error: action.error! };
+      return { ...state, loading: false, error: action.error! };
 
     case AuthActionKind.VERIFY_START:
       return { ...state, user: null, loading: true, error: null };
@@ -120,38 +121,38 @@ const AuthReducer = (
       return { ...state, user: null, loading: false, error: action.error! };
 
     case AuthActionKind.SEND_V_CODE_START:
-      return { ...state, user: null, loading: true, error: null };
+      return { ...state, loading: true, error: null };
     case AuthActionKind.SEND_V_CODE_SUCCESS:
-      return { ...state, user: null, loading: false, error: null };
+      return { ...state, loading: false, error: null };
     case AuthActionKind.SEND_V_CODE_FAILURE:
-      return { ...state, user: null, loading: false, error: action.error! };
+      return { ...state, loading: false, error: action.error! };
 
     case AuthActionKind.FORGOT_PASSWORD_START:
-      return { ...state, user: null, loading: true, error: null };
+      return { ...state, loading: true, error: null };
     case AuthActionKind.FORGOT_PASSWORD_SUCCESS:
-      return { user: null, loading: false, error: null, success: "success" };
+      return { ...state, loading: false, error: null, success: "success" };
     case AuthActionKind.FORGOT_PASSWORD_FAILURE:
-      return { ...state, user: null, loading: false, error: action.error! };
+      return { ...state, loading: false, error: action.error! };
 
     case AuthActionKind.RESET_PASSWORD_START:
       return { ...state, user: null, loading: true, error: null };
     case AuthActionKind.RESET_PASSWORD_SUCCESS:
-      localStorage.setItem("user", JSON.stringify(action.payload!));
+      localStorage.setItem("user", JSON.stringify(action.payload as User));
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.RESET_PASSWORD_FAILURE:
       return { ...state, user: null, loading: false, error: action.error! };
 
     case AuthActionKind.CHECK_RESET_TOKEN_START:
-      return { ...state, user: null, loading: true, error: null };
+      return { ...state, loading: true, error: null };
     case AuthActionKind.CHECK_RESET_TOKEN_SUCCESS:
-      return { ...state, user: null, loading: false, error: null };
+      return { ...state, loading: false, error: null };
     case AuthActionKind.CHECK_RESET_TOKEN_FAILURE:
-      return { ...state, user: null, loading: false, error: action.error! };
+      return { ...state, loading: false, error: action.error! };
 
     case AuthActionKind.UPDATE_ME_START:
       return { ...state, loading: true, error: null };
     case AuthActionKind.UPDATE_ME_SUCCESS:
-      localStorage.setItem("user", JSON.stringify(action.payload!));
+      localStorage.setItem("user", JSON.stringify(action.payload as User));
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.UPDATE_ME_FAILURE:
       return { ...state, loading: false, error: action.error! };
@@ -159,7 +160,7 @@ const AuthReducer = (
     case AuthActionKind.CHANGE_PASSWORD_START:
       return { ...state, loading: true, error: null };
     case AuthActionKind.CHANGE_PASSWORD_SUCCESS:
-      localStorage.setItem("user", JSON.stringify(action.payload!));
+      localStorage.setItem("user", JSON.stringify(action.payload as User));
       return { ...state, user: action.payload!, loading: false, error: null };
     case AuthActionKind.CHANGE_PASSWORD_FAILURE:
       return { ...state, loading: false, error: action.error! };

@@ -3,10 +3,9 @@ import ProductInfo from "../components/product-details/ProductInfo";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import { ProductActionKind, ProductContext } from "../store/ProductContext";
+import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { getProductApi } from "../api/products";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -18,28 +17,8 @@ const ProductDetails = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    const getProduct = async () => {
-      try {
-        dispatch({ type: ProductActionKind.GET_PRODUCT_START });
-        const { data } = await axios({
-          headers: { "Content-Type": "application/json" },
-          method: "GET",
-          url: `http://localhost:8000/api/v1/products/${params.productId}`,
-        });
-
-        dispatch({
-          type: ProductActionKind.GET_PRODUCT_SUCCESS,
-          payload: data.data,
-        });
-      } catch (err: any) {
-        dispatch({
-          type: ProductActionKind.GET_PRODUCT_FAILURE,
-          error: err.response.data.message,
-        });
-        toast.error(err.response.data.message);
-        setTimeout(() => navigate("/"), 4000);
-      }
-    };
+    const getProduct = async () =>
+      await getProductApi(dispatch, params.productId, navigate);
 
     getProduct();
   }, [dispatch, params.productId, navigate]);
