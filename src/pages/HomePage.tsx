@@ -8,6 +8,7 @@ import { AuthContext } from "../store/AuthContext";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { CategoryContext } from "../store/CategoryContext";
+import { NewsContext } from "../store/NewsContext";
 
 const HomePage = () => {
   const { state } = useContext(AuthContext);
@@ -19,6 +20,10 @@ const HomePage = () => {
   const {
     state: { categories, categoriesLoading },
   } = useContext(CategoryContext);
+
+  const {
+    state: { news, newsLoading },
+  } = useContext(NewsContext);
 
   return (
     <>
@@ -37,7 +42,8 @@ const HomePage = () => {
           />
         </>
       )}
-      {state.user !== null && <NewsCarousel />}
+      {newsLoading && <LoadingSpinner />}
+      {state.user !== null && news.length > 0 && <NewsCarousel news={news} />}
     </>
   );
 };

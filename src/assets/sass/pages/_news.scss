@@ -96,7 +96,7 @@
 
 //// NEWS DETAILS
 .news {
-  max-width: 80rem;
+  max-width: 60rem;
   margin: 0 auto;
   display: grid;
   row-gap: 2rem;
@@ -147,7 +147,7 @@
   }
 
   &__image {
-    height: 40rem;
+    height: 100%;
     width: 100%;
     border-radius: 0.8rem;
   }
@@ -176,8 +176,12 @@
 }
 
 .news-slider {
-  height: 40rem;
+  height: 45rem;
   width: 100%;
+
+  @media (max-width: 475px) {
+    height: 37rem;
+  }
 
   .swiper-slide {
     margin-right: unset;
@@ -202,5 +206,14 @@
     @media (max-width: 768px) {
       margin-bottom: 2rem;
     }
+  }
+}
+
+.quill {
+  margin-bottom: 2rem;
+  min-height: 25rem;
+
+  .ql-container {
+    min-height: 18.4rem;
   }
 }

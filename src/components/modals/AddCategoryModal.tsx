@@ -6,6 +6,7 @@ import { addOrUpdateCategory, deleteCategory } from "../../api/categories";
 import { CategoryContext } from "../../store/CategoryContext";
 import { toast } from "react-toastify";
 import { CategoryItemTypes } from "../../utils/user-types";
+import { ActionTypeProps } from "../../utils/types";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -29,9 +30,7 @@ const AddCategoryOverlay = ({
     setUploadedImage(image);
   };
 
-  async function onAddOrDeleteOrUpdateCategory(
-    actionType: "add" | "update" | "delete"
-  ) {
+  async function onAddOrDeleteOrUpdateCategory(actionType: ActionTypeProps) {
     const name = nameRef.current?.value;
     const image = imageRef.current?.files![0];
     const formData = new FormData();
@@ -41,7 +40,8 @@ const AddCategoryOverlay = ({
     switch (actionType) {
       case "add":
         if (categoryState.categories.find((i) => i.name === name)) {
-          return toast.error(`The category (${name}) already exists.`);
+          toast.error(`The category (${name}) already exists.`);
+          return;
         }
         await addOrUpdateCategory(
           categoryState.categories,

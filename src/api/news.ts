@@ -1,106 +1,104 @@
-import axios from "axios";
-import { ProductAction, ProductActionKind } from "../store/ProductContext";
 import { toast } from "react-toastify";
-import { ImageItemTypes, ProductItemTypes } from "../utils/user-types";
+import { NewsAction, NewsActionKind } from "../store/NewsContext";
+import axios from "axios";
+import { ImageItemTypes, NewsItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
 
-export const getProductsApi = async (
-  dispatch: React.Dispatch<ProductAction>
+export const getNewsApi = async (
+  dispatch: React.Dispatch<NewsAction>
 ): Promise<void> => {
   try {
-    dispatch({ type: ProductActionKind.GET_PRODUCTS_START });
+    dispatch({ type: NewsActionKind.GET_NEWS_START });
     const { data } = await axios({
       headers: { "Content-Type": "application/json" },
       method: "GET",
-      url: "http://localhost:8000/api/v1/products",
+      url: "http://localhost:8000/api/v1/news?sort=createdAt",
     });
 
     dispatch({
-      type: ProductActionKind.GET_PRODUCTS_SUCCESS,
+      type: NewsActionKind.GET_NEWS_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {
     dispatch({
-      type: ProductActionKind.GET_PRODUCTS_FAILURE,
+      type: NewsActionKind.GET_NEWS_FAILURE,
       error: err.response.data.message,
     });
     toast.error(err.response.data.message);
   }
 };
 
-export const getProductApi = async (
-  dispatch: React.Dispatch<ProductAction>,
-  id: string | undefined,
-  navigate: (arg: string) => void
+export const getNewsItemApi = async (
+  dispatch: React.Dispatch<NewsAction>,
+  id: string | undefined
 ): Promise<void> => {
   try {
-    dispatch({ type: ProductActionKind.GET_PRODUCT_START });
+    dispatch({ type: NewsActionKind.GET_NEWSITEM_START });
     const { data } = await axios({
       headers: { "Content-Type": "application/json" },
       method: "GET",
-      url: `http://localhost:8000/api/v1/products/${id}`,
+      url: `http://localhost:8000/api/v1/news/${id}`,
     });
 
     dispatch({
-      type: ProductActionKind.GET_PRODUCT_SUCCESS,
+      type: NewsActionKind.GET_NEWSITEM_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {
     dispatch({
-      type: ProductActionKind.GET_PRODUCT_FAILURE,
+      type: NewsActionKind.GET_NEWSITEM_FAILURE,
       error: err.response.data.message,
     });
     toast.error(err.response.data.message);
-    setTimeout(() => navigate("/"), 4000);
   }
 };
 
-export const addProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+export const addNews = async (
+  dispatch: React.Dispatch<NewsAction>,
   formData: FormData,
   imagesForServer: FileList | [],
   closeModal: () => void
 ): Promise<void> => {
+  const token = JSON.parse(localStorage.getItem("user")!).token;
+
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
   }
-  const token = JSON.parse(localStorage.getItem("user")!).token;
 
   try {
-    dispatch({ type: ProductActionKind.ADD_PRODUCT_START });
+    dispatch({ type: NewsActionKind.ADD_NEWSITEM_START });
     const { data } = await axios({
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
       method: "POST",
-      url: "http://localhost:8000/api/v1/products",
       data: formData,
+      url: `http://localhost:8000/api/v1/news`,
     });
 
     dispatch({
-      type: ProductActionKind.ADD_PRODUCT_SUCCESS,
+      type: NewsActionKind.ADD_NEWSITEM_SUCCESS,
       payload: data.data,
     });
+    toast.success("News has been successfully added.");
     closeModal();
-
-    toast.success("New Product has been successfully added.");
   } catch (err: any) {
     dispatch({
-      type: ProductActionKind.ADD_PRODUCT_FAILURE,
+      type: NewsActionKind.ADD_NEWSITEM_FAILURE,
       error: err.response.data.message,
     });
     toast.error(err.response.data.message);
   }
 };
 
-export const updateProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+export const updateNews = async (
+  dispatch: React.Dispatch<NewsAction>,
   formData: FormData,
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  product: ProductItemTypes | undefined
+  news: NewsItemTypes | undefined
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
@@ -112,62 +110,63 @@ export const updateProduct = async (
   const updatedFormData = determineImageUploadConditions(
     imagesForServer,
     imagesForClient,
-    product,
+    news,
     formData
   );
 
   try {
-    dispatch({ type: ProductActionKind.UPDATE_PRODUCT_START });
+    dispatch({ type: NewsActionKind.UPDATE_NEWSITEM_START });
     const { data } = await axios({
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
       method: "PATCH",
-      url: `http://localhost:8000/api/v1/products/${product?.id}`,
+      url: `http://localhost:8000/api/v1/news/${news?._id}`,
       data: updatedFormData,
     });
 
     dispatch({
-      type: ProductActionKind.UPDATE_PRODUCT_SUCCESS,
+      type: NewsActionKind.UPDATE_NEWSITEM_SUCCESS,
       payload: data.data,
     });
     closeModal();
     toast.success("Product has been successfully updated.");
   } catch (err: any) {
     dispatch({
-      type: ProductActionKind.UPDATE_PRODUCT_FAILURE,
+      type: NewsActionKind.UPDATE_NEWSITEM_FAILURE,
       error: err.response.data.message,
     });
     toast.error(err.response.data.message);
   }
 };
 
-export const deleteProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
-  closeModal: () => void,
+export const deleteNews = async (
+  dispatch: React.Dispatch<NewsAction>,
   id: string | undefined,
+  closeModal: () => void,
   navigate: (arg: string) => void
 ): Promise<void> => {
   const token = JSON.parse(localStorage.getItem("user")!).token;
+
   try {
-    dispatch({ type: ProductActionKind.DELETE_PRODUCT_START });
+    dispatch({ type: NewsActionKind.DELETE_NEWSITEM_START });
     await axios({
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       method: "DELETE",
-      url: `http://localhost:8000/api/v1/products/${id}`,
+      url: `http://localhost:8000/api/v1/news/${id}`,
     });
 
-    dispatch({ type: ProductActionKind.DELETE_PRODUCT_SUCCESS });
+    dispatch({ type: NewsActionKind.DELETE_NEWSITEM_SUCCESS });
+    toast.success("News has been successfully deleted.");
     closeModal();
-    toast.success("Product has been successfully deleted.");
-    navigate("/shop");
+    navigate("/news");
   } catch (err: any) {
     dispatch({
-      type: ProductActionKind.DELETE_PRODUCT_FAILURE,
+      type: NewsActionKind.DELETE_NEWSITEM_FAILURE,
       error: err.response.data.message,
     });
     toast.error(err.response.data.message);

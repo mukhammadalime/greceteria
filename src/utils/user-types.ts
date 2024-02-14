@@ -62,3 +62,11 @@ export interface ImageItemTypes {
   _id?: string;
   name?: string;
 }
+
+export interface NewsItemTypes {
+  _id: string;
+  title: string;
+  images: ImageItemTypes[];
+  text: string;
+  createdAt: Date;
+}

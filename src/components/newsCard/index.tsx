@@ -1,25 +1,28 @@
 import { Link } from "react-router-dom";
 import RightArrowIcon from "../UI/Icons/RightArrowIcon";
+import { NewsItemTypes } from "../../utils/user-types";
 
-const NewsCard = () => {
+const NewsCard = ({ newsItem }: { newsItem: NewsItemTypes }) => {
+  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(
+    new Date(newsItem.createdAt)
+  );
+  const date = new Date(newsItem.createdAt).getDate();
+
   return (
-    <Link to="/news/details" className="news-card">
+    <Link to={`/news/${newsItem._id}`} className="news-card">
       <div className="news-card__img-box">
         <img
           className="news-card__img"
-          src="/assets/images/banner/banner-1.jpeg"
+          src={newsItem.images[0].imageUrl}
           alt=""
         />
         <div className="date">
-          <h3>06</h3>
-          <span>Aug</span>
+          <h3>{date}</h3>
+          <span>{month}</span>
         </div>
       </div>
       <div className="news-card__content">
-        <p>
-          Curabitur porttitor orci eget neque accumsan venenatis. Nunc
-          fermentum.
-        </p>
+        <p>{newsItem.title}</p>
         <div className="view-all">
           Read More
           <RightArrowIcon />

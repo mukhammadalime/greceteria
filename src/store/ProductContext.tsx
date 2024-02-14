@@ -6,7 +6,7 @@ interface ProductsInitialStateTypes {
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
-  addOrUpdateOrDeleteLoading: boolean;
+  addUpdateDeleteLoading: boolean;
   error: string | null;
 }
 
@@ -45,7 +45,7 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   product: null,
   productsLoading: false,
   productLoading: false,
-  addOrUpdateOrDeleteLoading: false,
+  addUpdateDeleteLoading: false,
   error: null,
 };
 
@@ -99,23 +99,23 @@ const ProductReducer = (
       };
 
     case ProductActionKind.ADD_PRODUCT_START:
-      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+      return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.ADD_PRODUCT_SUCCESS:
       return {
         ...state,
         products: [...state.products, action.payload as ProductItemTypes],
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: null,
       };
     case ProductActionKind.ADD_PRODUCT_FAILURE:
       return {
         ...state,
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: action.error!,
       };
 
     case ProductActionKind.UPDATE_PRODUCT_START:
-      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+      return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.UPDATE_PRODUCT_SUCCESS:
       const updatedItemIndex = state.products.findIndex(
         (item) => item.id === (action.payload as ProductItemTypes).id
@@ -126,29 +126,29 @@ const ProductReducer = (
         ...state,
         products: productsCopy,
         product: action.payload as ProductItemTypes,
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: null,
       };
     case ProductActionKind.UPDATE_PRODUCT_FAILURE:
       return {
         ...state,
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: action.error!,
       };
 
     case ProductActionKind.DELETE_PRODUCT_START:
-      return { ...state, addOrUpdateOrDeleteLoading: true, error: null };
+      return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.DELETE_PRODUCT_SUCCESS:
       return {
         ...state,
         products: state.products.filter((i) => i.id !== state.product?.id),
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: null,
       };
     case ProductActionKind.DELETE_PRODUCT_FAILURE:
       return {
         ...state,
-        addOrUpdateOrDeleteLoading: false,
+        addUpdateDeleteLoading: false,
         error: action.error!,
       };
 

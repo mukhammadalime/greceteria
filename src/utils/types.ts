@@ -32,3 +32,5 @@ export interface SocialShareTypes {
   url: string;
   closeModal: () => void;
 }
+
+export type ActionTypeProps = "add" | "delete" | "update";

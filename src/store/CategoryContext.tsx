@@ -44,7 +44,7 @@ const INITIAL_STATE: CategoryInitialStateTypes = {
   error: null,
 };
 
-export interface CategoryContextTypes {
+interface CategoryContextTypes {
   state: CategoryInitialStateTypes;
   dispatch: React.Dispatch<CategoryAction>;
 }

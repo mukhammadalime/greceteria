@@ -3,10 +3,9 @@ import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionHead from "../UI/SectionHeader";
 import NewsCard from ".";
+import { NewsItemTypes } from "../../utils/user-types";
 
-let blogs = [1, 2, 3, 4, 5, 6];
-
-const NewsCarousel = () => {
+const NewsCarousel = ({ news }: { news: NewsItemTypes[] }) => {
   return (
     <div className="section-sm">
       <div className="container">
@@ -21,9 +20,9 @@ const NewsCarousel = () => {
               disableOnInteraction: false,
             }}
           >
-            {blogs.map((blog) => (
-              <SwiperSlide key={blog} className="news-card-swiper">
-                <NewsCard />
+            {news.map((item: NewsItemTypes) => (
+              <SwiperSlide key={item._id} className="news-card-swiper">
+                <NewsCard newsItem={item} />
               </SwiperSlide>
             ))}
           </Swiper>

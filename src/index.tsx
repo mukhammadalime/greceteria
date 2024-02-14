@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { AuthContextProvider } from "./store/AuthContext";
 import { ProductContextProvider } from "./store/ProductContext";
 import { CategoryContextProvider } from "./store/CategoryContext";
+import { NewsContextProvider } from "./store/NewsContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,13 +16,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <AuthContextProvider>
     <CategoryContextProvider>
-      <ProductContextProvider>
-        <BrowserRouter>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        </BrowserRouter>
-      </ProductContextProvider>
+      <NewsContextProvider>
+        <ProductContextProvider>
+          <BrowserRouter>
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          </BrowserRouter>
+        </ProductContextProvider>
+      </NewsContextProvider>
     </CategoryContextProvider>
   </AuthContextProvider>
 );

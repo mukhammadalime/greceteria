@@ -1,3 +1,3 @@
 Tasks To Complete 
-- Connect login/signup with backend
 - Loading data as it is requested in pagination?
+- Error page content in pages when the data does not come from the backend

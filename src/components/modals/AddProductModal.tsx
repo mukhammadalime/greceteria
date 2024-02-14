@@ -6,17 +6,17 @@ import TextInput from "../UI/Inputs/TextInput";
 import FilterOptions from "../UI/FilterOptions";
 import { ImageItemTypes, ProductItemTypes } from "../../utils/user-types";
 import { ProductContext } from "../../store/ProductContext";
-import { AuthContext } from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { addProduct, deleteProduct, updateProduct } from "../../api/products";
 import {
-  createFormDataHandler,
   removeImagesHandler,
   setImagesHandler,
 } from "../../utils/helperFunctions";
 import UploadedImages from "./components/UploadedImages";
 import { inStockOptions, weightOptions } from "../../data/helperData";
 import useToggleOptions from "../../hooks/useToggleOptions";
+import { ActionTypeProps } from "../../utils/types";
+import { createFormDataHandler } from "../../api/helper";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -54,7 +54,6 @@ const AddProductOverlay = ({
   const [imagesForServer, setImagesForServer] = useState<FileList | []>([]);
 
   const { state: productsState, dispatch } = useContext(ProductContext);
-  const { state: userState } = useContext(AuthContext);
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(3);
 
   /// This function remove the image from states which are for client and server
@@ -67,9 +66,7 @@ const AddProductOverlay = ({
     setImagesHandler(e, setImagesForServer, setImagesForClient);
   };
 
-  async function onAddOrUpdateOrDeleteProduct(
-    actionType: "add" | "update" | "delete"
-  ) {
+  async function onAddOrUpdateOrDeleteProduct(actionType: ActionTypeProps) {
     const productRefs = {
       nameRef,
       brandNameRef,
@@ -90,13 +87,7 @@ const AddProductOverlay = ({
 
     switch (actionType) {
       case "add":
-        await addProduct(
-          dispatch,
-          formData,
-          imagesForServer,
-          userState.user?.token,
-          closeModal
-        );
+        await addProduct(dispatch, formData, imagesForServer, closeModal);
         break;
       case "update":
         await updateProduct(
@@ -104,20 +95,14 @@ const AddProductOverlay = ({
           formData,
           imagesForServer,
           imagesForClient,
-          userState.user?.token,
           closeModal,
           product
         );
         break;
       case "delete":
-        await deleteProduct(
-          dispatch,
-          closeModal,
-          productsState.products,
-          product,
-          userState.user?.token,
-          navigate
-        );
+        await deleteProduct(dispatch, closeModal, product?.id, navigate);
+        break;
+      default:
         break;
     }
   }
@@ -235,7 +220,7 @@ const AddProductOverlay = ({
         onAddHandler={onAddOrUpdateOrDeleteProduct.bind(null, "add")}
         onDeleteHandler={onAddOrUpdateOrDeleteProduct.bind(null, "delete")}
         onUpdateHandler={onAddOrUpdateOrDeleteProduct.bind(null, "update")}
-        loading={productsState.addOrUpdateOrDeleteLoading}
+        loading={productsState.addUpdateDeleteLoading}
       />
     </div>
   );

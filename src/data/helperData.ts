@@ -31,3 +31,18 @@ export const ratingOptions = [
   { name: "⭐⭐", id: "2" },
   { name: "⭐", id: "1" },
 ];
+
+////////////////////////////////////////////////////////////////
+export const toolbarOptions = [
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  ["bold", "italic", "underline", "strike", "blockquote", "link", "image"], // toggled buttons
+  [{ color: [] }],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  [{ direction: "rtl" }], // text direction
+
+  // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+];
