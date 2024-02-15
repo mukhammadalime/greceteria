@@ -1,22 +1,19 @@
 import { Link } from "react-router-dom";
+import { CartProductProps } from "../../utils/user-types";
 
-const OrderedItem = () => {
+const OrderedItem = ({ cartItem }: { cartItem: CartProductProps }) => {
   return (
     <div className="ordered__item">
       <div className="ordered__item--details">
         <Link to="/products/details">
-          <img
-            className="ordered__item--img"
-            src="/assets/images/products/almond-1.jpeg"
-            alt=""
-          />
+          <img className="ordered__item--img" src={cartItem.image} alt="" />
         </Link>
         <div>
-          <h5>Almond California</h5>
-          <span>5x</span>
+          <h5>{cartItem.name}</h5>
+          <span>{cartItem.quantity}x</span>
         </div>
       </div>
-      <h6 className="ordered__item--price">$70.00</h6>
+      <h6 className="ordered__item--price">${cartItem.subTotal.toFixed(2)}</h6>
     </div>
   );
 };

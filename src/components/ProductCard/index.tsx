@@ -13,9 +13,10 @@ const ProductCard = ({ item }: { item: ProductItemTypes }) => {
       <ProductCardDetails
         name={item.name}
         price={item.price}
-        discountPercent={item.discountPercent}
+        discountedPrice={item.discountedPrice}
         inStock={item.inStock}
         ratingsAverage={item.ratingsAverage}
+        id={item.id}
       />
     </div>
   );

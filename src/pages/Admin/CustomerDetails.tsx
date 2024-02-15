@@ -122,6 +122,7 @@ const CustomerDetails = () => {
         <WarningModal
           text="Are your sure that you want to make this user manager?"
           closeModal={() => setWarningModal(false)}
+          id=""
         />
       )}
       <div className="section-sm">

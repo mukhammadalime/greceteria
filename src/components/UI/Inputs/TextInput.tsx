@@ -5,7 +5,7 @@ interface TextInputTypes {
   placeholder: string;
   type?: string;
   span?: ReactElement;
-  defaultValue?: string;
+  defaultValue?: string | number;
   text?: string;
 }
 

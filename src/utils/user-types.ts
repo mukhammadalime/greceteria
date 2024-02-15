@@ -29,7 +29,7 @@ export interface ProductItemTypes {
   weight: string;
   brandName: string;
   description: string;
-  discountPercent: number;
+  discountedPrice: number;
   store: string;
   images: ImageItemTypes[];
   inStock: boolean;
@@ -69,4 +69,21 @@ export interface NewsItemTypes {
   images: ImageItemTypes[];
   text: string;
   createdAt: Date;
+}
+
+export interface CartProps {
+  cartProducts: CartProductProps[];
+  uset: string;
+  totalPrice: number;
+  totalQuantity: number;
+}
+
+export interface CartProductProps {
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+  subTotal: number;
+  productId: string;
+  _id: string;
 }

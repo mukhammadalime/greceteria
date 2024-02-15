@@ -1,9 +1,11 @@
 import { useContext, useState } from "react";
 import AddressList from "../../components/addresses/AddressList";
-import OrderSummary from "../../components/checkout/OrderSummary";
 import AdditionalInfo from "../../components/checkout/AdditionalInfo";
 import AddAddressModal from "../../components/modals/AddAddressModal";
 import { AuthContext } from "../../store/AuthContext";
+import { CartContext } from "../../store/CartContext";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import BillCard from "../../components/cart/BillCard";
 
 const Checkout = () => {
   const [addressModalShown, setAddressModalShown] = useState(false);
@@ -11,6 +13,11 @@ const Checkout = () => {
   const {
     state: { user },
   } = useContext(AuthContext);
+  const {
+    state: { cart, cartLoading },
+  } = useContext(CartContext);
+
+  if (cartLoading) return <LoadingSpinner />;
 
   return (
     <>
@@ -33,7 +40,7 @@ const Checkout = () => {
               />
               <AdditionalInfo />
             </div>
-            <OrderSummary />
+            {cart !== null && <BillCard cart={cart} type="checkout" />}
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Counter from "../UI/Counter";
 import WarningModal from "../modals/WarningModal";
+import { CartProductProps } from "../../utils/user-types";
 
-const CartItem = () => {
+const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
   const [warningModal, setWarningModal] = useState(() => false);
 
   return (
@@ -11,26 +12,31 @@ const CartItem = () => {
         <WarningModal
           text="Are your sure that you want to remove this product from your cart?"
           closeModal={() => setWarningModal(false)}
+          id={cartItem.productId}
         />
       )}
 
       <tr className="cart__item">
         <td className="cart__item--product">
           <div>
-            <img src="/assets/images/products/almond-1.jpeg" alt="" />
+            <img src={cartItem.image} alt="" />
           </div>
-          <h5>Beef shank boneless</h5>
+          <h5>{cartItem.name}</h5>
         </td>
 
         <td className="cart__item--price">
-          <p>$14.99</p>
+          <p>${cartItem.price.toFixed(2)}</p>
         </td>
 
         <td className="cart__item--counter">
-          <Counter />
+          <Counter
+            defaultValue={cartItem.quantity}
+            forCart
+            id={cartItem.productId}
+          />
         </td>
         <td className="cart__item--subtotal">
-          <p>$70.00</p>
+          <p>${cartItem.subTotal.toFixed(2)}</p>
         </td>
         <td className="cart__item--delete">
           <div onClick={() => setWarningModal(true)}>

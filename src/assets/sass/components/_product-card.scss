@@ -161,16 +161,17 @@
     font-weight: 500;
     font-size: 1.3rem;
     border-radius: 4.3rem;
-    color: #4d4d4d;
-    background-color: #f2f2f2;
+    color: #ffffff;
+    background-color: #00b207;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.15s ease-in-out;
     text-transform: capitalize;
     outline: none;
     border: none;
     cursor: pointer;
+    padding: 0;
 
     &:hover {
       background-color: #2c742ed6;
@@ -178,14 +179,14 @@
     }
 
     &:disabled {
-      cursor: not-allowed;
+      cursor: default;
       &:active {
         transform: unset;
       }
     }
 
     &:active {
-      transform: scale(0.95);
+      transform: scale(0.99);
     }
   }
 }

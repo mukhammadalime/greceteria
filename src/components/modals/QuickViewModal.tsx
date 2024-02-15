@@ -2,45 +2,70 @@ import ReactDOM from "react-dom";
 import Counter from "../UI/Counter";
 import CloseIcon from "../UI/Icons/CloseIcon";
 import RatingsStars from "../UI/RatingsStars";
+import { ProductItemTypes } from "../../utils/user-types";
+import { ProductContext } from "../../store/ProductContext";
+import { useContext } from "react";
 
-const Backdrop = (props: { closeQuickView: () => void }) => {
-  return <div className="modal-container" onClick={props.closeQuickView} />;
+const Backdrop = (props: { closeModal: () => void }) => {
+  return <div className="modal-container" onClick={props.closeModal} />;
 };
 
-const QuickViewOverlay = (props: { closeQuickView: () => void }) => {
+const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
+  const {
+    state: { products },
+  } = useContext(ProductContext);
+
+  const product = products.find(
+    (item) => item.id === productId
+  ) as ProductItemTypes;
+
+  let discountPercent: number = 0;
+  if (product.discountedPrice > 0) {
+    const priceGap = product.price - product.discountedPrice;
+    discountPercent = priceGap / (product.price / 100);
+  }
+
   return (
     <div className="quick-view">
-      <div className="quick-view__close" onClick={props.closeQuickView}>
+      <div className="quick-view__close" onClick={closeModal}>
         <CloseIcon />
       </div>
       <div className="product__info">
         <div className="product__info--item">
           <div className="product__info--title">
-            {/* {props.brandName ? [props.brandName] : ""} */}
-            [California] Almond
-            {/* {props.features ? props.features : ""}{" "} */} Newly updated
-            400g
-            {/* {props.weight ? props.weight : ""}{" "} */}
+            {product.brandName ? `[${product.brandName}]` : ""} {product.name}{" "}
+            {product.features ? product.features : ""}{" "}
+            {product.weight ? product.weight : ""}
           </div>
           <div className="product__info--ratings">
-            <RatingsStars ratingsAverage={3.7} ratingsQuantity={12} />
+            <RatingsStars
+              ratingsAverage={product.ratingsAverage}
+              ratingsQuantity={product.ratingsQuantity}
+            />
           </div>
           <div className="product__info--price">
-            <del className="discounted-price">$48.00</del>
-            <h2>$17.28</h2>
-            <span className="sale-off">64% Off</span>
+            {product.discountedPrice > 0 && (
+              <>
+                <del className="discounted-price">
+                  ${product.price.toFixed(2)}
+                </del>
+                <h2>${product.discountedPrice.toFixed(2)}</h2>
+                <span className="sale-off">
+                  {Math.round(discountPercent)}% Off
+                </span>
+              </>
+            )}
+
+            {!product.discountedPrice && <h2>${product.price}</h2>}
           </div>
         </div>
         <div className="product__info--item">
-          <p className="description">
-            Class Aptent Taciti Sociosqu Ad Litora Torquent Per Conubia Nostra,
-            Per Inceptos Himenaeos. Nulla Nibh Diam, Blandit Vel Consequat Nec.
-          </p>
+          <p className="description">{product.description}</p>
         </div>
         <div className="product__info--item">
           <div className="product__info--action">
-            <Counter />
-            <div className="button add-to-cart">Add To Cart</div>
+            <Counter id={productId} inStock={product.inStock} />
+
             <div className="wishlist">
               <svg>
                 <use href="/assets/icons/icons.svg#icon-heart"></use>
@@ -51,10 +76,10 @@ const QuickViewOverlay = (props: { closeQuickView: () => void }) => {
         <div className="product__info--item">
           <div className="product__info--last">
             <h5>
-              Category: <span>Vegetables</span>
+              Category: <span>{product.category.name}</span>
             </h5>
             <h5>
-              Store: <span>Hala Meat & Diary</span>
+              Store: <span>{product.store}</span>
             </h5>
           </div>
         </div>
@@ -63,19 +88,24 @@ const QuickViewOverlay = (props: { closeQuickView: () => void }) => {
   );
 };
 
-const QuickViewModal = (props: { closeQuickView: () => void }) => {
+const QuickViewModal = ({ closeModal, productId }: QuickViewModalProps) => {
   return (
     <>
       {ReactDOM.createPortal(
-        <Backdrop closeQuickView={props.closeQuickView} />,
+        <Backdrop closeModal={closeModal} />,
         document.getElementById("backdrop-root")!
       )}
       {ReactDOM.createPortal(
-        <QuickViewOverlay closeQuickView={props.closeQuickView} />,
+        <QuickViewOverlay closeModal={closeModal} productId={productId} />,
         document.getElementById("modal-root")!
       )}
     </>
   );
 };
+
+interface QuickViewModalProps {
+  closeModal: () => void;
+  productId: string;
+}
 
 export default QuickViewModal;

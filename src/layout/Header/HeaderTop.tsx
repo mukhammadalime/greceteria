@@ -4,10 +4,13 @@ import Sidebar from "./Sidebar";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CartModal from "../../components/modals/CartModal";
 import { AuthContext } from "../../store/AuthContext";
+import { CartContext } from "../../store/CartContext";
 
 const HeaderTop = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
+
+  const { state: cartState } = useContext(CartContext);
 
   const { state } = useContext(AuthContext);
 
@@ -18,7 +21,7 @@ const HeaderTop = () => {
         open={sidebarOpen}
       />
 
-      {cartOpen && <CartModal closeCartModal={() => setCartOpen(false)} />}
+      {cartOpen && <CartModal closeModal={() => setCartOpen(false)} />}
 
       <div className="header__top">
         <div className="container">
@@ -56,7 +59,9 @@ const HeaderTop = () => {
                   <svg onClick={() => setCartOpen(true)}>
                     <use href="/assets/icons/icons.svg#icon-shopping-cart"></use>
                   </svg>
-                  <span className="items-number">2</span>
+                  <span className="items-number">
+                    {cartState.cart?.cartProducts?.length || 0}
+                  </span>
                 </div>
               </div>
               <div className="header__cart--auth">

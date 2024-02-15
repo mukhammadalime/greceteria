@@ -28,6 +28,16 @@
   &__items {
     overflow-y: scroll;
     height: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
   }
 
   &__empty {
@@ -80,6 +90,8 @@
       img {
         height: 10rem;
         width: 12rem;
+        // object-fit: cover;
+        object-fit: contain;
       }
     }
 
@@ -198,6 +210,10 @@
       height: 1.7rem;
       width: 1.7rem;
     }
+  }
+
+  .add-to-cart {
+    min-width: 13rem;
   }
 
   .product__info--item:last-child {

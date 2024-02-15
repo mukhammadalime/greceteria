@@ -57,6 +57,7 @@ export const login = async (
     if (location.search.startsWith("?next-page"))
       navigate(`/${location.search.split("=")[1]}`);
     else navigate("/home");
+    window.location.reload();
   } catch (err: any) {
     dispatch({
       type: AuthActionKind.LOGIN_FAILURE,
@@ -67,6 +68,27 @@ export const login = async (
       navigate(`/auth/verify?username=${username}`);
     }
 
+    toast.error(err.response.data.message);
+  }
+};
+
+export const logout = async (
+  dispatch: React.Dispatch<AuthAction>,
+  token: string | undefined
+) => {
+  try {
+    await axios({
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      url: "http://localhost:8000/api/v1/users/logout",
+    });
+
+    dispatch({ type: AuthActionKind.LOGOUT });
+    localStorage.removeItem("user");
+    window.location.reload();
+  } catch (err: any) {
     toast.error(err.response.data.message);
   }
 };

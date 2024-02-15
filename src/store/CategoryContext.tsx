@@ -126,7 +126,7 @@ export const CategoryContextProvider = ({
 
   const getCategories = async () => await getCategoriesApi(dispatch);
 
-  // Fetch user on every refresh to keep the user up to date with the database.
+  // Fetch categories on every refresh to keep the data up to date with the database.
   useEffect(() => {
     getCategories();
   }, []);

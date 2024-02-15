@@ -165,7 +165,7 @@ export const NewsContextProvider = ({
 
   const getNews = async () => await getNewsApi(dispatch);
 
-  // Fetch user on every refresh to keep the user up to date with the database.
+  // Fetch news on every refresh to keep the data up to date with the database.
   useEffect(() => {
     getNews();
   }, []);

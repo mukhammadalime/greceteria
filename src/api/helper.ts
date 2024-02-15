@@ -59,7 +59,7 @@ export const createFormDataHandler = (
     storeRef: React.RefObject<HTMLInputElement>;
     descriptionRef: React.RefObject<HTMLInputElement>;
     featuresRef: React.RefObject<HTMLInputElement>;
-    discountPercentRef: React.RefObject<HTMLInputElement>;
+    discountedPriceRef: React.RefObject<HTMLInputElement>;
   },
   weightType: string,
   product: ProductItemTypes | undefined,
@@ -73,7 +73,7 @@ export const createFormDataHandler = (
   const store = productRefs.storeRef.current?.value;
   const description = productRefs.descriptionRef.current?.value;
   const features = productRefs.featuresRef.current?.value;
-  const discountPercent = productRefs.discountPercentRef.current?.value;
+  const discountedPrice = productRefs.discountedPriceRef.current?.value;
 
   const formData = new FormData();
   formData.append("name", name as string);
@@ -83,7 +83,7 @@ export const createFormDataHandler = (
   formData.append("store", store as string);
   formData.append("description", description as string);
   formData.append("features", features as string);
-  formData.append("discountPercent", discountPercent as string);
+  formData.append("discountedPrice", discountedPrice as string);
   formData.append("inStock", inStock ? inStock : "");
   // This will be needed in the backend when changing the category of the product
   if (product?.category && product?.category._id !== selectedCategory)

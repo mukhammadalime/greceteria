@@ -13,7 +13,10 @@ const ProductCardImg = (props: {
   return (
     <>
       {showQuickView && (
-        <QuickViewModal closeQuickView={() => setShowQuickView(false)} />
+        <QuickViewModal
+          closeModal={() => setShowQuickView(false)}
+          productId={props.id}
+        />
       )}
       <div className="product-item__img-box">
         <Link to={`/products/${props.id}`}>

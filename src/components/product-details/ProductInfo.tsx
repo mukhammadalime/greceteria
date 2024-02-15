@@ -16,10 +16,10 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
   const [shareModal, setShareModal] = useState(() => false);
   const [addProductModal, setAddProductModal] = useState(() => false);
 
-  let discountedPrice: number = 0;
-  if (product.discountPercent) {
-    discountedPrice =
-      product.price - (product.price / 100) * product.discountPercent;
+  let discountPercent: number = 0;
+  if (product.discountedPrice > 0) {
+    const priceGap = product.price - product.discountedPrice;
+    discountPercent = priceGap / (product.price / 100);
   }
 
   return (
@@ -71,19 +71,21 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
                   />
                 </div>
                 <div className="product__info--price">
-                  {product.discountPercent && (
+                  {product.discountedPrice > 0 && (
                     <>
                       <del className="discounted-price">
                         ${product.price.toFixed(2)}
                       </del>
-                      <h2>${discountedPrice.toFixed(2)}</h2>
+                      <h2>${product.discountedPrice.toFixed(2)}</h2>
                       <span className="sale-off">
-                        {product.discountPercent}% Off
+                        {Math.round(discountPercent)}% Off
                       </span>
                     </>
                   )}
 
-                  {!product.discountPercent && <h2>${product.price}</h2>}
+                  {!product.discountedPrice && (
+                    <h2>${product.price.toFixed(2)}</h2>
+                  )}
                 </div>
               </div>
               <div className="product__info--item">
@@ -102,6 +104,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
                 category={product.category.name}
                 store={product.store}
                 inStock={product.inStock}
+                id={product.id}
               />
             </div>
           </div>

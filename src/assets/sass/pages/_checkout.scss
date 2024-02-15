@@ -56,6 +56,16 @@
   max-height: 22rem;
   overflow-y: scroll;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   &__item {
     display: flex;
     justify-content: space-between;
@@ -67,6 +77,8 @@
     &--img {
       height: 6rem;
       width: 6rem;
+      // object-fit: cover;
+      object-fit: contain;
     }
 
     &--details {

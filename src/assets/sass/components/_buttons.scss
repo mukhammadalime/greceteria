@@ -7,7 +7,7 @@
   color: #fff;
   background-color: #00b207;
   display: inline-block;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.15s ease-in-out;
   text-transform: capitalize;
   cursor: pointer;
   text-align: center;
@@ -15,7 +15,7 @@
   border: none;
 
   &:disabled {
-    cursor: not-allowed;
+    cursor: default;
     &:active {
       transform: unset;
     }
@@ -26,7 +26,7 @@
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.99);
   }
 }
 

@@ -9,9 +9,8 @@ import StatisticsIcon from "../UI/Icons/StatisticsIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
 import { useContext, useState } from "react";
-import axios from "axios";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import { toast } from "react-toastify";
+import { AuthContext } from "../../store/AuthContext";
+import { logout } from "../../api/auth";
 
 const navUserItems = [
   {
@@ -77,25 +76,9 @@ const navAdminItems = [
 const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const [navOpen, setNavOpen] = useState<boolean>(() => false);
   const { state, dispatch } = useContext(AuthContext);
-
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
 
-  const onLogoutHandler = async () => {
-    try {
-      await axios({
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${state.user?.token}`,
-        },
-        url: "http://localhost:8000/api/v1/users/logout",
-      });
-
-      dispatch({ type: AuthActionKind.LOGOUT });
-      localStorage.removeItem("user");
-    } catch (err: any) {
-      toast.error(err.response.data.message);
-    }
-  };
+  const onLogoutHandler = async () => await logout(dispatch, state.user?.token);
 
   return (
     <div className={`dashboard__nav${navOpen ? " nav-open" : ""}`}>

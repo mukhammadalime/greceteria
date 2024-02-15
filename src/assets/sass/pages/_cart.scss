@@ -11,6 +11,17 @@
     border: 1px solid #e5e5e5;
     overflow-x: scroll;
     white-space: nowrap;
+    height: min-content;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
 
     &--table {
       overflow-x: scroll;
@@ -77,6 +88,8 @@
       img {
         height: 10rem;
         width: 10rem;
+        // object-fit: cover;
+        object-fit: contain;
       }
 
       h5 {
@@ -84,7 +97,7 @@
         line-height: 2.4rem;
         color: #1a1a1a;
         font-weight: 400;
-
+        text-align: start;
         text-overflow: ellipsis;
         overflow: hidden;
         width: 15rem;

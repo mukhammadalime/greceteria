@@ -38,7 +38,7 @@ const AddProductOverlay = ({
   const storeRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const featuresRef = useRef<HTMLInputElement>(null);
-  const discountPercentRef = useRef<HTMLInputElement>(null);
+  const discountedPriceRef = useRef<HTMLInputElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     product?.category ? product.category._id : ""
   );
@@ -75,7 +75,7 @@ const AddProductOverlay = ({
       storeRef,
       descriptionRef,
       featuresRef,
-      discountPercentRef,
+      discountedPriceRef,
     };
     const formData = createFormDataHandler(
       productRefs,
@@ -180,11 +180,11 @@ const AddProductOverlay = ({
         </div>
         <div className="form-inputs form-inputs-4">
           <TextInput
-            label="Discount (%)"
-            placeholder="Discount (10)"
+            label="Sale price (default: 0)"
+            placeholder="Sale price"
             type="number"
-            ref={discountPercentRef}
-            defaultValue={String(product?.discountPercent)}
+            ref={discountedPriceRef}
+            defaultValue={product?.discountedPrice || "0"}
           />
           <TextInput
             label="Product features"
