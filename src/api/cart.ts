@@ -95,7 +95,6 @@ export const updateCart = async (
       type: CartActionKind.UPDATE_CART_SUCCESS,
       payload: data.data,
     });
-    toast.success("Cart updated.");
   } catch (err: any) {
     dispatch({
       type: CartActionKind.UPDATE_CART_FAILURE,

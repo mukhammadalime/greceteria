@@ -1,22 +1,33 @@
-const WishlistedItem = () => {
+const WishlistedItem = ({
+  name,
+  price,
+  discountedPrice,
+  inStock,
+  image,
+  id,
+}: WishlistedItemProps) => {
   return (
     <div className="wishlist__item">
       <div className="wishlist__item--product">
         <div className="wishlist__item--image">
-          <img src="/assets/images/products/almond-1.jpeg" alt="" />
+          <img src={image} alt="" />
         </div>
-        <h5>Beef shank boneless</h5>
+        <h5>{name}</h5>
       </div>
       <div className="wishlist__item--price">
         <p>
-          $14.99 <del>$20.99</del>
+          ${price.toFixed(2)}{" "}
+          {discountedPrice && <del>${discountedPrice.toFixed(2)}</del>}
         </p>
       </div>
       <div className="wishlist__item--stock">
-        <span className="stock-in">in Stock</span>
+        {inStock && <span className="stock-in">in Stock</span>}
+        {!inStock && <span className="stock-out">out of stock</span>}
       </div>
       <div className="wishlist__item--actions">
-        <button className="button button-md">Add To Cart</button>
+        <button className="button button-md" disabled={!inStock && true}>
+          Add To Cart
+        </button>
         <div className="delete-item">
           <img src="/assets/icons/delete-icon.svg" alt="" />
         </div>
@@ -24,5 +35,14 @@ const WishlistedItem = () => {
     </div>
   );
 };
+
+interface WishlistedItemProps {
+  name: string;
+  price: number;
+  discountedPrice: number;
+  inStock: boolean;
+  image: string;
+  id: string;
+}
 
 export default WishlistedItem;

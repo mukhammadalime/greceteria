@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
 import { Link } from "react-router-dom";
+import { addToWishlist, removeFromWishlist } from "../../api/user";
+import { UserContext } from "../../store/UserContext";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { AuthContext } from "../../store/AuthContext";
 
 const ProductCardImg = (props: {
   image: string;
@@ -9,6 +14,15 @@ const ProductCardImg = (props: {
   id: string;
 }) => {
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
+  const { state: userState, dispatch } = useContext(UserContext);
+  const { state } = useContext(AuthContext);
+
+  const onAddToWishlist = async () => {
+    const alreadyAdded = state.user?.wishlisted.includes(props.id);
+    if (userState.wishlistUpdateLoading) return;
+    if (!alreadyAdded) await addToWishlist(dispatch, props.id);
+    if (alreadyAdded) await removeFromWishlist(dispatch, props.id);
+  };
 
   return (
     <>
@@ -28,10 +42,12 @@ const ProductCardImg = (props: {
           )}
         </Link>
         <div className="favs">
-          <div className="favs-item">
-            <svg>
-              <use href="/assets/icons/icons.svg#icon-heart"></use>
-            </svg>
+          <div className="favs-item" onClick={onAddToWishlist}>
+            {state.user?.wishlisted.includes(props.id) ? (
+              <FavoriteIcon className="full-icon" />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
           </div>
           <div className="favs-item" onClick={() => setShowQuickView(true)}>
             <svg>

@@ -8,6 +8,8 @@ export interface User {
   addresses: AddressItemTypes[];
   token: string;
   phoneNumber: string;
+  wishlisted: string[];
+  compare: string[];
 }
 
 export interface AddressItemTypes {
