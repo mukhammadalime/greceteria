@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 
 const navUserItems = [
   {
@@ -57,7 +57,7 @@ const navAdminItems = [
 ];
 
 const HeaderBottom = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   // If user is not logged in or logged in, "navUserItems" will appear. If admin or manager is logged in, "navAdminItems" will appear.
   const navItems =

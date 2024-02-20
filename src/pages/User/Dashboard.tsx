@@ -3,8 +3,8 @@ import UserDetails from "../../components/dashboard/UserDetails";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import OrdersByStatus from "../../components/admin/OrdersByStatus";
 import { useContext } from "react";
-import { AuthContext } from "../../store/AuthContext";
 import LoginFirst from "../../components/LoginFirst";
+import { UserContext } from "../../store/UserContext";
 
 const orders = [
   {
@@ -45,7 +45,8 @@ const orders = [
 ];
 
 const Dashboard = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
+
   if (state.user === null) return <LoginFirst />;
 
   return (

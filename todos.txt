@@ -1,4 +1,6 @@
 Tasks To Complete 
 - Loading data as it is requested in pagination?
 - Error page content in pages when the data does not come from the backend
-- Link images to product page in cart, cartmodal and checkout
+- make buttons reusable and add spinner when loading
+- add card info component 
+- add deletea account component

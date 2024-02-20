@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import CartModal from "../../components/modals/CartModal";
-import { AuthContext } from "../../store/AuthContext";
 import { CartContext } from "../../store/CartContext";
+import { UserContext } from "../../store/UserContext";
 
 const HeaderTop = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -12,7 +12,7 @@ const HeaderTop = () => {
 
   const { state: cartState } = useContext(CartContext);
 
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   return (
     <>

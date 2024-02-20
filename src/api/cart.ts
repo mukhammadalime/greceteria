@@ -1,34 +1,29 @@
-import axios from "axios";
+import { AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 import { CartAction, CartActionKind } from "../store/CartContext";
 
 export const getCartApi = async (
-  dispatch: React.Dispatch<CartAction>
+  dispatch: React.Dispatch<CartAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!)?.token;
-
-  if (!token) return;
   try {
     dispatch({ type: CartActionKind.GET_CART_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-      url: `http://localhost:8000/api/v1/cart`,
-    });
+    const { data } = await axiosPrivate.get("/cart");
 
     dispatch({
       type: CartActionKind.GET_CART_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {
+    console.log("err:", err);
     dispatch({
       type: CartActionKind.GET_CART_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -36,23 +31,15 @@ export const addToCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
   counterRef: React.RefObject<HTMLInputElement>,
-  setLoading: (arg: boolean) => void
+  setLoading: (arg: boolean) => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
   const quantity = Number(counterRef.current?.value);
 
   try {
     setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "POST",
-      url: `http://localhost:8000/api/v1/cart`,
-      data: { productId, quantity },
-    });
+    const { data } = await axiosPrivate.post("/cart", { productId, quantity });
 
     dispatch({
       type: CartActionKind.UPDATE_CART_SUCCESS,
@@ -62,9 +49,12 @@ export const addToCart = async (
   } catch (err: any) {
     dispatch({
       type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
   setLoading(false);
 };
@@ -73,23 +63,15 @@ export const updateCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
   counterRef: React.RefObject<HTMLInputElement>,
-  setLoading: (arg: boolean) => void
+  setLoading: (arg: boolean) => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
   const quantity = Number(counterRef.current?.value);
 
   try {
     setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: `http://localhost:8000/api/v1/cart`,
-      data: { productId, quantity },
-    });
+    const { data } = await axiosPrivate.patch("/cart", { productId, quantity });
 
     dispatch({
       type: CartActionKind.UPDATE_CART_SUCCESS,
@@ -98,9 +80,12 @@ export const updateCart = async (
   } catch (err: any) {
     dispatch({
       type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
   setLoading(false);
 };
@@ -108,23 +93,16 @@ export const updateCart = async (
 export const deleteProductCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
-  setLoading?: (arg: boolean) => void
+  axiosPrivate: AxiosInstance,
+  setLoading: (arg: boolean) => void
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-
   try {
-    setLoading && setLoading(true);
+    setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: `http://localhost:8000/api/v1/cart/delete-product`,
-      data: { productId },
-    });
 
+    const { data } = await axiosPrivate.patch("/cart/delete-product", {
+      productId,
+    });
     dispatch({
       type: CartActionKind.UPDATE_CART_SUCCESS,
       payload: data.data,
@@ -133,9 +111,12 @@ export const deleteProductCart = async (
   } catch (err: any) {
     dispatch({
       type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
-  setLoading && setLoading(true);
+  setLoading(false);
 };

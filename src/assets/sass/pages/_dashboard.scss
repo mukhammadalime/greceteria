@@ -37,6 +37,16 @@
       }
     }
 
+    button {
+      width: 100%;
+      border: none;
+      background-color: unset;
+      height: 5.7rem;
+      li {
+        height: inherit;
+      }
+    }
+
     &--item {
       list-style-type: none;
       cursor: pointer;

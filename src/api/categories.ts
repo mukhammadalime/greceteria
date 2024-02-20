@@ -1,18 +1,15 @@
-import axios from "axios";
 import { CategoryAction, CategoryActionKind } from "../store/CategoryContext";
 import { toast } from "react-toastify";
 import { CategoryItemTypes } from "../utils/user-types";
+import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 export const getCategoriesApi = async (
   dispatch: React.Dispatch<CategoryAction>
 ): Promise<void> => {
   try {
     dispatch({ type: CategoryActionKind.GET_CATEGORIES_START });
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      url: "http://localhost:8000/api/v1/categories",
-    });
+    const { data } = await axios("/categories");
 
     dispatch({
       type: CategoryActionKind.GET_CATEGORIES_SUCCESS,
@@ -21,9 +18,12 @@ export const getCategoriesApi = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.GET_CATEGORIES_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -33,11 +33,7 @@ export const getCategory = async (
 ): Promise<void> => {
   try {
     dispatch({ type: CategoryActionKind.GET_CATEGORY_START });
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      url: `http://localhost:8000/api/v1/categories/${id}`,
-    });
+    const { data } = await axios(`/categories/${id}`);
 
     dispatch({
       type: CategoryActionKind.GET_CATEGORY_SUCCESS,
@@ -46,9 +42,12 @@ export const getCategory = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.GET_CATEGORY_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -58,18 +57,15 @@ export const addOrUpdateCategory = async (
   formData: FormData,
   closeModal: () => void,
   type: string,
+  axiosPrivate: AxiosInstance,
   id?: string | undefined
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
   try {
     dispatch({ type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
+
+    const { data } = await axiosPrivate(`/categories${id ? "/" + id : ""}`, {
+      headers: { "Content-Type": "multipart/form-data" },
       method: type,
-      url: `http://localhost:8000/api/v1/categories${id ? "/" + id : ""}`,
       data: formData,
     });
 
@@ -97,38 +93,37 @@ export const addOrUpdateCategory = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
 export const deleteCategory = async (
   categories: CategoryItemTypes[],
   dispatch: React.Dispatch<CategoryAction>,
-  id: string | undefined
+  id: string | undefined,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
   try {
     dispatch({ type: CategoryActionKind.DELETE_CATEGORY_START });
-    await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "DELETE",
-      url: `http://localhost:8000/api/v1/categories/${id}`,
-    });
-
+    await axiosPrivate.delete(`/categories/${id}`);
     dispatch({
       type: CategoryActionKind.DELETE_CATEGORY_SUCCESS,
       payload: categories.filter((i) => i._id !== id),
     });
+    toast.success(`Category deleted.`);
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.DELETE_CATEGORY_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };

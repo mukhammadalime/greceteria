@@ -2,11 +2,11 @@ import OrderStatusBar from "./OrderStatusBar";
 import OrderDetailsPayment from "./OrderDetailsPayment";
 import FilterOptions from "../UI/FilterOptions";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 const statusOptions = ["Received", "Processing", "On The Way", "Delivered"];
 
 const OrderDetailsContent = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
 

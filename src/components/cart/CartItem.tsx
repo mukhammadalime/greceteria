@@ -2,6 +2,7 @@ import { useState } from "react";
 import Counter from "../UI/Counter";
 import WarningModal from "../modals/WarningModal";
 import { CartProductProps } from "../../utils/user-types";
+import { Link } from "react-router-dom";
 
 const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
   const [warningModal, setWarningModal] = useState(() => false);
@@ -18,9 +19,9 @@ const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
 
       <tr className="cart__item">
         <td className="cart__item--product">
-          <div>
+          <Link to={`/products/${cartItem.productId}`}>
             <img src={cartItem.image} alt="" />
-          </div>
+          </Link>
           <h5>{cartItem.name}</h5>
         </td>
 

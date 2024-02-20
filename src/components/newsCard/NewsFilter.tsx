@@ -1,14 +1,18 @@
 import { useContext, useState } from "react";
 import FilterOptions from "../UI/FilterOptions";
 import AddNewsModal from "../modals/AddNewsModal";
-import { AuthContext } from "../../store/AuthContext";
-const sortOptions = ["Sort by: Newest", "Sort by: Oldest"];
+import { UserContext } from "../../store/UserContext";
+export const sortOptions = [
+  { name: "Sort by: Newest", id: "newest" },
+  { name: "Sort by: Latest", id: "latest" },
+];
 
 const NewsFilter = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const [addNewsModal, setAddNewsModal] = useState(() => false);
   const [sortOpen, setSortOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("");
 
   return (
     <>
@@ -28,12 +32,13 @@ const NewsFilter = () => {
               alt="Search Icon"
             />
           </div>
-          {/* <FilterOptions
+          <FilterOptions
             options={sortOptions}
             title="Sort By: Newest"
-            onOpenHandler={() => setSortOpen((prev) => !prev)}
+            onToggle={() => setSortOpen((prev) => !prev)}
+            onSelect={(id: string) => setSortOption(id)}
             open={sortOpen}
-          /> */}
+          />
           <div className="date-filter">
             <input type="date" />
           </div>

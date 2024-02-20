@@ -34,7 +34,11 @@ const CartOverLay = (props: { closeModal: () => void }) => {
       <div className="cart-modal__items">
         {cart &&
           cart.cartProducts.map((item: CartProductProps) => (
-            <CartModalItem key={item._id} cartItem={item} />
+            <CartModalItem
+              key={item._id}
+              cartItem={item}
+              closeModal={props.closeModal}
+            />
           ))}
 
         {!cart && (

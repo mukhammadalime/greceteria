@@ -4,13 +4,13 @@ import { CategoryContext } from "../../store/CategoryContext";
 import { CategoryItemTypes } from "../../utils/user-types";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import CategoryItem from "../../components/category";
-import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(() => false);
 
   const { state } = useContext(CategoryContext);
-  const { state: userState } = useContext(AuthContext);
+  const { state: userState } = useContext(UserContext);
 
   return (
     <>

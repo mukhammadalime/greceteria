@@ -3,20 +3,40 @@ import { CartProductProps } from "../../utils/user-types";
 import { CartContext } from "../../store/CartContext";
 import { deleteProductCart } from "../../api/cart";
 import LoadingCounterSpinner from "../UI/Icons/LoadingCounterSpinner";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
-const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
+const CartItem = ({
+  cartItem,
+  closeModal,
+}: {
+  cartItem: CartProductProps;
+  closeModal: () => void;
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { dispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  const onGoToProduct = () => {
+    navigate(`/products/${cartItem.productId}`);
+    closeModal();
+  };
 
   const onDeleteProductFromCart = async () => {
-    await deleteProductCart(dispatch, cartItem.productId, setLoading);
+    await deleteProductCart(
+      dispatch,
+      cartItem.productId,
+      axiosPrivate,
+      setLoading
+    );
   };
 
   return (
     <>
       <div className="cart-modal__item">
         <div className="cart-modal__item--main">
-          <img src={cartItem.image} alt="" />
+          <img src={cartItem.image} alt="" onClick={onGoToProduct} />
           <div className="cart-modal__item--info">
             <span className="cart-modal__item--name">{cartItem.name}</span>
             <p>

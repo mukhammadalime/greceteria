@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { CartContext } from "../../store/CartContext";
 import { deleteProductCart } from "../../api/cart";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -12,9 +13,10 @@ const Backdrop = (props: { closeModal: () => void }) => {
 const WarningOverlay = ({ closeModal, text, id }: WarningModalProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { state, dispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const onDeleteProductFromCart = async () => {
-    await deleteProductCart(dispatch, id, setLoading);
+    await deleteProductCart(dispatch, id, axiosPrivate, setLoading);
     closeModal();
   };
 

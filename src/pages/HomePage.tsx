@@ -4,14 +4,14 @@ import AllProductCards from "../layout/AllProductCards";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import NewsCarousel from "../components/newsCard/NewsCarousel";
 import { useContext } from "react";
-import { AuthContext } from "../store/AuthContext";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { CategoryContext } from "../store/CategoryContext";
 import { NewsContext } from "../store/NewsContext";
+import { UserContext } from "../store/UserContext";
 
 const HomePage = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const {
     state: { products, productsLoading },

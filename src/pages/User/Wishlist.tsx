@@ -2,17 +2,15 @@ import WishlistedItem from "../../components/WishlistedItem";
 import CustomProductsCarousel from "../../components/CustomProductsCarousel";
 import SectionHead from "../../components/UI/SectionHeader";
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../../store/AuthContext";
 import LoginFirst from "../../components/LoginFirst";
 import { UserContext } from "../../store/UserContext";
 import { getWishlistApi } from "../../api/user";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
 const Wishlist = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const { state: userState, dispatch } = useContext(UserContext);
-  console.log("userState:", userState);
 
   useEffect(() => {
     const getWishlist = async () => await getWishlistApi(dispatch);
@@ -20,7 +18,7 @@ const Wishlist = () => {
   }, [dispatch]);
 
   if (state.user === null) return <LoginFirst />;
-  if (userState.wishlistLoading) return <LoadingSpinner />;
+  // if (userState.wishlistLoading) return <LoadingSpinner />;
 
   return (
     <>
@@ -29,7 +27,7 @@ const Wishlist = () => {
           <SectionHead text="My Wishlist" />
           <div className="wishlist__items">
             <div>
-              {userState.wishlist.length > 0 &&
+              {/* {userState.wishlist.length > 0 &&
                 userState.wishlist.map((item) => (
                   <WishlistedItem
                     key={item.id}
@@ -40,7 +38,7 @@ const Wishlist = () => {
                     price={item.price}
                     discountedPrice={item.discountedPrice}
                   />
-                ))}
+                ))} */}
               {/* <div className="wishlist-cart__empty">
                 <h2>No wishlisted products yet</h2>
               </div> */}

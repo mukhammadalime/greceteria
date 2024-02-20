@@ -1,22 +1,27 @@
 import { useContext, useState } from "react";
 import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../store/AuthContext";
 import { sendCodeAgain, verify } from "../../api/auth";
+import { UserContext } from "../../store/UserContext";
+import { AuthContext } from "../../store/AuthContext";
 
 const Verification = () => {
   const [code, setCode] = useState<string>("");
+  const [sendVLoading, setSendVLoading] = useState<boolean>(false);
   const handleChange = (code: string) => setCode(code);
   const navigate = useNavigate();
   const location = useLocation();
-  const { state, dispatch } = useContext(AuthContext);
+  const { state, dispatch } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
 
   const onVerifyHandler = async () => {
-    await verify(dispatch, code, location, navigate);
+    await verify(dispatch, code, location, navigate, setAuth);
   };
 
   const onSendCodeAgainHandler = async () => {
-    await sendCodeAgain(dispatch, setCode, location);
+    setSendVLoading(true);
+    await sendCodeAgain(setCode, location);
+    setSendVLoading(false);
   };
 
   return (
@@ -38,14 +43,14 @@ const Verification = () => {
             <div className="form__buttons">
               <button
                 className="button form__button"
-                disabled={state.loading && true}
+                disabled={(state.verifyLoading || sendVLoading) && true}
                 onClick={onSendCodeAgainHandler}
               >
                 Send again
               </button>
               <button
                 className="button form__button"
-                disabled={(state.loading || code?.length < 6) && true}
+                disabled={(state.verifyLoading || code?.length < 6) && true}
                 onClick={onVerifyHandler}
               >
                 Verify me

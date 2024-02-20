@@ -1,100 +1,64 @@
-import axios from "axios";
-import { AuthAction, AuthActionKind } from "../store/AuthContext";
 import { toast } from "react-toastify";
-import PhoneNumber, { CountryCode } from "libphonenumber-js";
-
-export const getUserApi = async (dispatch: React.Dispatch<AuthAction>) => {
-  if (JSON.parse(localStorage.getItem("user")!) === null) return;
-  dispatch({ type: AuthActionKind.GETME_START });
-
-  try {
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem("user")!).token
-        }`,
-      },
-      method: "GET",
-      url: "http://localhost:8000/api/v1/users/me",
-    });
-
-    const userData = { token: data.token, ...data.user };
-    dispatch({ type: AuthActionKind.GETME_SUCCESS, payload: userData });
-  } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.GETME_FAILURE,
-      error: err.response.data.message,
-    });
-  }
-};
+import axios from "./axios";
+import { AuthInitialStateTypes } from "../store/AuthContext";
+import { UserAction, UserActionKind } from "../store/UserContext";
+import { AxiosInstance } from "axios";
 
 export const login = async (
-  dispatch: React.Dispatch<AuthAction>,
+  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
   userData: { username: string | undefined; password: string | undefined },
   location: { search: string },
-  navigate: (arg0: string) => void
+  navigate: (arg: string) => void,
+  userDispatch: React.Dispatch<UserAction>
 ) => {
   const { username, password } = userData;
 
   if (!username || !password) toast.warning("Please fill in all the inputs.");
 
   try {
-    dispatch({ type: AuthActionKind.LOGIN_START });
-
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      url: "http://localhost:8000/api/v1/users/login",
-      data: { username, password },
+    const { data } = await axios.post("/users/login", {
+      username,
+      password,
     });
-
-    dispatch({
-      type: AuthActionKind.LOGIN_SUCCESS,
-      payload: { token: data.token, ...data.user },
-    });
+    setAuth({ accessToken: data.accessToken });
+    userDispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
 
     if (location.search.startsWith("?next-page"))
       navigate(`/${location.search.split("=")[1]}`);
     else navigate("/home");
-    window.location.reload();
+    // window.location.reload();
   } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.LOGIN_FAILURE,
-      error: err.response.data.message,
+    userDispatch({
+      type: UserActionKind.GETME_FAILURE,
+      error: err.response?.data.message,
     });
-
-    if (err.response.data.message.startsWith("Your account")) {
+    if (err.response?.data.message.startsWith("Your account")) {
       navigate(`/auth/verify?username=${username}`);
     }
 
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
 export const logout = async (
-  dispatch: React.Dispatch<AuthAction>,
-  token: string | undefined
+  dispatch: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
+  axiosPrivate: AxiosInstance
 ) => {
   try {
-    await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      url: "http://localhost:8000/api/v1/users/logout",
-    });
+    dispatch({ accessToken: null });
+    await axiosPrivate.get("/users/logout");
 
-    dispatch({ type: AuthActionKind.LOGOUT });
-    localStorage.removeItem("user");
+    localStorage.removeItem("persist");
     window.location.reload();
   } catch (err: any) {
-    toast.error(err.response.data.message);
+    toast.error(err.response?.data?.message);
   }
 };
 
 export const signup = async (
-  dispatch: React.Dispatch<AuthAction>,
   userData: {
     username: string | undefined;
     password: string | undefined;
@@ -119,18 +83,11 @@ export const signup = async (
   ) {
     return toast.warning("Please fill in all the inputs.");
   }
-
   try {
-    dispatch({ type: AuthActionKind.SIGNUP_START });
+    const userData = { name, username, email, password, passwordConfirm };
 
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      url: "http://localhost:8000/api/v1/users/signup",
-      data: { name, username, email, password, passwordConfirm },
-    });
+    const { data } = await axios.post("/users/signup", userData);
 
-    dispatch({ type: AuthActionKind.SIGNUP_SUCCESS });
     toast.success(data.message);
     if (location.search !== "") {
       navigate(`/auth/verify${location.search}&username=${data.username}`);
@@ -138,39 +95,36 @@ export const signup = async (
       navigate(`/auth/verify?username=${data.username}`);
     }
   } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.SIGNUP_FAILURE,
-      error: err.response.data.message,
-    });
-
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
 export const verify = async (
-  dispatch: React.Dispatch<AuthAction>,
+  dispatch: React.Dispatch<UserAction>,
   verificationCode: string,
   location: { search: string },
-  navigate: (arg0: string) => void
+  navigate: (arg0: string) => void,
+  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>
 ) => {
   if (!/^\d*$/.test(verificationCode)) {
-    return toast.warning("Please enter only numbers");
+    toast.warning("Please enter only numbers");
+    return;
   }
 
   try {
-    dispatch({ type: AuthActionKind.VERIFY_START });
+    dispatch({ type: UserActionKind.VERIFY_START });
 
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      url: "http://localhost:8000/api/v1/users/verify",
-      data: { verificationCode },
+    const { data } = await axios.post("/users/verify", {
+      verificationCode,
     });
+    console.log("data:", data);
 
-    dispatch({
-      type: AuthActionKind.VERIFY_SUCCESS,
-      payload: { token: data.token, ...data.user },
-    });
+    setAuth({ accessToken: data.accessToken });
+
+    dispatch({ type: UserActionKind.VERIFY_SUCCESS, payload: data.user });
 
     toast.success("You`ve successfully registered.");
 
@@ -179,108 +133,98 @@ export const verify = async (
     } else navigate("/home");
   } catch (err: any) {
     dispatch({
-      type: AuthActionKind.VERIFY_FAILURE,
-      error: err.response.data.message,
+      type: UserActionKind.VERIFY_FAILURE,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
 export const sendCodeAgain = async (
-  dispatch: React.Dispatch<AuthAction>,
   setCode: (i: string) => void,
   location: { search: string }
 ) => {
   try {
-    dispatch({ type: AuthActionKind.SEND_V_CODE_START });
-
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      url: "http://localhost:8000/api/v1/users/send-code-again",
-      data: { username: location.search.split("=").pop() },
+    const { data } = await axios.post("/users/send-code-again", {
+      username: location.search.split("=").pop(),
     });
 
-    dispatch({ type: AuthActionKind.SEND_V_CODE_SUCCESS });
     toast.success(data.message);
   } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.SEND_V_CODE_FAILURE,
-      error: err.response.data.message,
-    });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 
   setCode("");
 };
 
 export const forgotPassword = async (
-  dispatch: React.Dispatch<AuthAction>,
   email: string | undefined,
   location: { search: string }
 ) => {
   if (!email) toast.warning("Please enter the email.");
   try {
-    dispatch({ type: AuthActionKind.FORGOT_PASSWORD_START });
-
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      url: "http://localhost:8000/api/v1/users/forgotPassword",
-      data: { email, searchLink: location.search },
-    });
-
-    dispatch({ type: AuthActionKind.FORGOT_PASSWORD_SUCCESS });
+    const requestData = { email, searchLink: location.search };
+    const { data } = await axios.post("users/forgotPassword", requestData);
+    localStorage.setItem("forgotPassSuccess", JSON.stringify(true));
     toast.success(data.message);
   } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.FORGOT_PASSWORD_FAILURE,
-      error: err.response.data.message,
-    });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
 export const resetPassword = async (
-  dispatch: React.Dispatch<AuthAction>,
+  dispatch: React.Dispatch<UserAction>,
   passwords: {
     password: string | undefined;
     passwordConfirm: string | undefined;
   },
   resetToken: string | undefined,
   location: { search: string },
-  navigate: (arg0: string) => void
+  navigate: (arg0: string) => void,
+  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>
 ) => {
   const { password, passwordConfirm } = passwords;
   if (!passwordConfirm || !password)
     toast.warning("Please fill in all the inputs.");
 
   try {
-    dispatch({ type: AuthActionKind.RESET_PASSWORD_START });
-
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "PATCH",
-      url: `http://localhost:8000/api/v1/users/resetPassword/${resetToken}`,
-      data: { password, passwordConfirm },
+    dispatch({ type: UserActionKind.RESET_PASSWORD_START });
+    const { data } = await axios.patch(`/users/resetPassword/${resetToken}`, {
+      password,
+      passwordConfirm,
     });
 
+    setAuth({ accessToken: data.accessToken });
+
     dispatch({
-      type: AuthActionKind.RESET_PASSWORD_SUCCESS,
-      payload: { token: data.token, ...data.user },
+      type: UserActionKind.RESET_PASSWORD_SUCCESS,
+      payload: data.user,
     });
 
     if (location.search.startsWith("?next-page"))
       navigate(`/${location.search.split("=")[1]}`);
     else navigate("/home");
 
+    localStorage.removeItem("forgotPassSuccess");
     toast.success("Password has been successfully reset.");
   } catch (err: any) {
     dispatch({
-      type: AuthActionKind.RESET_PASSWORD_FAILURE,
-      error: err.response.data.message,
+      type: UserActionKind.RESET_PASSWORD_FAILURE,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -290,91 +234,25 @@ export const checkResetTokenExistApi = async (
   navigate: (arg0: string) => void
 ) => {
   try {
-    await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      url: `http://localhost:8000/api/v1/users/checkResetToken/${resetToken}`,
-    });
+    await axios(`/users/checkResetToken/${resetToken}`);
   } catch (err: any) {
     toast.error(
-      err.response.data.message +
+      err.response?.data.message +
         '. You will be redirected to the "Forgot password" page in 5 seconds.'
     );
 
+    localStorage.removeItem("forgotPassSuccess");
     setTimeout(() => navigate(`/auth/forgot-password${location.search}`), 5000);
   }
 };
 
-export const updateMe = async (
-  dispatch: React.Dispatch<AuthAction>,
-  userData: {
-    phoneNumber: string | undefined;
-    name: string | undefined;
-    username: string | undefined;
-    email: string | undefined;
-    photoRef: React.RefObject<HTMLInputElement>;
-    countryCode: CountryCode | undefined;
-    token: string | undefined;
-  }
-) => {
-  const validatePhoneNumber = (number: string, code: CountryCode) => {
-    return PhoneNumber(number, code)!.isValid() ? true : false;
-  };
-
-  const { phoneNumber, name, username, email, photoRef, countryCode, token } =
-    userData;
-
-  // Check if phonenumber is in correct format.
-  if (phoneNumber) {
-    if (!validatePhoneNumber(phoneNumber, countryCode!)) {
-      toast.warning("Please enter a valid phone number.");
-      return;
-    }
-  }
-
-  const formData = new FormData();
-  formData.append("phoneNumber", phoneNumber ? (phoneNumber as string) : "");
-  formData.append("name", name as string);
-  formData.append("username", username as string);
-  formData.append("email", email as string);
-  const userPhoto = photoRef.current?.files![0]
-    ? (photoRef.current.files[0] as Blob)
-    : "";
-  formData.append("photo", userPhoto);
-
-  try {
-    dispatch({ type: AuthActionKind.UPDATE_ME_START });
-
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: "http://localhost:8000/api/v1/users/updateMe",
-      data: formData,
-    });
-
-    dispatch({
-      type: AuthActionKind.UPDATE_ME_SUCCESS,
-      payload: { token: token, ...data.user },
-    });
-    toast.success("Your data's been successfully updated.");
-  } catch (err: any) {
-    dispatch({
-      type: AuthActionKind.UPDATE_ME_FAILURE,
-      error: err.response.data.message,
-    });
-    toast.error(err.response.data.message);
-  }
-};
-
 export const changeMyPassword = async (
-  dispatch: React.Dispatch<AuthAction>,
+  dispatch: React.Dispatch<UserAction>,
   currentPasswordRef: React.RefObject<HTMLInputElement>,
   newPasswordRef: React.RefObject<HTMLInputElement>,
   newPasswordConfirmRef: React.RefObject<HTMLInputElement>,
-  token: string | undefined
+  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
+  axiosPrivate: AxiosInstance
 ) => {
   const currentPassword = currentPasswordRef.current?.value;
   const password = newPasswordRef.current?.value;
@@ -384,45 +262,32 @@ export const changeMyPassword = async (
     return toast.warning("Please fill in all the inputs.");
 
   try {
-    dispatch({ type: AuthActionKind.CHANGE_PASSWORD_START });
+    dispatch({ type: UserActionKind.CHANGE_PASSWORD_START });
 
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: "http://localhost:8000/api/v1/users/updateMyPassword",
-      data: { currentPassword, password, passwordConfirm },
+    const { data } = await axios.patch("/users/updateMyPassword", {
+      currentPassword,
+      password,
+      passwordConfirm,
     });
 
+    setAuth({ accessToken: data.accessToken });
     dispatch({
-      type: AuthActionKind.CHANGE_PASSWORD_SUCCESS,
-      payload: { token: data.token, ...data.user },
+      type: UserActionKind.CHANGE_PASSWORD_SUCCESS,
+      payload: data.user,
     });
-    toast.success("Your data's been successfully updated.");
+    toast.success("Your password's been successfully updated.");
+
+    currentPasswordRef.current.value = "";
+    newPasswordRef.current.value = "";
+    newPasswordConfirmRef.current.value = "";
   } catch (err: any) {
     dispatch({
-      type: AuthActionKind.CHANGE_PASSWORD_FAILURE,
-      error: err.response.data.message,
+      type: UserActionKind.CHANGE_PASSWORD_FAILURE,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
-  }
-
-  currentPasswordRef.current.value = "";
-  newPasswordRef.current.value = "";
-  newPasswordConfirmRef.current.value = "";
-};
-
-export const getCountryCode = async (
-  setCountryCode: (code: CountryCode | undefined) => void
-) => {
-  try {
-    // Fetch the user's IP-based location
-    const response = await fetch("https://ipapi.co/json/");
-    const data = await response.json();
-    setCountryCode(data.country);
-  } catch (error) {
-    console.error("Error fetching country:", error);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };

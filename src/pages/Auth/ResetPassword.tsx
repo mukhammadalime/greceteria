@@ -1,8 +1,10 @@
+import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 import { FormEvent, useContext, useEffect, useRef } from "react";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { AuthContext } from "../../store/AuthContext";
 import { checkResetTokenExistApi, resetPassword } from "../../api/auth";
+import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -11,14 +13,13 @@ const ResetPassword = () => {
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
   const { resetToken } = useParams();
-  const { state, dispatch } = useContext(AuthContext);
+  const { state, dispatch } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
 
   // Check if token is valid or has not yet expired. If either of them happens, the user will be redirected to the "forgot-password" page.
   useEffect(() => {
-    const checkResetTokenExist = async () => {
-      await checkResetTokenExistApi(resetToken, location, navigate);
-    };
-    checkResetTokenExist();
+    (async () =>
+      await checkResetTokenExistApi(resetToken, location, navigate))();
   }, [resetToken, navigate, location]);
 
   const onResetPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
@@ -26,7 +27,14 @@ const ResetPassword = () => {
     const password = passwordRef.current?.value;
     const passwordConfirm = passwordConfirmRef.current?.value;
     const passwords = { password, passwordConfirm };
-    await resetPassword(dispatch, passwords, resetToken, location, navigate);
+    await resetPassword(
+      dispatch,
+      passwords,
+      resetToken,
+      location,
+      navigate,
+      setAuth
+    );
   };
 
   return (
@@ -47,10 +55,11 @@ const ResetPassword = () => {
             />
             <button
               className="button form__button"
-              disabled={state.loading && true}
-            >
-              Reset Password
-            </button>
+              disabled={state.resetLoading && true}
+              children={
+                state.resetLoading ? <LoadingButtonSpinner /> : "Reset Password"
+              }
+            />
           </form>
         </div>
       </div>

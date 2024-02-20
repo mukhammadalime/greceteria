@@ -2,17 +2,17 @@ import { useContext, useState } from "react";
 import AddressList from "../../components/addresses/AddressList";
 import AdditionalInfo from "../../components/checkout/AdditionalInfo";
 import AddAddressModal from "../../components/modals/AddAddressModal";
-import { AuthContext } from "../../store/AuthContext";
 import { CartContext } from "../../store/CartContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import BillCard from "../../components/cart/BillCard";
+import { UserContext } from "../../store/UserContext";
 
 const Checkout = () => {
   const [addressModalShown, setAddressModalShown] = useState(false);
 
   const {
     state: { user },
-  } = useContext(AuthContext);
+  } = useContext(UserContext);
   const {
     state: { cart, cartLoading },
   } = useContext(CartContext);

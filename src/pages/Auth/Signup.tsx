@@ -1,12 +1,13 @@
-import { FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
-import { AuthContext } from "../../store/AuthContext";
 import { signup } from "../../api/auth";
+import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
 
 const Signup = () => {
-  const [agreement, setAgreement] = useState(false);
+  const [agreement, setAgreement] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,11 +16,6 @@ const Signup = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const passwordConfirmRef = useRef<HTMLInputElement>(null);
-
-  const {
-    state: { loading },
-    dispatch,
-  } = useContext(AuthContext);
 
   const onSignupHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,7 +33,9 @@ const Signup = () => {
       passwordConfirm,
       agreement,
     };
-    await signup(dispatch, userData, location, navigate);
+    setLoading(true);
+    await signup(userData, location, navigate);
+    setLoading(false);
   };
 
   return (
@@ -79,9 +77,11 @@ const Signup = () => {
                 </label>
               </div>
             </div>
-            <button className="button form__button" disabled={loading && true}>
-              Create Account
-            </button>
+            <button
+              className="button form__button"
+              disabled={loading && true}
+              children={loading ? <LoadingButtonSpinner /> : "Sign up"}
+            />
             <div className="form__signup">
               Already have account?{" "}
               <Link

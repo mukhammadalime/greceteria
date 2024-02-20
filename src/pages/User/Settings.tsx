@@ -4,11 +4,11 @@ import UserPassword from "../../components/settings/UserPassword";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import AddAddressModal from "../../components/modals/AddAddressModal";
 import AccountSettings from "../../components/settings/AccountSettings";
-import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 
 const Settings = () => {
   const [addressModalShown, setAddressModalShown] = useState(false);
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   return (
     <>

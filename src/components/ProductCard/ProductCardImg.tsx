@@ -6,7 +6,6 @@ import { addToWishlist, removeFromWishlist } from "../../api/user";
 import { UserContext } from "../../store/UserContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { AuthContext } from "../../store/AuthContext";
 
 const ProductCardImg = (props: {
   image: string;
@@ -14,12 +13,11 @@ const ProductCardImg = (props: {
   id: string;
 }) => {
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
-  const { state: userState, dispatch } = useContext(UserContext);
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(UserContext);
 
   const onAddToWishlist = async () => {
     const alreadyAdded = state.user?.wishlisted.includes(props.id);
-    if (userState.wishlistUpdateLoading) return;
+    // if (userState.wishlistUpdateLoading) return;
     if (!alreadyAdded) await addToWishlist(dispatch, props.id);
     if (alreadyAdded) await removeFromWishlist(dispatch, props.id);
   };

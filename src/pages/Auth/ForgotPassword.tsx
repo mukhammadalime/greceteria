@@ -1,26 +1,31 @@
 import TextInput from "../../components/UI/Inputs/TextInput";
-import { FormEvent, useContext, useRef } from "react";
-import { AuthContext } from "../../store/AuthContext";
+import { FormEvent, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { forgotPassword } from "../../api/auth";
+import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState<boolean>(false);
   const emailRef = useRef<HTMLInputElement>(null);
-  const { state, dispatch } = useContext(AuthContext);
+  const forgotPassSuccess = JSON.parse(
+    localStorage.getItem("forgotPassSuccess")!
+  );
 
   const onForgotPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = emailRef.current?.value;
-    await forgotPassword(dispatch, email, location);
+    setLoading(true);
+    await forgotPassword(email, location);
+    setLoading(false);
   };
 
   return (
     <div className="section-xl">
       <div className="container">
         <div className="form-wrapper">
-          {state.success === null && (
+          {!forgotPassSuccess && (
             <>
               <h6>Enter your email</h6>
               <form className="form" onSubmit={onForgotPasswordHandler}>
@@ -32,14 +37,14 @@ const ForgotPassword = () => {
                 />
                 <button
                   className="button form__button"
-                  children="Enter"
-                  disabled={state.loading && true}
+                  children={loading ? <LoadingButtonSpinner /> : "Enter"}
+                  disabled={loading && true}
                 />
               </form>
             </>
           )}
 
-          {state.success && (
+          {forgotPassSuccess && (
             <div className="forgotPassword-success">
               <h6>Reset your password</h6>
               <p>

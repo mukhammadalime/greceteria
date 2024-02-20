@@ -1,26 +1,28 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
-import { FormEvent, useContext, useRef } from "react";
-import { AuthContext } from "../../store/AuthContext";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { login } from "../../api/auth";
+import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
+import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  const {
-    state: { loading },
-    dispatch,
-  } = useContext(AuthContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { dispatch } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
 
   const onLoginHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = userNameRef.current?.value;
     const password = passwordRef.current?.value;
-    await login(dispatch, { username, password }, location, navigate);
+    setLoading(true);
+    await login(setAuth, { username, password }, location, navigate, dispatch);
+    setLoading(false);
   };
 
   return (
@@ -59,9 +61,11 @@ const LoginForm = () => {
                 Forgot you password?
               </h4>
             </div>
-            <button className="button form__button" disabled={loading && true}>
-              Sign in
-            </button>
+            <button
+              className="button form__button"
+              disabled={loading && true}
+              children={loading ? <LoadingButtonSpinner /> : "Sign in"}
+            />
             <div className="form__signup">
               Don't have account?{" "}
               <Link

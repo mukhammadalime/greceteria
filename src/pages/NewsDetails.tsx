@@ -2,17 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import AddNewsModal from "../components/modals/AddNewsModal";
 import NewsImagesSlider from "../components/UI/Slider/NewsImagesSlider";
 import SocialShareModal from "../components/modals/SocialShareModal";
-import { AuthContext } from "../store/AuthContext";
 import { getNewsItemApi } from "../api/news";
 import { NewsContext } from "../store/NewsContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
+import { UserContext } from "../store/UserContext";
 
 const NewsDetails = () => {
   const { newsId } = useParams();
   const [shareModal, setShareModal] = useState(() => false);
   const [addNewsModal, setAddNewsModal] = useState(() => false);
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
   const { state: newsState, dispatch } = useContext(NewsContext);
 
   useEffect(() => {

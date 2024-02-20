@@ -1,19 +1,16 @@
 import { toast } from "react-toastify";
 import { NewsAction, NewsActionKind } from "../store/NewsContext";
-import axios from "axios";
 import { ImageItemTypes, NewsItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
+import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 export const getNewsApi = async (
   dispatch: React.Dispatch<NewsAction>
 ): Promise<void> => {
   try {
     dispatch({ type: NewsActionKind.GET_NEWS_START });
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      url: "http://localhost:8000/api/v1/news?sort=createdAt",
-    });
+    const { data } = await axios("news?sort=createdAt");
 
     dispatch({
       type: NewsActionKind.GET_NEWS_SUCCESS,
@@ -22,9 +19,12 @@ export const getNewsApi = async (
   } catch (err: any) {
     dispatch({
       type: NewsActionKind.GET_NEWS_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -34,11 +34,7 @@ export const getNewsItemApi = async (
 ): Promise<void> => {
   try {
     dispatch({ type: NewsActionKind.GET_NEWSITEM_START });
-    const { data } = await axios({
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
-      url: `http://localhost:8000/api/v1/news/${id}`,
-    });
+    const { data } = await axios(`/news/${id}`);
 
     dispatch({
       type: NewsActionKind.GET_NEWSITEM_SUCCESS,
@@ -47,9 +43,12 @@ export const getNewsItemApi = async (
   } catch (err: any) {
     dispatch({
       type: NewsActionKind.GET_NEWSITEM_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -57,24 +56,18 @@ export const addNews = async (
   dispatch: React.Dispatch<NewsAction>,
   formData: FormData,
   imagesForServer: FileList | [],
-  closeModal: () => void
+  closeModal: () => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
   }
 
   try {
     dispatch({ type: NewsActionKind.ADD_NEWSITEM_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "POST",
-      data: formData,
-      url: `http://localhost:8000/api/v1/news`,
+
+    const { data } = await axiosPrivate.post(`/news`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     dispatch({
@@ -86,9 +79,12 @@ export const addNews = async (
   } catch (err: any) {
     dispatch({
       type: NewsActionKind.ADD_NEWSITEM_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -98,13 +94,13 @@ export const updateNews = async (
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  news: NewsItemTypes | undefined
+  news: NewsItemTypes | undefined,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
     return;
   }
-  const token = JSON.parse(localStorage.getItem("user")!).token;
 
   // This function determines how the user updated the images of the item and return formdata based on the way of change.
   const updatedFormData = determineImageUploadConditions(
@@ -116,28 +112,28 @@ export const updateNews = async (
 
   try {
     dispatch({ type: NewsActionKind.UPDATE_NEWSITEM_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: `http://localhost:8000/api/v1/news/${news?._id}`,
-      data: updatedFormData,
-    });
+
+    const { data } = await axiosPrivate.patch(
+      `/news/${news?._id}`,
+      updatedFormData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
 
     dispatch({
       type: NewsActionKind.UPDATE_NEWSITEM_SUCCESS,
       payload: data.data,
     });
     closeModal();
-    toast.success("Product has been successfully updated.");
+    toast.success("News has been successfully updated.");
   } catch (err: any) {
     dispatch({
       type: NewsActionKind.UPDATE_NEWSITEM_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };
 
@@ -145,20 +141,13 @@ export const deleteNews = async (
   dispatch: React.Dispatch<NewsAction>,
   id: string | undefined,
   closeModal: () => void,
-  navigate: (arg: string) => void
+  navigate: (arg: string) => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-
   try {
     dispatch({ type: NewsActionKind.DELETE_NEWSITEM_START });
-    await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "DELETE",
-      url: `http://localhost:8000/api/v1/news/${id}`,
-    });
+
+    await axiosPrivate.delete(`/news/${id}`);
 
     dispatch({ type: NewsActionKind.DELETE_NEWSITEM_SUCCESS });
     toast.success("News has been successfully deleted.");
@@ -167,8 +156,11 @@ export const deleteNews = async (
   } catch (err: any) {
     dispatch({
       type: NewsActionKind.DELETE_NEWSITEM_FAILURE,
-      error: err.response.data.message,
+      error: err.response?.data.message,
     });
-    toast.error(err.response.data.message);
+    toast.error(
+      err.response?.data.message ||
+        "Something went wrong. Please come back later."
+    );
   }
 };

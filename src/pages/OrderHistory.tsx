@@ -2,8 +2,8 @@ import { OrdersTable } from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
 import FilterOptions from "../components/UI/FilterOptions";
 import { useContext, useState } from "react";
-import { AuthContext } from "../store/AuthContext";
 import LoginFirst from "../components/LoginFirst";
+import { UserContext } from "../store/UserContext";
 
 const sortOptions = [
   "Sort by: Received",
@@ -718,7 +718,7 @@ const orders = [
 
 const OrderHistory = () => {
   const [filtersOpen, setFiltersOpen] = useState<boolean[]>([false, false]);
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   // This function opens the requested filter and closed other remaining open filters.
   const onOpenHandler = (num: number) => {

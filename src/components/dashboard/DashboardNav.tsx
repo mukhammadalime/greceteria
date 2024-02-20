@@ -9,8 +9,10 @@ import StatisticsIcon from "../UI/Icons/StatisticsIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../store/AuthContext";
 import { logout } from "../../api/auth";
+import { AuthContext } from "../../store/AuthContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { UserContext } from "../../store/UserContext";
 
 const navUserItems = [
   {
@@ -75,10 +77,16 @@ const navAdminItems = [
 
 const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const [navOpen, setNavOpen] = useState<boolean>(() => false);
-  const { state, dispatch } = useContext(AuthContext);
+  const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
+  const { state } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
+  const axiosPrivate = useAxiosPrivate();
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
-
-  const onLogoutHandler = async () => await logout(dispatch, state.user?.token);
+  const onLogoutHandler = async () => {
+    setLogoutLoading(true);
+    await logout(setAuth, axiosPrivate);
+    setLogoutLoading(false);
+  };
 
   return (
     <div className={`dashboard__nav${navOpen ? " nav-open" : ""}`}>
@@ -102,12 +110,14 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
             <p>{item.name}</p>
           </Link>
         ))}
-        <li className="dashboard__nav--item" onClick={onLogoutHandler}>
-          <span>
-            <LogoutIcon />
-          </span>
-          <p>Log out</p>
-        </li>
+        <button onClick={onLogoutHandler} disabled={logoutLoading && true}>
+          <li className="dashboard__nav--item">
+            <span>
+              <LogoutIcon />
+            </span>
+            <p>Log out</p>
+          </li>
+        </button>
       </ul>
     </div>
   );

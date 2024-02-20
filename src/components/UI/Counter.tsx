@@ -7,6 +7,7 @@ import LoadingButtonSpinner from "./Icons/LoadingButtonSpinner";
 import React from "react";
 import LoadingCounterSpinner from "./Icons/LoadingCounterSpinner";
 import WarningModal from "../modals/WarningModal";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Counter = ({
   defaultValue,
@@ -22,6 +23,7 @@ const Counter = ({
   const counterRef = useRef<HTMLInputElement>(null);
   const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const { state, dispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const changeInputvalue = (num: number): void => {
     const currentValue = Number(counterRef.current?.value);
@@ -36,12 +38,18 @@ const Counter = ({
   // This function is executed after 300 milliseconds after click and terminated if another click comes before 300 milliseconds. This prevents the user to send many requests to the backend.
   const onUpdateHandler = async (): Promise<void> => {
     if (forCart && !warningModal)
-      await updateCart(dispatch, id, counterRef, setCounterLoading);
+      await updateCart(
+        dispatch,
+        id,
+        counterRef,
+        setCounterLoading,
+        axiosPrivate
+      );
   };
 
   // This function is called when the user wants to add one or multiple quantities of one product to the cart. This is used in ProductCard, QuickViewModal and ProductDetails.
   const onAddToCart = async () => {
-    await addToCart(dispatch, id, counterRef, setBtnLoading);
+    await addToCart(dispatch, id, counterRef, setBtnLoading, axiosPrivate);
     counterRef.current!.value = "1";
   };
 

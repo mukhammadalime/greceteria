@@ -5,13 +5,13 @@ import CartHeader from "../../components/cart/CartHeader";
 import SectionHead from "../../components/UI/SectionHeader";
 import LoginFirst from "../../components/LoginFirst";
 import { useContext } from "react";
-import { AuthContext } from "../../store/AuthContext";
 import { CartContext } from "../../store/CartContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import { CartProductProps } from "../../utils/user-types";
+import { UserContext } from "../../store/UserContext";
 
 const Cart = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
   const {
     state: { cart, cartLoading },
   } = useContext(CartContext);

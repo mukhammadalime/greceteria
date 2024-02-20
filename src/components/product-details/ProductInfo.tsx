@@ -4,12 +4,12 @@ import RatingsStars from "../UI/RatingsStars";
 import AddProductModal from "../modals/AddProductModal";
 import SocialShareModal from "../modals/SocialShareModal";
 import ProductImagesSlider from "../UI/Slider/ProductImagesSlider";
-import { AuthContext } from "../../store/AuthContext";
 import { ProductItemTypes } from "../../utils/user-types";
 import { CategoryContext } from "../../store/CategoryContext";
+import { UserContext } from "../../store/UserContext";
 
 const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
   const {
     state: { categories },
   } = useContext(CategoryContext);

@@ -8,7 +8,7 @@ import CompareIcon from "../../components/UI/Icons/CompareIcon";
 import Groups2Icon from "@mui/icons-material/Groups2";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../../store/AuthContext";
+import { UserContext } from "../../store/UserContext";
 
 const navUserItems = [
   {
@@ -77,7 +77,7 @@ const navAdminItems = [
 ];
 
 const Sidebar = ({ onCloseSidebar, open }: SidebarTypes) => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
 

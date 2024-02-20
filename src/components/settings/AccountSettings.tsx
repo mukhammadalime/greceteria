@@ -3,9 +3,10 @@ import { User } from "../../utils/user-types";
 import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { AuthContext } from "../../store/AuthContext";
 import { CountryCode } from "libphonenumber-js";
-import { getCountryCode, updateMe } from "../../api/auth";
+import { getCountryCode, updateMe } from "../../api/user";
+import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const AccountSettings = ({ user }: { user: User | null }) => {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>(
@@ -23,7 +24,9 @@ const AccountSettings = ({ user }: { user: User | null }) => {
     setUploadedImage(image);
   };
 
-  const { state, dispatch } = useContext(AuthContext);
+  const { state, dispatch } = useContext(UserContext);
+
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchCountry = async () => await getCountryCode(setCountryCode);
@@ -43,9 +46,8 @@ const AccountSettings = ({ user }: { user: User | null }) => {
       email,
       photoRef,
       countryCode,
-      token: user?.token,
     };
-    await updateMe(dispatch, userData);
+    await updateMe(dispatch, userData, axiosPrivate);
   };
 
   return (

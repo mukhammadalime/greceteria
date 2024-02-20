@@ -1,17 +1,17 @@
 import { FormEvent, useContext, useRef } from "react";
 import PasswordInput from "../UI/Inputs/PasswordInput";
-import { AuthContext } from "../../store/AuthContext";
 import { changeMyPassword } from "../../api/auth";
+import { UserContext } from "../../store/UserContext";
+import { AuthContext } from "../../store/AuthContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const UserPassword = () => {
   const currentPasswordRef = useRef<HTMLInputElement>(null);
   const newPasswordRef = useRef<HTMLInputElement>(null);
   const newPasswordConfirmRef = useRef<HTMLInputElement>(null);
-
-  const {
-    state: { loading, user },
-    dispatch,
-  } = useContext(AuthContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { state, dispatch } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
 
   const onChangeMyPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,7 +21,8 @@ const UserPassword = () => {
       currentPasswordRef,
       newPasswordRef,
       newPasswordConfirmRef,
-      user?.token
+      setAuth,
+      axiosPrivate
     );
   };
 
@@ -40,9 +41,11 @@ const UserPassword = () => {
             ref={newPasswordConfirmRef}
           />
         </div>
-        <button className="button button-md" disabled={loading && true}>
-          Change Password
-        </button>
+        <button
+          className="button button-md"
+          disabled={state.changePassLoading && true}
+          children="Change Password"
+        />
       </form>
     </div>
   );

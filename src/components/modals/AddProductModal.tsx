@@ -17,6 +17,7 @@ import { inStockOptions, weightOptions } from "../../data/helperData";
 import useToggleOptions from "../../hooks/useToggleOptions";
 import { ActionTypeProps } from "../../utils/types";
 import { createFormDataHandler } from "../../api/helper";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -30,6 +31,9 @@ const AddProductOverlay = ({
   product,
 }: AddProductModalTypes) => {
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+  const { state: productsState, dispatch } = useContext(ProductContext);
+  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(3);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const brandNameRef = useRef<HTMLInputElement>(null);
@@ -52,9 +56,6 @@ const AddProductOverlay = ({
     images || []
   );
   const [imagesForServer, setImagesForServer] = useState<FileList | []>([]);
-
-  const { state: productsState, dispatch } = useContext(ProductContext);
-  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(3);
 
   /// This function remove the image from states which are for client and server
   const onRemoveImages = (img: ImageItemTypes): void => {
@@ -87,7 +88,13 @@ const AddProductOverlay = ({
 
     switch (actionType) {
       case "add":
-        await addProduct(dispatch, formData, imagesForServer, closeModal);
+        await addProduct(
+          dispatch,
+          formData,
+          imagesForServer,
+          closeModal,
+          axiosPrivate
+        );
         break;
       case "update":
         await updateProduct(
@@ -96,11 +103,18 @@ const AddProductOverlay = ({
           imagesForServer,
           imagesForClient,
           closeModal,
-          product
+          product,
+          axiosPrivate
         );
         break;
       case "delete":
-        await deleteProduct(dispatch, closeModal, product?.id, navigate);
+        await deleteProduct(
+          dispatch,
+          closeModal,
+          product?.id,
+          navigate,
+          axiosPrivate
+        );
         break;
       default:
         break;

@@ -2,13 +2,14 @@ import ReactDOM from "react-dom";
 import ModalActions from "./ModalActions";
 import { useContext, useEffect, useRef, useState } from "react";
 import TextInput from "../UI/Inputs/TextInput";
-import { AddressItemTypes } from "../../utils/user-types";
+import { AddressItemTypes, User } from "../../utils/user-types";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import PhoneNumber, { CountryCode } from "libphonenumber-js";
-import { toast } from "react-toastify";
-import { AuthActionKind, AuthContext } from "../../store/AuthContext";
-import axios from "axios";
+import { CountryCode } from "libphonenumber-js";
+import { UserContext } from "../../store/UserContext";
+import { addDeleteUpdateAddress, getCountryCode } from "../../api/user";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { ActionTypeProps } from "../../utils/types";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -18,11 +19,7 @@ const AddAddressOverlay = ({
   addressItem,
   text,
   closeModal,
-}: {
-  text: string;
-  closeModal: () => void;
-  addressItem?: AddressItemTypes;
-}) => {
+}: AddAddressModalProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>(
     addressItem?.phoneNumber!
   );
@@ -33,116 +30,34 @@ const AddAddressOverlay = ({
   const address2Ref = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
 
-  const {
-    state: { loading, user },
-    dispatch,
-  } = useContext(AuthContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { state, dispatch } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        // Fetch the user's IP-based location
-        const response = await fetch("https://ipapi.co/json/");
-        const data = await response.json();
-        setCountryCode(data.country);
-      } catch (error) {
-        console.error("Error fetching country:", error);
-      }
+    const fetchCountry = async () => await getCountryCode(setCountryCode);
+    state.user?.phoneNumber === undefined && fetchCountry();
+  }, [state.user?.phoneNumber]);
+
+  const onUpdateOrDeleteOrAddAddress = async (actionType: ActionTypeProps) => {
+    const addressRefs = {
+      nameRef,
+      cityRef,
+      address1Ref,
+      address2Ref,
+      postalCodeRef,
+      phoneNumber: phoneNumber as string,
+      countryCode: countryCode as CountryCode,
     };
 
-    fetchCountry();
-  }, []);
-
-  const validatePhoneNumber = (number: string, code: CountryCode) => {
-    return PhoneNumber(number, code)!.isValid() ? true : false;
-  };
-
-  const onUpdateOrDeleteOrAddAddress = async (
-    actionType: "update" | "delete" | "add"
-  ) => {
-    if (!user) return;
-
-    // 1. Get all values from input
-    const name = nameRef.current?.value!;
-    const city = cityRef.current?.value!;
-    const address1 = address1Ref.current?.value!;
-    const address2 = address2Ref.current?.value!;
-    const postalCode = Number(postalCodeRef.current?.value!);
-
-    let newAddresses: AddressItemTypes[] = [];
-
-    // Check if phonenumber is in correct format.
-    if (phoneNumber && !validatePhoneNumber(phoneNumber, countryCode!)) {
-      toast.error("Please enter a valid phone number.");
-      return;
-    }
-
-    const newAddress: AddressItemTypes = {
-      name,
-      phoneNumber: phoneNumber!,
-      city,
-      address1,
-      address2,
-      postalCode,
-    };
-
-    switch (actionType) {
-      case "delete":
-        newAddresses = user?.addresses.filter(
-          (item) => item._id !== addressItem?._id
-        );
-        break;
-
-      case "add":
-        user.addresses.length > 0
-          ? (newAddresses = [...user?.addresses!, newAddress])
-          : (newAddresses = [newAddress]);
-        break;
-
-      case "update":
-        if (user.addresses.length === 1) newAddresses = [newAddress];
-        else if (user.addresses.length > 1) {
-          // Find the index of the updating address and replaces it with new updated address
-          const updatingAddressIndex = user.addresses.findIndex(
-            (item) => item._id === addressItem?._id
-          );
-          const userAddressesCopy = [...user.addresses];
-          userAddressesCopy[updatingAddressIndex] = newAddress;
-          newAddresses = userAddressesCopy;
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    // The same for all action types
-    try {
-      dispatch({ type: AuthActionKind.UPDATE_ME_START });
-      const { data } = await axios({
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        method: "PATCH",
-        url: "http://localhost:8000/api/v1/users/updateMe",
-        data: { addresses: newAddresses },
-      });
-
-      dispatch({
-        type: AuthActionKind.UPDATE_ME_SUCCESS,
-        payload: { token: user?.token, ...data.user },
-      });
-      toast.success("Your data's been successfully updated.");
-    } catch (err: any) {
-      dispatch({
-        type: AuthActionKind.UPDATE_ME_FAILURE,
-        error: err.response.data.message,
-      });
-
-      toast.error(err.response.data.message);
-    }
-    closeModal();
+    await addDeleteUpdateAddress(
+      dispatch,
+      axiosPrivate,
+      actionType,
+      state.user as User,
+      addressRefs,
+      addressItem as AddressItemTypes,
+      closeModal
+    );
   };
 
   return (
@@ -212,17 +127,13 @@ const AddAddressOverlay = ({
         onAddHandler={onUpdateOrDeleteOrAddAddress.bind(null, "add")}
         onUpdateHandler={onUpdateOrDeleteOrAddAddress.bind(null, "update")}
         onDeleteHandler={onUpdateOrDeleteOrAddAddress.bind(null, "delete")}
-        loading={loading}
+        loading={state.updateMeLoading}
       />
     </div>
   );
 };
 
-const AddAddressModal = (props: {
-  text: string;
-  closeModal: () => void;
-  addressItem?: AddressItemTypes;
-}) => {
+const AddAddressModal = (props: AddAddressModalProps) => {
   return (
     <>
       {ReactDOM.createPortal(
@@ -240,5 +151,11 @@ const AddAddressModal = (props: {
     </>
   );
 };
+
+interface AddAddressModalProps {
+  text: string;
+  closeModal: () => void;
+  addressItem?: AddressItemTypes;
+}
 
 export default AddAddressModal;

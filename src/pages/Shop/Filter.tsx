@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import CloseIcon from "../../components/UI/Icons/CloseIcon";
 import FilterOptions from "../../components/UI/FilterOptions";
 import AddProductModal from "../../components/modals/AddProductModal";
-import { AuthContext } from "../../store/AuthContext";
 import { CategoryContext } from "../../store/CategoryContext";
 import { ProductContext } from "../../store/ProductContext";
 import useToggleOptions from "../../hooks/useToggleOptions";
@@ -11,13 +10,14 @@ import {
   ratingOptions,
   sortOptions,
 } from "../../data/helperData";
+import { UserContext } from "../../store/UserContext";
 
 const Filter = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedPrice, setSelectedPrice] = useState<string>("");
   const [selectedSort, setSelectedSort] = useState<string>("");
   const [selectedRating, setSelectedRating] = useState<string>("");
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
 
   const {

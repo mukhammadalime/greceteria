@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import NewsCard from "../components/newsCard";
 import NewsFilter from "../components/newsCard/NewsFilter";
-import { AuthContext } from "../store/AuthContext";
 import LoginFirst from "../components/LoginFirst";
 import { NewsContext } from "../store/NewsContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
+import { UserContext } from "../store/UserContext";
 
 const NewsPage = () => {
-  const { state } = useContext(AuthContext);
+  const { state } = useContext(UserContext);
 
   const {
     state: { news, newsLoading },
