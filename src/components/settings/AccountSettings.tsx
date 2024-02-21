@@ -25,6 +25,7 @@ const AccountSettings = ({ user }: { user: User | null }) => {
   };
 
   const { state, dispatch } = useContext(UserContext);
+  console.log("state:", state);
 
   const axiosPrivate = useAxiosPrivate();
 
@@ -88,7 +89,10 @@ const AccountSettings = ({ user }: { user: User | null }) => {
             />
           </div>
 
-          <button className="button button-md" disabled={state.loading && true}>
+          <button
+            className="button button-md"
+            disabled={state.updateMeLoading && true}
+          >
             Save Changes
           </button>
         </form>

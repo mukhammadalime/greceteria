@@ -22,8 +22,8 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useContext, useEffect, useState } from "react";
-import { ToastContainer, Flip } from "react-toastify";
+import { useContext, useEffect } from "react";
+import { ToastContainer, Flip, toast } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
 import { ProductContext } from "./store/ProductContext";
@@ -38,13 +38,13 @@ function App() {
   const {
     state: { user, loading },
   } = useContext(UserContext);
+  console.log("user:", user);
   const { dispatch } = useContext(ProductContext);
   const { auth, setAuth } = useContext(AuthContext);
   const refresh = useRefreshToken();
 
-  const persist = JSON.parse(localStorage.getItem("persist")!);
-
   useEffect(() => {
+    const persist = JSON.parse(localStorage.getItem("persist")!);
     const verifyRefreshToken = async () => {
       setAuth({ accessToken: null });
       try {
@@ -77,6 +77,7 @@ function App() {
           transition={Flip}
           draggablePercent={60}
           icon={<CartIcon />}
+          limit={1}
         />
 
         <Routes>

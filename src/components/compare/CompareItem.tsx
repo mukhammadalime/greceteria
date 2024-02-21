@@ -23,11 +23,11 @@ const CompareItem = ({ product }: { product: ProductItemTypes }) => {
             alt=""
           />
         </Link>
-        <ActionsBox />
+        <ActionsBox id={product.id} />
       </div>
       <div className="compare-item__main">
         <h2 className="compare-item__title">
-          <span>{product.brandName ? product.brandName : ""}</span>
+          <span>{product.brandName ? "[" + product.brandName + "]" : ""}</span>
           {product.name}
           <span>
             {product.features ? product.features : ""}{" "}

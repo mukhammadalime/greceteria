@@ -112,7 +112,7 @@
           background-color: #2c742ee6;
         }
         &:active {
-          transform: scale(0.95);
+          transform: scale(0.99);
         }
 
         span {
@@ -126,15 +126,15 @@
       }
 
       .wishlist {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 5.2rem;
-        height: 5.2rem;
+        display: grid;
+        place-items: center;
+        width: 5rem;
+        height: 5rem;
         border-radius: 100%;
-        background-color: #20b5261a;
+        background-color: #20b52531;
+        border: none;
         cursor: pointer;
-        transition: all 0.3s linear;
+        transition: all 0.15s ease-in-out;
 
         &:hover {
           background-color: #00b207;
@@ -144,12 +144,12 @@
         }
 
         &:active {
-          transform: scale(0.95);
+          transform: scale(0.96);
         }
 
         svg {
-          width: 2.3rem;
-          height: 2.3rem;
+          width: 2.8rem;
+          height: 2.6rem;
           fill: #00b207;
         }
       }

@@ -2,24 +2,58 @@ import { useContext, useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
 import { Link } from "react-router-dom";
-import { addToWishlist, removeFromWishlist } from "../../api/user";
+import {
+  addToCompare,
+  addToWishlist,
+  removeFromCompare,
+  removeFromWishlist,
+} from "../../api/user";
 import { UserContext } from "../../store/UserContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import CompareIconFull from "../UI/Icons/CompareIconFull";
 
 const ProductCardImg = (props: {
   image: string;
   inStock: boolean;
   id: string;
 }) => {
+  const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
+  const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
+  const [compareAdded, setCompareAdded] = useState<boolean>(false);
+  const [compareRemoved, setCompareRemoved] = useState<boolean>(false);
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
-  const { state, dispatch } = useContext(UserContext);
+  const {
+    state: { user },
+    dispatch,
+  } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
 
-  const onAddToWishlist = async () => {
-    const alreadyAdded = state.user?.wishlisted.includes(props.id);
-    // if (userState.wishlistUpdateLoading) return;
-    if (!alreadyAdded) await addToWishlist(dispatch, props.id);
-    if (alreadyAdded) await removeFromWishlist(dispatch, props.id);
+  const onToggleWishlist = async () => {
+    if (!user?.wishlisted.includes(props.id)) {
+      setWishlistAdded(true);
+      await addToWishlist(dispatch, props.id, axiosPrivate);
+      setWishlistAdded(false);
+      return;
+    }
+    setWishlistRemoved(true);
+    await removeFromWishlist(dispatch, props.id, axiosPrivate);
+    setWishlistRemoved(false);
+  };
+
+  const onToggleCompare = async () => {
+    const alreadyAdded = user?.compare.includes(props.id);
+    if (!alreadyAdded) {
+      setCompareAdded(true);
+      await addToCompare(dispatch, props.id, axiosPrivate);
+      setCompareAdded(false);
+    }
+    if (alreadyAdded) {
+      setCompareRemoved(true);
+      await removeFromCompare(dispatch, props.id, axiosPrivate);
+      setCompareRemoved(false);
+    }
   };
 
   return (
@@ -40,21 +74,31 @@ const ProductCardImg = (props: {
           )}
         </Link>
         <div className="favs">
-          <div className="favs-item" onClick={onAddToWishlist}>
-            {state.user?.wishlisted.includes(props.id) ? (
-              <FavoriteIcon className="full-icon" />
-            ) : (
-              <FavoriteBorderIcon />
-            )}
-          </div>
+          <button
+            className="favs-item"
+            onClick={onToggleWishlist}
+            disabled={(wishlistAdded || wishlistRemoved) && true}
+          >
+            {(user?.wishlisted.includes(props.id) || wishlistAdded) &&
+              !wishlistRemoved && <FavoriteIcon className="full-icon" />}
+            {(!user?.wishlisted.includes(props.id) || wishlistRemoved) &&
+              !wishlistAdded && <FavoriteBorderIcon />}
+          </button>
           <div className="favs-item" onClick={() => setShowQuickView(true)}>
             <svg>
               <use href="/assets/icons/icons.svg#icon-eye"></use>
             </svg>
           </div>
-          <div className="favs-item">
-            <CompareIcon />
-          </div>
+          <button
+            className="favs-item"
+            onClick={onToggleCompare}
+            disabled={(compareAdded || compareRemoved) && true}
+          >
+            {(user?.compare.includes(props.id) || compareAdded) &&
+              !compareRemoved && <CompareIconFull />}
+            {(!user?.compare.includes(props.id) || compareRemoved) &&
+              !compareAdded && <CompareIcon />}
+          </button>
         </div>
       </div>
     </>

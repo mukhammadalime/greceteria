@@ -1,4 +1,10 @@
+import { useContext, useState } from "react";
 import Counter from "../UI/Counter";
+import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { addToWishlist, removeFromWishlist } from "../../api/user";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const ProductActions = ({
   category,
@@ -6,17 +12,38 @@ const ProductActions = ({
   inStock,
   id,
 }: ProductActionsProps) => {
+  const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
+  const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
+  const { state, dispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  const onToggleWishlist = async () => {
+    if (!state.user?.wishlisted.includes(id)) {
+      setWishlistAdded(true);
+      await addToWishlist(dispatch, id, axiosPrivate);
+      setWishlistAdded(false);
+      return;
+    }
+    setWishlistRemoved(true);
+    await removeFromWishlist(dispatch, id, axiosPrivate);
+    setWishlistRemoved(false);
+  };
   return (
     <>
       <div className="product__info--item">
         <div className="product__info--action">
           <Counter id={id} inStock={inStock} cartIcon />
 
-          <div className="wishlist">
-            <svg>
-              <use href="/assets/icons/icons.svg#icon-heart"></use>
-            </svg>
-          </div>
+          <button
+            className="wishlist"
+            onClick={onToggleWishlist}
+            disabled={(wishlistAdded || wishlistRemoved) && true}
+          >
+            {(state.user?.wishlisted.includes(id) || wishlistAdded) &&
+              !wishlistRemoved && <FavoriteIcon className="full-icon" />}
+            {(!state.user?.wishlisted.includes(id) || wishlistRemoved) &&
+              !wishlistAdded && <FavoriteBorderIcon />}
+          </button>
         </div>
       </div>
       <div className="product__info--item">

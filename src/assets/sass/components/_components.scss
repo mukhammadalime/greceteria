@@ -149,7 +149,6 @@
   padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
   margin: 0 0.8rem;
-  flex-shrink: 0;
   background-color: #20b52633;
   color: #2c742f;
 
@@ -160,16 +159,20 @@
 }
 
 .stock-out {
-  // position: absolute;
   top: 1.4rem;
   left: 1.4rem;
   color: #fff;
-  padding: 0.3rem 0.8rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
   font-size: 1.4rem;
   font-weight: 400;
   text-transform: capitalize;
   background-color: #ea4b48;
+
+  @media (max-width: 600px) {
+    font-size: 1.2rem;
+    padding: 0.3rem 0.6rem;
+  }
 }
 
 /// SALE OFF BOX

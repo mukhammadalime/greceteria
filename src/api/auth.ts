@@ -36,10 +36,10 @@ export const login = async (
       navigate(`/auth/verify?username=${username}`);
     }
 
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -95,10 +95,10 @@ export const signup = async (
       navigate(`/auth/verify?username=${data.username}`);
     }
   } catch (err: any) {
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -136,10 +136,10 @@ export const verify = async (
       type: UserActionKind.VERIFY_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -154,10 +154,10 @@ export const sendCodeAgain = async (
 
     toast.success(data.message);
   } catch (err: any) {
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 
   setCode("");
@@ -174,10 +174,10 @@ export const forgotPassword = async (
     localStorage.setItem("forgotPassSuccess", JSON.stringify(true));
     toast.success(data.message);
   } catch (err: any) {
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -221,10 +221,10 @@ export const resetPassword = async (
       type: UserActionKind.RESET_PASSWORD_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -285,9 +285,9 @@ export const changeMyPassword = async (
       type: UserActionKind.CHANGE_PASSWORD_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };

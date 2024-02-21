@@ -15,29 +15,26 @@ export const getCartApi = async (
       payload: data.data,
     });
   } catch (err: any) {
-    console.log("err:", err);
     dispatch({
       type: CartActionKind.GET_CART_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
 export const addToCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
-  counterRef: React.RefObject<HTMLInputElement>,
-  setLoading: (arg: boolean) => void,
-  axiosPrivate: AxiosInstance
+  quantity: number,
+  axiosPrivate: AxiosInstance,
+  setLoading?: (arg: boolean) => void
 ): Promise<void> => {
-  const quantity = Number(counterRef.current?.value);
-
   try {
-    setLoading(true);
+    setLoading && setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
     const { data } = await axiosPrivate.post("/cart", { productId, quantity });
 
@@ -45,29 +42,22 @@ export const addToCart = async (
       type: CartActionKind.UPDATE_CART_SUCCESS,
       payload: data.data,
     });
-    toast.success("Cart updated.");
   } catch (err: any) {
-    dispatch({
-      type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
-  setLoading(false);
+  setLoading && setLoading(false);
 };
 
 export const updateCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
-  counterRef: React.RefObject<HTMLInputElement>,
+  quantity: number,
   setLoading: (arg: boolean) => void,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const quantity = Number(counterRef.current?.value);
-
   try {
     setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
@@ -78,14 +68,10 @@ export const updateCart = async (
       payload: data.data,
     });
   } catch (err: any) {
-    dispatch({
-      type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
   setLoading(false);
 };
@@ -107,16 +93,11 @@ export const deleteProductCart = async (
       type: CartActionKind.UPDATE_CART_SUCCESS,
       payload: data.data,
     });
-    toast.success("Product removed.");
   } catch (err: any) {
-    dispatch({
-      type: CartActionKind.UPDATE_CART_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
   setLoading(false);
 };

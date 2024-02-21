@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { UserAction, UserActionKind } from "../store/UserContext";
 import { toast } from "react-toastify";
 import PhoneNumber, { CountryCode } from "libphonenumber-js";
-import { AddressItemTypes, User } from "../utils/user-types";
+import { AddressItemTypes, ProductItemTypes, User } from "../utils/user-types";
 import { ActionTypeProps } from "../utils/types";
 
 export const getCountryCode = async (
@@ -56,7 +56,7 @@ export const updateMe = async (
   try {
     dispatch({ type: UserActionKind.UPDATE_ME_START });
 
-    const { data } = await axiosPrivate.patch("users/updateMe", formData, {
+    const { data } = await axiosPrivate.patch("/users/updateMe", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -67,10 +67,10 @@ export const updateMe = async (
       type: UserActionKind.UPDATE_ME_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -168,141 +168,112 @@ export const addDeleteUpdateAddress = async (
       type: UserActionKind.UPDATE_ME_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
-export const getCompareApi = async (
-  dispatch: React.Dispatch<UserAction>
+export const getCompareWishlistProducts = async (
+  products: ProductItemTypes[],
+  items: string[],
+  setProducts: (items: ProductItemTypes[]) => void
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-  try {
-    dispatch({ type: UserActionKind.GET_COMPARE_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-      url: "http://localhost:8000/api/v1/users/compare",
-    });
-
-    dispatch({
-      type: UserActionKind.GET_COMPARE_SUCCESS,
-      payload: data.data,
-    });
-  } catch (err: any) {
-    dispatch({
-      type: UserActionKind.GET_COMPARE_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
-      err.response?.data.message ||
-        "Something went wrong. Please come back later."
+  let itemsList: ProductItemTypes[] = [];
+  for (let i = 0; i < items.length!; i++) {
+    itemsList.push(
+      products.find((item) => item.id === items[i]) as ProductItemTypes
     );
   }
-};
 
-export const getWishlistApi = async (
-  dispatch: React.Dispatch<UserAction>
-): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-  try {
-    dispatch({ type: UserActionKind.GET_WISHLIST_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-      url: "http://localhost:8000/api/v1/users/wishlist",
-    });
-
-    dispatch({
-      type: UserActionKind.GET_WISHLIST_SUCCESS,
-      payload: data.data,
-    });
-  } catch (err: any) {
-    dispatch({
-      type: UserActionKind.GET_WISHLIST_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
-      err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
-  }
+  setProducts(itemsList);
 };
 
 export const addToWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string
+  productId: string,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-
   try {
-    dispatch({ type: UserActionKind.ADD_TO_WISHLIST_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: "http://localhost:8000/api/v1/users/wishlist/add",
-      data: { productId },
+    const { data } = await axiosPrivate.patch("/users/wishlist/add", {
+      productId,
     });
 
     dispatch({
-      type: UserActionKind.ADD_TO_WISHLIST_SUCCESS,
+      type: UserActionKind.UPDATE_ME_SUCCESS,
       payload: data.data,
     });
-    toast.success("Added to wishlist");
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.ADD_TO_WISHLIST_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
 export const removeFromWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string
+  productId: string,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
-  const token = JSON.parse(localStorage.getItem("user")!).token;
-
   try {
-    dispatch({ type: UserActionKind.ADD_TO_WISHLIST_START });
-    const { data } = await axios({
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      method: "PATCH",
-      url: "http://localhost:8000/api/v1/users/wishlist/remove",
-      data: { productId },
+    const { data } = await axiosPrivate.patch("/users/wishlist/remove", {
+      productId,
     });
 
     dispatch({
-      type: UserActionKind.ADD_TO_WISHLIST_SUCCESS,
+      type: UserActionKind.UPDATE_ME_SUCCESS,
       payload: data.data,
     });
-    toast.success("Removed to wishlist");
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.ADD_TO_WISHLIST_FAILURE,
-      error: err.response?.data.message,
-    });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
+  }
+};
+
+export const addToCompare = async (
+  dispatch: React.Dispatch<UserAction>,
+  productId: string,
+  axiosPrivate: AxiosInstance
+): Promise<void> => {
+  try {
+    const { data } = await axiosPrivate.patch("/users/compare/add", {
+      productId,
+    });
+
+    dispatch({
+      type: UserActionKind.UPDATE_ME_SUCCESS,
+      payload: data.data,
+    });
+  } catch (err: any) {
+    const error =
+      err.response?.data.message ||
+      "Something went wrong. Please come back later.";
+    toast.error(error);
+  }
+};
+
+export const removeFromCompare = async (
+  dispatch: React.Dispatch<UserAction>,
+  productId: string,
+  axiosPrivate: AxiosInstance
+): Promise<void> => {
+  try {
+    const { data } = await axiosPrivate.patch("/users/compare/remove", {
+      productId,
+    });
+
+    dispatch({
+      type: UserActionKind.UPDATE_ME_SUCCESS,
+      payload: data.data,
+    });
+  } catch (err: any) {
+    const error =
+      err.response?.data.message ||
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };

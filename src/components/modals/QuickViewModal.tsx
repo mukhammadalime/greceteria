@@ -4,7 +4,12 @@ import CloseIcon from "../UI/Icons/CloseIcon";
 import RatingsStars from "../UI/RatingsStars";
 import { ProductItemTypes } from "../../utils/user-types";
 import { ProductContext } from "../../store/ProductContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { addToWishlist, removeFromWishlist } from "../../api/user";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -14,16 +19,30 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
   const {
     state: { products },
   } = useContext(ProductContext);
+  const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
+  const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
+  const { state, dispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
 
-  const product = products.find(
-    (item) => item.id === productId
-  ) as ProductItemTypes;
+  const product = products.find((i) => i.id === productId) as ProductItemTypes;
 
   let discountPercent: number = 0;
   if (product.discountedPrice > 0) {
     const priceGap = product.price - product.discountedPrice;
     discountPercent = priceGap / (product.price / 100);
   }
+
+  const onToggleWishlist = async () => {
+    if (state.user?.wishlisted.includes(productId)) {
+      setWishlistRemoved(true);
+      await removeFromWishlist(dispatch, productId, axiosPrivate);
+      setWishlistRemoved(false);
+      return;
+    }
+    setWishlistAdded(true);
+    await addToWishlist(dispatch, productId, axiosPrivate);
+    setWishlistAdded(false);
+  };
 
   return (
     <div className="quick-view">
@@ -66,11 +85,17 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
           <div className="product__info--action">
             <Counter id={productId} inStock={product.inStock} />
 
-            <div className="wishlist">
-              <svg>
-                <use href="/assets/icons/icons.svg#icon-heart"></use>
-              </svg>
-            </div>
+            <button
+              className="wishlist"
+              onClick={onToggleWishlist}
+              disabled={(wishlistAdded || wishlistRemoved) && true}
+            >
+              {(state.user?.wishlisted.includes(productId) || wishlistAdded) &&
+                !wishlistRemoved && <FavoriteIcon className="full-icon" />}
+              {(!state.user?.wishlisted.includes(productId) ||
+                wishlistRemoved) &&
+                !wishlistAdded && <FavoriteBorderIcon />}
+            </button>
           </div>
         </div>
         <div className="product__info--item">

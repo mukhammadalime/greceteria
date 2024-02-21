@@ -2,8 +2,7 @@
   &-list {
     list-style: none;
     display: grid;
-    column-gap: 2.4rem;
-    row-gap: 2.4rem;
+    gap: 1.5rem;
     grid-template-columns: repeat(auto-fit, minmax(33rem, 1fr));
   }
 
@@ -51,6 +50,7 @@
       width: 100%;
       border-top-right-radius: 0.8rem;
       border-top-left-radius: 0.8rem;
+      object-fit: cover;
     }
 
     &__ratings {
@@ -88,7 +88,6 @@
   display: grid;
   top: 1rem;
   right: 1rem;
-  row-gap: 1rem;
 
   img {
     height: 2rem;
@@ -107,18 +106,19 @@
     justify-self: right;
     transition: all 0.3s linear;
   }
+
+  .options {
+    position: unset;
+  }
 }
 
-.options-box__icon-open {
-  visibility: visible;
-}
+// .actionsBoxModal-container {
+//   background-color: unset !important;
+//   display: none;
+// }
 
-.actionsBoxModal-container {
-  background-color: unset !important;
-}
-
-.actionsBoxItems {
-  display: unset;
-  width: 13rem;
-  z-index: 100;
-}
+// .actionsBoxItems {
+//   display: unset;
+//   width: 13rem;
+//   z-index: 100;
+// }

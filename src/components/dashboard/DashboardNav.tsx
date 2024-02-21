@@ -82,6 +82,7 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const { setAuth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
+
   const onLogoutHandler = async () => {
     setLogoutLoading(true);
     await logout(setAuth, axiosPrivate);

@@ -1,3 +1,13 @@
+import { useContext, useState } from "react";
+import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
+import { UserContext } from "../store/UserContext";
+import { removeFromWishlist } from "../api/user";
+import LoadingCounterSpinner from "./UI/Icons/LoadingCounterSpinner";
+import { addToCart } from "../api/cart";
+import { CartContext } from "../store/CartContext";
+import LoadingButtonSpinner from "./UI/Icons/LoadingButtonSpinner";
+import { Link } from "react-router-dom";
+
 const WishlistedItem = ({
   name,
   price,
@@ -6,33 +16,67 @@ const WishlistedItem = ({
   image,
   id,
 }: WishlistedItemProps) => {
+  const [addToCartLoading, setAddToCartLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { dispatch } = useContext(UserContext);
+  const { state, dispatch: cartDispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  const onAddToCart = async () => {
+    if (state.updateLoading) return;
+    await addToCart(cartDispatch, id, 1, axiosPrivate, setAddToCartLoading);
+  };
+
+  const onRemoveFromWishlist = async () => {
+    setLoading(true);
+    await removeFromWishlist(dispatch, id, axiosPrivate);
+    setLoading(false);
+  };
+
   return (
-    <div className="wishlist__item">
-      <div className="wishlist__item--product">
-        <div className="wishlist__item--image">
+    <tr className="wishlist__item">
+      <td className="wishlist__item--product">
+        <Link to={`/products/${id}`} className="wishlist__item--image">
           <img src={image} alt="" />
-        </div>
+        </Link>
         <h5>{name}</h5>
-      </div>
-      <div className="wishlist__item--price">
+      </td>
+      <td className="wishlist__item--price">
         <p>
-          ${price.toFixed(2)}{" "}
-          {discountedPrice && <del>${discountedPrice.toFixed(2)}</del>}
+          {discountedPrice > 0 ? (
+            <>
+              ${discountedPrice.toFixed(2)} <del>${price.toFixed(2)}</del>
+            </>
+          ) : (
+            "$" + price.toFixed(2)
+          )}
         </p>
-      </div>
-      <div className="wishlist__item--stock">
+      </td>
+      <td className="wishlist__item--stock">
         {inStock && <span className="stock-in">in Stock</span>}
         {!inStock && <span className="stock-out">out of stock</span>}
-      </div>
-      <div className="wishlist__item--actions">
-        <button className="button button-md" disabled={!inStock && true}>
-          Add To Cart
+      </td>
+      <td className="wishlist__item--actions">
+        <button
+          className="button button-md"
+          disabled={!inStock && true}
+          onClick={onAddToCart}
+        >
+          {addToCartLoading ? <LoadingButtonSpinner /> : "Add to Cart"}
         </button>
-        <div className="delete-item">
-          <img src="/assets/icons/delete-icon.svg" alt="" />
-        </div>
-      </div>
-    </div>
+        <button
+          className="delete-item"
+          disabled={loading && true}
+          onClick={onRemoveFromWishlist}
+        >
+          {loading ? (
+            <LoadingCounterSpinner />
+          ) : (
+            <img src="/assets/icons/delete-icon.svg" alt="" />
+          )}
+        </button>
+      </td>
+    </tr>
   );
 };
 

@@ -1,26 +1,31 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-const useClose = () => {
-  const btnRef = useRef();
-  const imgRef = useRef();
-  const [showOptions, setShowOptions] = useState(() => false);
+const useClose = (ref: React.RefObject<HTMLDivElement>) => {
+  const [boxOpen, setBoxOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const closeOptions = (e: any) => {
-      if (e.path[0] !== btnRef.current && e.path[0] !== imgRef.current)
-        setShowOptions(false);
+    // Alert if clicked on outside of element
+    function handleClickOutside(event: PointerEvent) {
+      if (
+        ref.current &&
+        !ref.current.contains(event.target as HTMLDivElement)
+      ) {
+        console.log("You clicked outside of me!");
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [ref]);
 
-    document.addEventListener("click", closeOptions);
-    return () => document.removeEventListener("click", closeOptions);
-  }, [btnRef, imgRef]);
-
-  return {
-    showOptions,
-    btnRef,
-    imgRef,
-    setShowOptions,
-  };
+  // return {
+  //   boxOpen,
+  //   setBoxOpen,
+  // };
 };
 
 export default useClose;

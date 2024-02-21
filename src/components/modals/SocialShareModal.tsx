@@ -18,36 +18,36 @@ const Backdrop = ({ closeModal }: { closeModal: () => void }) => {
 };
 
 const SocialShareOverlay = ({ text, url, closeModal }: SocialShareTypes) => {
-  const hideModalHandler = (e: any) => {
-    if (e.target.className === "social-share__buttons") return;
-    closeModal();
+  const hideModalHandler = (e: React.MouseEvent) => {
+    if ((e.target as HTMLDivElement).className !== "social-share__buttons")
+      closeModal();
   };
 
   return (
     <div className="social-share">
       <h2>Share this {text}</h2>
       <div className="social-share__buttons" onClick={hideModalHandler}>
-        <FacebookShareButton url={window.location.href}>
+        <FacebookShareButton url={url}>
           <div className="share-icon-box">
             <FaceBookIcon />
           </div>
         </FacebookShareButton>
-        <TwitterShareButton url={window.location.href}>
+        <TwitterShareButton url={url}>
           <div className="share-icon-box">
             <TwitterIcon />
           </div>
         </TwitterShareButton>
-        <LinkedinShareButton url={window.location.href}>
+        <LinkedinShareButton url={url}>
           <div className="share-icon-box">
             <LinkedinIcon />
           </div>
         </LinkedinShareButton>
-        <WhatsappShareButton url={window.location.href}>
+        <WhatsappShareButton url={url}>
           <div className="share-icon-box">
             <WhatsappIcon />
           </div>
         </WhatsappShareButton>
-        <TelegramShareButton url={window.location.href}>
+        <TelegramShareButton url={url}>
           <div className="share-icon-box">
             <TelegramIcon />
           </div>

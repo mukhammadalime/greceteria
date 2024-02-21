@@ -21,10 +21,10 @@ export const getNewsApi = async (
       type: NewsActionKind.GET_NEWS_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -45,10 +45,10 @@ export const getNewsItemApi = async (
       type: NewsActionKind.GET_NEWSITEM_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -81,10 +81,10 @@ export const addNews = async (
       type: NewsActionKind.ADD_NEWSITEM_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -130,10 +130,10 @@ export const updateNews = async (
       type: NewsActionKind.UPDATE_NEWSITEM_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -158,9 +158,9 @@ export const deleteNews = async (
       type: NewsActionKind.DELETE_NEWSITEM_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };

@@ -1,57 +1,80 @@
-import { useRef, useState } from "react";
-import ActionsBoxModal from "../modals/ActionsBoxModal";
+import { useContext, useState } from "react";
 import SocialShareModal from "../modals/SocialShareModal";
+import { addToCart } from "../../api/cart";
+import { CartContext } from "../../store/CartContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { toast } from "react-toastify";
+import { addToWishlist, removeFromCompare } from "../../api/user";
+import { UserContext } from "../../store/UserContext";
 
-const ActionsBox = () => {
-  const btnRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [showActionsBox, setShowActionsBox] = useState<boolean>(() => false);
-  const [showShareModal, setShowShareModal] = useState<boolean>(() => false);
-  const [coordinates, setCoordinates] = useState<{
-    left: number;
-    top: number;
-  }>({ left: 0, top: 0 });
+const ActionsBox = ({ id }: { id: string }) => {
+  const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [removeLoading, setRemoveLoading] = useState<boolean>(false);
+  const { state: cartState, dispatch } = useContext(CartContext);
+  const { state, dispatch: userDispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
 
-  const onToggleActionsBoxHandler = () => {
-    setShowActionsBox((prevState) => !prevState);
-    if (showActionsBox) return;
+  const onToggleOptions = () => {
+    const boxes = document.querySelectorAll(".options-box");
+    for (let box of boxes as NodeListOf<HTMLDivElement>) {
+      if (box.dataset.id === id && !box.classList.contains("options-open")) {
+        box.classList.add("options-open");
+      } else box.classList.remove("options-open");
+    }
+  };
 
-    const optionsBox = document.querySelector(".options-box")!;
-    const optionsBoxPosition = optionsBox.getBoundingClientRect();
-    const coordinates = {
-      left: optionsBoxPosition.left,
-      top: optionsBoxPosition.top,
-    };
-    setCoordinates(coordinates);
+  const onAddToCart = async () => {
+    await addToCart(dispatch, id, 1, axiosPrivate);
+    toast.success("Added to cart.");
+  };
+
+  const onAddToWishlist = async () => {
+    await addToWishlist(userDispatch, id, axiosPrivate);
+    toast.success("Added to wishlist.");
+  };
+
+  const onRemoveFromCompare = async () => {
+    if (removeLoading) return;
+    setRemoveLoading(true);
+    await removeFromCompare(userDispatch, id, axiosPrivate);
+    setRemoveLoading(false);
   };
 
   return (
     <>
-      {showActionsBox && (
-        <ActionsBoxModal
-          closeModal={() => setShowActionsBox(false)}
-          coordinates={coordinates}
-          onOpenShareModal={() => setShowShareModal(true)}
-        />
-      )}
-
       {showShareModal && (
         <SocialShareModal
           closeModal={() => setShowShareModal(false)}
-          text={""}
-          url={""}
+          text="product"
+          url={`${window.location.origin}/products/${id}`}
         />
       )}
-      <div className={`options-box${showActionsBox ? " options-open" : ""}`}>
-        <div
-          className={`options-box__icon${
-            showActionsBox ? " options-box__icon-open" : ""
-          }`}
-          onClick={onToggleActionsBoxHandler}
-          ref={btnRef}
-        >
-          <img src="/assets/icons/three-dots.svg" alt="" ref={imgRef} />
+      <div className={`options-box`} onClick={onToggleOptions} data-id={id}>
+        <div className="options-box__icon">
+          <img src="/assets/icons/three-dots.svg" alt="" />
         </div>
+
+        <ul className="options" data-id={id}>
+          <li className="options__item" onClick={onRemoveFromCompare}>
+            Remove
+          </li>
+
+          {!state.user?.wishlisted.includes(id) && (
+            <li className="options__item" onClick={onAddToWishlist}>
+              Add To Wishlist
+            </li>
+          )}
+
+          {!cartState.cart?.cartProducts.find((i) => i.productId === id) && (
+            <li className="options__item" onClick={onAddToCart}>
+              Add To Cart
+            </li>
+          )}
+
+          <li className="options__item" onClick={() => setShowShareModal(true)}>
+            Share Product
+          </li>
+        </ul>
       </div>
     </>
   );

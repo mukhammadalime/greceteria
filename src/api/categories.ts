@@ -20,10 +20,10 @@ export const getCategoriesApi = async (
       type: CategoryActionKind.GET_CATEGORIES_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -44,10 +44,10 @@ export const getCategory = async (
       type: CategoryActionKind.GET_CATEGORY_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -95,10 +95,10 @@ export const addOrUpdateCategory = async (
       type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -121,9 +121,9 @@ export const deleteCategory = async (
       type: CategoryActionKind.DELETE_CATEGORY_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };

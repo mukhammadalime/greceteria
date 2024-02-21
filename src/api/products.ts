@@ -21,10 +21,10 @@ export const getProductsApi = async (
       type: ProductActionKind.GET_PRODUCTS_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -46,10 +46,10 @@ export const getProductApi = async (
       type: ProductActionKind.GET_PRODUCT_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
     setTimeout(() => navigate("/"), 4000);
   }
 };
@@ -85,10 +85,10 @@ export const addProduct = async (
       type: ProductActionKind.ADD_PRODUCT_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -134,10 +134,10 @@ export const updateProduct = async (
       type: ProductActionKind.UPDATE_PRODUCT_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
 
@@ -161,9 +161,9 @@ export const deleteProduct = async (
       type: ProductActionKind.DELETE_PRODUCT_FAILURE,
       error: err.response?.data.message,
     });
-    toast.error(
+    const error =
       err.response?.data.message ||
-        "Something went wrong. Please come back later."
-    );
+      "Something went wrong. Please come back later.";
+    toast.error(error);
   }
 };
