@@ -1,4 +1,3 @@
-import { useState } from "react";
 import AddressItem from "./AddressItem";
 import { AddressItemTypes } from "../../utils/user-types";
 
@@ -8,10 +7,11 @@ const AddressList = ({
   onOpenAddressModal,
   headerTwo,
   addresses,
+  setSelectedAddressId,
+  selectedAddressId,
 }: AddressListTypes) => {
-  const [selectedAddress, setSelectedAddress] = useState(() => "1");
   const selectAddress = (value: string) => {
-    setSelectedAddress(value);
+    setSelectedAddressId && setSelectedAddressId(value);
   };
 
   return (
@@ -27,7 +27,7 @@ const AddressList = ({
               key={item._id}
               addressItem={item}
               select={select}
-              selectedAddress={selectedAddress}
+              selectedAddressId={selectedAddressId}
               selectAddressHandler={selectAddress}
             />
           ))}
@@ -61,6 +61,8 @@ interface AddressListTypes {
   onOpenAddressModal?: () => void;
   headerTwo?: boolean;
   addresses: AddressItemTypes[] | [];
+  setSelectedAddressId?: (arg: string) => void;
+  selectedAddressId?: string;
 }
 
 export default AddressList;

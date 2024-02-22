@@ -1,8 +1,9 @@
+import { StatsTypes } from "../../store/OrderContext";
 import PackageIcon from "../UI/Icons/PackageIcon";
 import ShippingIcon from "../UI/Icons/ShippingIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 
-const OrdersByStatus = () => {
+const OrdersByStatus = ({ stats }: { stats: StatsTypes }) => {
   return (
     <div className="order-numbers">
       <div className="order-numbers__item">
@@ -11,7 +12,7 @@ const OrdersByStatus = () => {
         </div>
         <div className="order-numbers__main">
           <h6>Total Order</h6>
-          <span>245</span>
+          <span>{stats.total}</span>
         </div>
       </div>
       <div className="order-numbers__item">
@@ -20,7 +21,7 @@ const OrdersByStatus = () => {
         </div>
         <div className="order-numbers__main">
           <h6>To be packed</h6>
-          <span>234</span>
+          <span>{stats.toBePacked}</span>
         </div>
       </div>
       <div className="order-numbers__item">
@@ -29,7 +30,7 @@ const OrdersByStatus = () => {
         </div>
         <div className="order-numbers__main">
           <h6>On the way</h6>
-          <span>100</span>
+          <span>{stats.onTheWay}</span>
         </div>
       </div>
       <div className="order-numbers__item">
@@ -38,7 +39,7 @@ const OrdersByStatus = () => {
         </div>
         <div className="order-numbers__main">
           <h6>Delivered</h6>
-          <span>98</span>
+          <span>{stats.delivered}</span>
         </div>
       </div>
     </div>

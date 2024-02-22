@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import PaginationButtons from "../UI/PaginationButtons";
-import usePaginate from "../../hooks/usePaginate";
+import { OrderProps } from "../../utils/user-types";
+import OrderItem from "./OrderItem";
 
 export const OrdersTableHeader = () => {
   return (
@@ -18,55 +18,47 @@ export const OrdersTableHeader = () => {
 
 export const OrdersTable = ({
   orders,
-  text,
+  recent,
+  filterQuery,
 }: {
-  orders: any;
-  text: string;
+  orders: OrderProps[] | null;
+  recent?: boolean;
+  filterQuery?: string;
 }) => {
-  const { handlePageClick, pageCount, currentItems } = usePaginate(orders);
-
   return (
     <div className="order-history">
       <div className="order-history__header">
-        {text === "Order History" ? (
-          <>
-            <h2>Order History</h2>
-            <PaginationButtons
-              pageCount={pageCount}
-              handlePageClick={handlePageClick}
-            />
-          </>
-        ) : (
-          <>
-            <h2>Recent Order History</h2>
-            <Link to="/orders">View All</Link>
-          </>
-        )}
+        <h2>{recent && "Recent "}Order History</h2>
+        {recent && <Link to="/orders">View All</Link>}
       </div>
-
-      {/* <div className="order-history__empty">
-          <h2>No orders yet</h2>
-        </div> */}
 
       <div className="order-history__table">
         <table className="table">
           <OrdersTableHeader />
           <tbody>
-            {currentItems.map((order: any, i: number) => (
-              <tr className="table__item" key={i}>
-                <td>{order.id}</td>
-                <td>{order.date}</td>
+            {orders &&
+              orders.length > 0 &&
+              orders.map((order: OrderProps) => (
+                <OrderItem
+                  key={order._id}
+                  orderNumber={order.orderNumber}
+                  numOfProducts={order.orderedProducts.length}
+                  totalPrice={order.totalPrice}
+                  status={order.status}
+                  id={order._id}
+                  createdAt={order.createdAt}
+                />
+              ))}
+
+            {orders?.length === 0 && (
+              <tr className="order-history__empty">
                 <td>
-                  <span>{order.total} </span>({order.numOfProducts} Products)
-                </td>
-                <td>{order.status}</td>
-                <td>
-                  <Link to="/orders/details" className="view-details">
-                    View Details
-                  </Link>
+                  {filterQuery
+                    ? "No orders with that filter."
+                    : "No orders yet."}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

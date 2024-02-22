@@ -1,36 +1,48 @@
-const OrderDetailsPayment = () => {
+const OrderDetailsPayment = ({
+  orderNumber,
+  paymentMethod,
+  total,
+  shippingFee,
+}: OrderDetailsPaymentProps) => {
   return (
     <div className="total-payment">
       <div className="total-payment__header">
         <div className="total-payment__item">
           <h5>Order Id</h5>
-          <p>(#123)</p>
+          <p>(#{orderNumber})</p>
         </div>
         <div className="total-payment__item">
           <h5>Payment via</h5>
-          <p>(Paypal)</p>
+          <p>({paymentMethod})</p>
         </div>
       </div>
       <div className="total-payment__content">
         <div className="total-payment__content--item">
           <h5>Subtotal</h5>
-          <p>$365.00</p>
+          <p>${(total - shippingFee).toFixed(2)}</p>
         </div>
         <div className="total-payment__content--item">
           <h5>Discount</h5>
-          <p>$24.00</p>
+          <p>$0.00</p>
         </div>
         <div className="total-payment__content--item">
           <h5>Shipping</h5>
-          <p>Free</p>
+          <p>{shippingFee ? "$" + shippingFee.toFixed(2) : "Free"}</p>
         </div>
         <div className="total-payment__content--item">
           <h5>Total</h5>
-          <p>$341.00</p>
+          <p>${total.toFixed(2)}</p>
         </div>
       </div>
     </div>
   );
 };
+
+interface OrderDetailsPaymentProps {
+  orderNumber: number;
+  paymentMethod: string;
+  total: number;
+  shippingFee: number;
+}
 
 export default OrderDetailsPayment;

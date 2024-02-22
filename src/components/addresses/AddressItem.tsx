@@ -6,7 +6,7 @@ const AddressItem = ({
   selectAddressHandler,
   addressItem,
   select,
-  selectedAddress,
+  selectedAddressId,
 }: PropsTypes) => {
   const [addressModalShown, setAddressModalShown] = useState(() => false);
 
@@ -45,7 +45,7 @@ const AddressItem = ({
             data-id={addressItem._id}
             onClick={selectAddress}
             className={`address-book__select ${
-              selectedAddress === addressItem._id && "selected"
+              selectedAddressId === addressItem._id && "selected"
             }`}
           ></span>
         )}
@@ -57,7 +57,7 @@ const AddressItem = ({
 interface PropsTypes {
   selectAddressHandler: (id: string) => void;
   select: boolean;
-  selectedAddress: string;
+  selectedAddressId?: string;
   addressItem: AddressItemTypes;
 }
 

@@ -1,15 +1,33 @@
 import UserIcon from "../../components/UI/Icons/UserIcon";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import OrderStatistics from "../../components/admin/OrderStatistics";
+import { useContext, useEffect } from "react";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { OrderContext } from "../../store/OrderContext";
+import { UserContext } from "../../store/UserContext";
+import { getOrdersRevenueStats } from "../../api/orders";
 
 const Statistics = () => {
+  const { state } = useContext(UserContext);
+  const { state: ordersState, dispatch } = useContext(OrderContext);
+
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    if (!state.user) return;
+    const getOrdersStatsForAdmin = async () =>
+      await getOrdersRevenueStats(dispatch, axiosPrivate);
+
+    state.user.role !== "user" && getOrdersStatsForAdmin();
+  }, [axiosPrivate, dispatch, state.user]);
+
   return (
     <div className="section-sm">
       <div className="container">
         <div className="dashboard">
           <DashboardNav activeNavItem="Statistics" />
           <div className="statistics">
-            <OrderStatistics />
+            <OrderStatistics stats={ordersState.revenue} />
             <div className="order-numbers">
               <div className="order-numbers__item">
                 <div className="order-numbers__img">
@@ -46,7 +64,7 @@ const Statistics = () => {
                 </div>
                 <div className="order-numbers__main">
                   <h6>Total Revenue</h6>
-                  <span>$25.698.00</span>
+                  <span>${ordersState.revenue.totalRevenue.toFixed(2)}</span>
                 </div>
               </div>
               <div className="order-numbers__item">
@@ -55,7 +73,7 @@ const Statistics = () => {
                 </div>
                 <div className="order-numbers__main">
                   <h6>Total Orders</h6>
-                  <span>2308</span>
+                  <span>{ordersState.revenue.total}</span>
                 </div>
               </div>
               <div className="order-numbers__item">
@@ -64,7 +82,7 @@ const Statistics = () => {
                 </div>
                 <div className="order-numbers__main">
                   <h6>Cancelled Orders</h6>
-                  <span>342</span>
+                  <span>{ordersState.revenue.cancelled}</span>
                 </div>
               </div>
             </div>

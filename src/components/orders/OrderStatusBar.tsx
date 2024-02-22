@@ -1,40 +1,44 @@
 import CheckMarkIcon from "../UI/Icons/CheckMarkIcon";
 
 const orderStatuses = [
-  { num: "02", status: "Processing" },
-  { num: "03", status: "On The Way" },
-  { num: "04", status: "Delivered" },
+  { num: 1, name: "processing" },
+  { num: 2, name: "paid" },
+  { num: 3, name: "on the way" },
+  { num: 4, name: "delivered" },
 ];
 
-const OrderStatusBar = () => {
-  const width = 16.6666667;
-  // const width = 50;
-  // const width = 83.3333335;
-  // const width = 100;
+const OrderStatusBar = ({ status }: { status: string }) => {
+  const width =
+    status === "processing"
+      ? 16.6666667
+      : status === "paid"
+      ? 50
+      : status === "on the way"
+      ? 83.3333335
+      : 100;
 
   return (
     <div className="progress-bar">
       <div className="progress-bar__border">
         <span style={{ width: `${width}%` }}></span>
       </div>
-      <div className="progress-bar__item active-status">
-        <div className="progress-bar__item--ball">
-          <p>01</p>
-          <span>
-            <CheckMarkIcon />
-          </span>
-        </div>
-        <h2>Order Received</h2>
-      </div>
-      {orderStatuses.map(({ num, status }) => (
-        <div className="progress-bar__item" key={num}>
+
+      {orderStatuses.map((item) => (
+        <div
+          className={`progress-bar__item ${
+            orderStatuses.find((i) => i.name === status)?.num! >= item.num
+              ? "active-status"
+              : ""
+          }`}
+          key={item.num}
+        >
           <div className="progress-bar__item--ball">
-            <p>{num}</p>
+            <p>{item.num}</p>
             <span>
               <CheckMarkIcon />
             </span>
           </div>
-          <h2>{status}</h2>
+          <h2>{item.name}</h2>
         </div>
       ))}
     </div>

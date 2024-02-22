@@ -1,60 +1,14 @@
-import ArrowCircleIcon from "../UI/Icons/ArrowCircleIcon";
+import { RevenueDataTypes } from "../../utils/user-types";
+import OrderStatisticsItem from "./OrderStatisticsItem";
 
-const OrderStatistics = () => {
+const OrderStatistics = ({ stats }: { stats: RevenueDataTypes }) => {
   return (
     <div className="orders-stat">
-      <div className="orders-stat__item">
-        <h2>Today's Revenue</h2>
-        <div className="orders-stat__img">
-          <img src="/assets/icons/money-icon.svg" alt="" />
-          <span>$550.00</span>
-        </div>
-        <div className="orders-stat__statistics">
-          <ArrowCircleIcon />
-          <p>
-            5% <span>than Yesterday</span>
-          </p>
-        </div>
-      </div>
-      <div className="orders-stat__item">
-        <h2>This Week Revenue</h2>
-        <div className="orders-stat__img">
-          <img src="/assets/icons/money-icon.svg" alt="" />
-          <span>$5500.00</span>
-        </div>
-        <div className="orders-stat__statistics">
-          <ArrowCircleIcon />
-          <p>
-            5% <span>than Yesterday</span>
-          </p>
-        </div>
-      </div>
-      <div className="orders-stat__item">
-        <h2>This month Revenue</h2>
-        <div className="orders-stat__img">
-          <img src="/assets/icons/money-icon.svg" alt="" />
-          <span>$5.550.00</span>
-        </div>
-        <div className="orders-stat__statistics orders-down">
-          <ArrowCircleIcon />
-          <p>
-            5% <span>than Last Month</span>
-          </p>
-        </div>
-      </div>
-      <div className="orders-stat__item">
-        <h2>This year Revenue</h2>
-        <div className="orders-stat__img">
-          <img src="/assets/icons/money-icon.svg" alt="" />
-          <span>$15.550.00</span>
-        </div>
-        <div className="orders-stat__statistics">
-          <ArrowCircleIcon />
-          <p>
-            5% <span>than Last Year</span>
-          </p>
-        </div>
-      </div>
+      {Object.entries(stats)
+        .slice(0, -3)
+        .map((obj) => (
+          <OrderStatisticsItem item={obj[1]} key={obj[0]} />
+        ))}
     </div>
   );
 };

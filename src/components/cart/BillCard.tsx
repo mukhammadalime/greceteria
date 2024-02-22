@@ -1,8 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { CartProductProps, CartProps } from "../../utils/user-types";
 import OrderedItem from "../checkout/OrderedItem";
+import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
 
-const BillCard = ({ cart, type }: BillCardProps) => {
+const BillCard = ({
+  cart,
+  type,
+  placeOrder,
+  loading,
+  setPaymentMethod,
+}: BillCardProps) => {
   const navigate = useNavigate();
   const shippingFee: number = cart ? (cart.totalPrice < 50 ? 5.0 : 0) : 0;
   const total: number = cart ? cart?.totalPrice + shippingFee : 0;
@@ -44,13 +51,17 @@ const BillCard = ({ cart, type }: BillCardProps) => {
         </div>
       </div>
 
-      {type === "checkout" && (
+      {type === "checkout" && setPaymentMethod && (
         <>
           <div className="payment__method">
             <h2>Payment Method</h2>
             <div className="payment__method--box">
               {["Paypal", "Stripe"].map((val: string) => (
-                <div className="payment__method--item radio-input" key={val}>
+                <div
+                  className="payment__method--item radio-input"
+                  key={val}
+                  onClick={() => setPaymentMethod(val)}
+                >
                   <input type="radio" id={val} name="payment" />
                   <label htmlFor={val}>
                     <span></span> {val}
@@ -59,9 +70,12 @@ const BillCard = ({ cart, type }: BillCardProps) => {
               ))}
             </div>
           </div>
-          <button className="button button-lg bill-card__action">
-            Place Order
-          </button>
+          <button
+            className="button button-lg bill-card__action"
+            onClick={placeOrder}
+            disabled={loading && true}
+            children={loading ? <LoadingButtonSpinner /> : "Place order"}
+          />
         </>
       )}
       {type === "cart" && (
@@ -79,6 +93,9 @@ const BillCard = ({ cart, type }: BillCardProps) => {
 interface BillCardProps {
   cart: CartProps | null;
   type: "checkout" | "cart";
+  placeOrder?: () => Promise<void>;
+  setPaymentMethod?: (arg: string) => void;
+  loading?: boolean;
 }
 
 export default BillCard;

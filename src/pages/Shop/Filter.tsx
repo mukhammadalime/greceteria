@@ -6,7 +6,7 @@ import { CategoryContext } from "../../store/CategoryContext";
 import { ProductContext } from "../../store/ProductContext";
 import useToggleOptions from "../../hooks/useToggleOptions";
 import {
-  priceOptions,
+  productPriceOptions,
   ratingOptions,
   sortOptions,
 } from "../../data/helperData";
@@ -55,7 +55,7 @@ const Filter = () => {
               open={filtersOpen[0]}
             />
             <FilterOptions
-              options={priceOptions}
+              options={productPriceOptions}
               title="Select Price"
               onToggle={toggleOptionsHandler.bind(null, 1)}
               open={filtersOpen[1]}

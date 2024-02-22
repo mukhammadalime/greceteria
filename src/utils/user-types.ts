@@ -89,3 +89,43 @@ export interface CartProductProps {
   productId: string;
   _id: string;
 }
+
+export interface OrderProps {
+  _id: string;
+  orderedProducts: CartProductProps[];
+  totalPrice: number;
+  orderNumber: number;
+  user: string;
+  isPaid: boolean;
+  isDelivered: boolean;
+  deliveredAt: Date;
+  paymentMethod: string;
+  deliveryFee: number;
+  address: AddressItemTypes;
+  notes?: string;
+  status: string;
+  createdAt: Date;
+}
+
+export type OrderStatustypes =
+  | "processing"
+  | "paid"
+  | "on the way"
+  | "delivered"
+  | "cancelled";
+
+export interface RevenueDataTypes {
+  dayStats: RevenueItemTypes;
+  weekStats: RevenueItemTypes;
+  monthStats: RevenueItemTypes;
+  yearStats: RevenueItemTypes;
+  totalRevenue: number;
+  total: number;
+  cancelled: number;
+}
+
+export type RevenueItemTypes = {
+  new: number;
+  old: number;
+  difference: number;
+};

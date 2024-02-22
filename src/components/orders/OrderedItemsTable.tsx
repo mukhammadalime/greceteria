@@ -1,4 +1,6 @@
-const OrderedItemsTable = () => {
+import { CartProductProps } from "../../utils/user-types";
+
+const OrderedItemsTable = ({ items }: { items: CartProductProps[] }) => {
   return (
     <div className="order-details__table">
       <table>
@@ -11,24 +13,17 @@ const OrderedItemsTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="table__item">
-            <td className="table__item--img">
-              <img src="/assets/images/products/almond-1.jpeg" alt="" />
-              <h5>Beef California</h5>
-            </td>
-            <td>$14.00</td>
-            <td>x5</td>
-            <td>$70.00</td>
-          </tr>
-          <tr className="table__item">
-            <td className="table__item--img">
-              <img src="/assets/images/products/almond-1.jpeg" alt="" />
-              <h5>Beef California</h5>
-            </td>
-            <td>$14.00</td>
-            <td>x5</td>
-            <td>$70.00</td>
-          </tr>
+          {items.map((item) => (
+            <tr className="table__item" key={item._id}>
+              <td className="table__item--img">
+                <img src={item.image} alt="" />
+                <h5>{item.name}</h5>
+              </td>
+              <td>${item.price.toFixed(2)}</td>
+              <td>x{item.quantity}</td>
+              <td>${item.subTotal.toFixed(2)}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

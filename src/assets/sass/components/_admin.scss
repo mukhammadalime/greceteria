@@ -51,11 +51,12 @@
       width: 2rem;
     }
 
-    p {
+    p,
+    span {
       font-size: 1.5rem;
-      span {
-        color: #666666;
-      }
+    }
+    span {
+      color: #666666;
     }
   }
 
@@ -253,6 +254,7 @@
     }
 
     span {
+      text-transform: capitalize;
       font-weight: 500;
       font-size: 1.6rem;
       color: #1a1a1a;

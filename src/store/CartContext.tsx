@@ -108,7 +108,6 @@ export const CartContextProvider = ({
 
   // Fetch cart on every refresh to keep the data up to date with the database.
   useEffect(() => {
-    console.log("helloe");
     auth.accessToken && getCart();
   }, [auth.accessToken, getCart]);
 

@@ -23,13 +23,9 @@ const FilterOptions = ({
     onToggle();
   };
 
-  const onOpenOptionsHandler = () => {
-    onToggle();
-  };
-
   return (
     <div className={`choose${open ? " options-open" : ""}`}>
-      <div className="chosen" onClick={onOpenOptionsHandler}>
+      <div className="chosen" onClick={onToggle}>
         {option}
         <img src="/assets/icons/arrow-down-icon.svg" alt="" />
       </div>

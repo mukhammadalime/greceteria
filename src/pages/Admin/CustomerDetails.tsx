@@ -164,7 +164,7 @@ const CustomerDetails = () => {
                   Make me Manager
                 </button>
               </div>
-              <OrdersTable orders={orders} text={""} />
+              {/* <OrdersTable orders={orders} text={""} /> */}
             </div>
           </div>
         </div>

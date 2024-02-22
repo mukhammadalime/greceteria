@@ -39,12 +39,6 @@ const NewsFilter = () => {
             onSelect={(id: string) => setSortOption(id)}
             open={sortOpen}
           />
-          <div className="date-filter">
-            <input type="date" />
-          </div>
-          <div className="date-filter">
-            <input type="month" />
-          </div>
 
           {state.user && state.user.role !== "user" && (
             <button

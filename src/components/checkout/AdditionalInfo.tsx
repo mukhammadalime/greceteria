@@ -1,4 +1,6 @@
-const AdditionalInfo = () => {
+import React from "react";
+
+const AdditionalInfo = React.forwardRef<HTMLTextAreaElement>((_, ref) => {
   return (
     <div className="additional">
       <h2>Additional Information</h2>
@@ -11,11 +13,12 @@ const AdditionalInfo = () => {
             name="notes"
             id="note"
             placeholder="Notes about your order, e.g. special notes for delivery"
+            ref={ref}
           ></textarea>
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default AdditionalInfo;

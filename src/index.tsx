@@ -10,6 +10,7 @@ import { NewsContextProvider } from "./store/NewsContext";
 import { CartContextProvider } from "./store/CartContext";
 import { UserContextProvider } from "./store/UserContext";
 import { AuthContextProvider } from "./store/AuthContext";
+import { OrderContextProvider } from "./store/OrderContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,19 +19,21 @@ const root = ReactDOM.createRoot(
 root.render(
   <AuthContextProvider>
     <UserContextProvider>
-      <CategoryContextProvider>
-        <NewsContextProvider>
-          <CartContextProvider>
-            <ProductContextProvider>
-              <BrowserRouter>
-                <React.StrictMode>
-                  <App />
-                </React.StrictMode>
-              </BrowserRouter>
-            </ProductContextProvider>
-          </CartContextProvider>
-        </NewsContextProvider>
-      </CategoryContextProvider>
+      <OrderContextProvider>
+        <CategoryContextProvider>
+          <NewsContextProvider>
+            <CartContextProvider>
+              <ProductContextProvider>
+                <BrowserRouter>
+                  <React.StrictMode>
+                    <App />
+                  </React.StrictMode>
+                </BrowserRouter>
+              </ProductContextProvider>
+            </CartContextProvider>
+          </NewsContextProvider>
+        </CategoryContextProvider>
+      </OrderContextProvider>
     </UserContextProvider>
   </AuthContextProvider>
 );

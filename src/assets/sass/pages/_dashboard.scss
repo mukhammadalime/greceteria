@@ -6,6 +6,11 @@
   &__main {
     display: grid;
     gap: 2rem;
+    height: max-content;
+
+    .filter__top {
+      padding: 0;
+    }
   }
 
   &__nav {
@@ -254,6 +259,16 @@
   overflow-x: scroll;
   white-space: nowrap;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   &__table {
     overflow-x: scroll;
     &::-webkit-scrollbar {
@@ -264,13 +279,6 @@
     & {
       -ms-overflow-style: none; /* IE and Edge */
       scrollbar-width: none; /* Firefox */
-    }
-  }
-
-  &__main {
-    .order-history {
-      border-radius: unset;
-      border: unset;
     }
   }
 
@@ -307,7 +315,7 @@
     align-items: center;
     padding: 1.5rem;
 
-    h2 {
+    td {
       font-weight: 400;
       font-size: 2rem;
     }
@@ -355,6 +363,7 @@
         justify-content: center;
         font-weight: 400;
         color: #333333;
+        text-transform: capitalize;
         span {
           font-weight: 500;
         }
@@ -406,11 +415,5 @@
         }
       }
     }
-  }
-}
-
-.order-history-page {
-  .filter__top {
-    padding: 0;
   }
 }

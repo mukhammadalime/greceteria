@@ -2,50 +2,38 @@ import { OrdersTable } from "../../components/orders/OrdersTable";
 import UserDetails from "../../components/dashboard/UserDetails";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import OrdersByStatus from "../../components/admin/OrdersByStatus";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import LoginFirst from "../../components/LoginFirst";
 import { UserContext } from "../../store/UserContext";
-
-const orders = [
-  {
-    id: "#123",
-    date: "8 Sep, 2020",
-    total: "$135.00",
-    numOfProducts: 5,
-    status: "Delivered",
-  },
-  {
-    id: "#234",
-    date: "14 Aug, 2021",
-    total: "$150.00",
-    numOfProducts: 6,
-    status: "Delivered",
-  },
-  {
-    id: "#355",
-    date: "12 Jan, 2022",
-    total: "$300.00",
-    numOfProducts: 7,
-    status: "Delivered",
-  },
-  {
-    id: "#400",
-    date: "12 Mar, 2022",
-    total: "$490.00",
-    numOfProducts: 10,
-    status: "Delivered",
-  },
-  {
-    id: "#444",
-    date: "20 Apr, 2022",
-    total: "$500.00",
-    numOfProducts: 13,
-    status: "Processing",
-  },
-];
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { OrderContext } from "../../store/OrderContext";
+import {
+  getMyOrders,
+  getOrdersStats,
+  getRecentOrdersForAdmin,
+} from "../../api/orders";
 
 const Dashboard = () => {
   const { state } = useContext(UserContext);
+  const { state: ordersState, dispatch } = useContext(OrderContext);
+
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    if (!state.user) return;
+    const getOrdersForUser = async () =>
+      await getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
+
+    const getOrdersForAdmin = async () =>
+      await getRecentOrdersForAdmin(dispatch, axiosPrivate);
+
+    const getOrdersStatsForAdmin = async () =>
+      await getOrdersStats(dispatch, axiosPrivate);
+
+    state.user.role === "user" && getOrdersForUser();
+    state.user.role !== "user" && getOrdersForAdmin();
+    state.user.role !== "user" && getOrdersStatsForAdmin();
+  }, [axiosPrivate, dispatch, state.user]);
 
   if (state.user === null) return <LoginFirst />;
 
@@ -56,8 +44,12 @@ const Dashboard = () => {
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
             <UserDetails user={state.user} />
-            {state.user && state.user.role !== "user" && <OrdersByStatus />}
-            <OrdersTable orders={orders} text={""} />
+            {state.user && state.user.role !== "user" && (
+              <OrdersByStatus stats={ordersState.stats} />
+            )}
+            {ordersState.orders && (
+              <OrdersTable orders={ordersState.orders} recent />
+            )}
           </div>
         </div>
       </div>

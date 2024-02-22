@@ -5,7 +5,7 @@ const OrderedItem = ({ cartItem }: { cartItem: CartProductProps }) => {
   return (
     <div className="ordered__item">
       <div className="ordered__item--details">
-        <Link to="/products/details">
+        <Link to={`/products/${cartItem.productId}`}>
           <img className="ordered__item--img" src={cartItem.image} alt="" />
         </Link>
         <div>
