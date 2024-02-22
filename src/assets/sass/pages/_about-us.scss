@@ -230,8 +230,10 @@
   }
 
   &__main {
-    display: flex;
-    column-gap: 2.4rem;
+    .swiper-wrapper {
+      display: flex;
+      column-gap: 1.5rem;
+    }
   }
 
   &__member {
@@ -354,6 +356,11 @@
   row-gap: 2.4rem;
   flex-wrap: wrap;
   justify-content: flex-start;
+
+  .swiper-wrapper {
+    display: flex;
+    column-gap: 1.5rem;
+  }
 }
 
 .client-review {

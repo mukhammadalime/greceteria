@@ -1,6 +1,16 @@
 Tasks To Complete 
-- Loading data as it is requested in pagination?
+- Loading data as it is requested in scroll
 - Error page content in pages when the data does not come from the backend
 - make buttons reusable and add spinner when loading
 - add card info component 
-- add deletea account component
+- add delete account component
+- add loading skeleton for every page
+- fix ordertable when moving from dashboard to order history or vice versa
+- Enable admin to change 'Shipping Policy' and 'Terms & Conditions'(with editor)
+- Fix the condition when there is left only one product or category or news in grid container
+
+// TODAY'S TODOS
+- Fetching reviews
+- Writing, updating and deleting review.
+- Enabling admin to delete the review.
+- Connecting logging in & signing up with github and google

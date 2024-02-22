@@ -99,26 +99,36 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
         </div>
       )}
 
-      <OrderStatusBar status={order.status} />
-
-      {state.user && state.user.role !== "user" && (
-        <div className="update-order">
-          <div className="order-status">
-            <h2>Order Status: </h2>
-            <span>{order.status}</span>
-          </div>
-          <div className="update-order__item">
-            <h2>Update Order: </h2>
-            <FilterOptions
-              options={statusOptions}
-              title=""
-              onToggle={() => setOptionsOpen((prev) => !prev)}
-              onSelect={(arg: string) => onUpdateOrder(arg)}
-              open={optionsOpen}
-              defaultValue={order.status}
-            />
-          </div>
+      {order.status === "cancelled" && (
+        <div className="order-details__cancelled">
+          <h1>Order has been cancelled.</h1>
         </div>
+      )}
+
+      {order.status !== "cancelled" && (
+        <>
+          <OrderStatusBar status={order.status} />
+
+          {state.user && state.user.role !== "user" && (
+            <div className="update-order">
+              <div className="order-status">
+                <h2>Order Status: </h2>
+                <span>{order.status}</span>
+              </div>
+              <div className="update-order__item">
+                <h2>Update Order: </h2>
+                <FilterOptions
+                  options={statusOptions}
+                  title=""
+                  onToggle={() => setOptionsOpen((prev) => !prev)}
+                  onSelect={(arg: string) => onUpdateOrder(arg)}
+                  open={optionsOpen}
+                  defaultValue={order.status}
+                />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

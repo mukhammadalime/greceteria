@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { User } from "../utils/user-types";
+import { CustomersStatsTypes, User } from "../utils/user-types";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "./AuthContext";
 
@@ -11,6 +11,11 @@ interface UserInitialStateTypes {
   changePassLoading: boolean;
   updateMeLoading: boolean;
   error: string | null;
+  customer: User | null;
+  customers: User[] | [];
+  customersLoading: boolean;
+  customerLoading: boolean;
+  customersStats: CustomersStatsTypes;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -36,7 +41,6 @@ export enum UserActionKind {
   RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE",
 
   /////////////////////////////////////////
-
   GET_COMPARE_START = "GET_COMPARE_START",
   GET_COMPARE_SUCCESS = "GET_COMPARE_SUCCESS",
   GET_COMPARE_FAILURE = "GET_COMPARE_FAILURE",
@@ -60,12 +64,25 @@ export enum UserActionKind {
   REMOVE_FROM_WISHLIST_START = "REMOVE_FROM_WISHLIST_START",
   REMOVE_FROM_WISHLIST_SUCCESS = "REMOVE_FROM_WISHLIST_SUCCESS",
   REMOVE_FROM_WISHLIST_FAILURE = "REMOVE_FROM_WISHLIST_FAILURE",
+
+  /////////////////////////////////////////
+  GET_CUSTOMERS_START = "GET_CUSTOMERS_START",
+  GET_CUSTOMERS_SUCCESS = "GET_CUSTOMERS_SUCCESS",
+  GET_CUSTOMERS_FAILURE = "GET_CUSTOMERS_FAILURE",
+
+  GET_CUSTOMER_START = "GET_CUSTOMER_START",
+  GET_CUSTOMER_SUCCESS = "GET_CUSTOMER_SUCCESS",
+  GET_CUSTOMER_FAILURE = "GET_CUSTOMER_FAILURE",
+
+  GET_CUSTOMERS_STATS_START = "GET_CUSTOMERS_STATS_START",
+  GET_CUSTOMERS_STATS_SUCCESS = "GET_CUSTOMERS_STATS_SUCCESS",
+  GET_CUSTOMERS_STATS_FAILURE = "GET_CUSTOMERS_STATS_FAILURE",
 }
 
 // An interface for our actions
 export interface UserAction {
   type: UserActionKind;
-  payload?: User;
+  payload?: User | User[] | CustomersStatsTypes;
   error?: string;
 }
 
@@ -77,6 +94,15 @@ const INITIAL_STATE: UserInitialStateTypes = {
   changePassLoading: false,
   updateMeLoading: false,
   error: null,
+  customers: [],
+  customersLoading: false,
+  customer: null,
+  customerLoading: false,
+  customersStats: {
+    total: 0,
+    new: 0,
+    thisMonth: 0,
+  },
 };
 
 interface UserContextTypes {
@@ -171,105 +197,41 @@ const UserReducer = (
         error: action.error as string,
       };
 
-    // case UserActionKind.GET_COMPARE_START:
-    //   return { ...state, compareLoading: true, error: null };
-    // case UserActionKind.GET_COMPARE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     compare: action.payload as ProductItemTypes[],
-    //     compareLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.GET_COMPARE_FAILURE:
-    //   return {
-    //     ...state,
-    //     compare: [],
-    //     compareLoading: false,
-    //     error: action.error!,
-    //   };
+    ///// ADMIN
+    case UserActionKind.GET_CUSTOMERS_START:
+      return { ...state, customersLoading: true, error: null };
+    case UserActionKind.GET_CUSTOMERS_SUCCESS:
+      return {
+        ...state,
+        customers: action.payload as User[],
+        customersLoading: false,
+        error: null,
+      };
+    case UserActionKind.GET_CUSTOMERS_FAILURE:
+      return { ...state, customersLoading: false, error: action.error! };
 
-    // case UserActionKind.ADD_TO_COMPARE_START:
-    //   return { ...state, compareUpdateLoading: true, error: null };
-    // case UserActionKind.ADD_TO_COMPARE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     compare: action.payload as ProductItemTypes[],
-    //     compareUpdateLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.ADD_TO_COMPARE_FAILURE:
-    //   return {
-    //     ...state,
-    //     compareUpdateLoading: false,
-    //     error: action.error!,
-    //   };
+    case UserActionKind.GET_CUSTOMERS_STATS_START:
+      return { ...state, error: null };
+    case UserActionKind.GET_CUSTOMERS_STATS_SUCCESS:
+      return {
+        ...state,
+        customersStats: action.payload as CustomersStatsTypes,
+        error: null,
+      };
+    case UserActionKind.GET_CUSTOMERS_STATS_FAILURE:
+      return { ...state, error: action.error! };
 
-    // case UserActionKind.REMOVE_FROM_COMPARE_START:
-    //   return { ...state, compareUpdateLoading: true, error: null };
-    // case UserActionKind.REMOVE_FROM_COMPARE_SUCCESS:
-    //   return {
-    //     ...state,
-    //     compare: action.payload as ProductItemTypes[],
-    //     compareUpdateLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.REMOVE_FROM_COMPARE_FAILURE:
-    //   return {
-    //     ...state,
-    //     compareUpdateLoading: false,
-    //     error: action.error!,
-    //   };
-
-    // case UserActionKind.GET_WISHLIST_START:
-    //   return { ...state, wishlistLoading: true, error: null };
-    // case UserActionKind.GET_WISHLIST_SUCCESS:
-    //   return {
-    //     ...state,
-    //     wishlist: action.payload as ProductItemTypes[],
-    //     wishlistLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.GET_WISHLIST_FAILURE:
-    //   return {
-    //     ...state,
-    //     wishlist: [],
-    //     wishlistLoading: false,
-    //     error: action.error!,
-    //   };
-
-    // case UserActionKind.ADD_TO_WISHLIST_START:
-    //   return { ...state, wishlistUpdateLoading: true, error: null };
-    // case UserActionKind.ADD_TO_WISHLIST_SUCCESS:
-    //   return {
-    //     ...state,
-    //     wishlist: [...state.wishlist, action.payload as ProductItemTypes],
-    //     wishlistUpdateLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.ADD_TO_WISHLIST_FAILURE:
-    //   return {
-    //     ...state,
-    //     wishlistUpdateLoading: false,
-    //     error: action.error!,
-    //   };
-
-    // case UserActionKind.REMOVE_FROM_WISHLIST_START:
-    //   return { ...state, wishlistUpdateLoading: true, error: null };
-    // case UserActionKind.REMOVE_FROM_WISHLIST_SUCCESS:
-    //   return {
-    //     ...state,
-    //     wishlist: state.wishlist.filter(
-    //       (i) => i.id !== (action.payload as string)
-    //     ),
-    //     wishlistUpdateLoading: false,
-    //     error: null,
-    //   };
-    // case UserActionKind.REMOVE_FROM_WISHLIST_FAILURE:
-    //   return {
-    //     ...state,
-    //     wishlistUpdateLoading: false,
-    //     error: action.error!,
-    //   };
+    case UserActionKind.GET_CUSTOMER_START:
+      return { ...state, customerLoading: true, error: null };
+    case UserActionKind.GET_CUSTOMER_SUCCESS:
+      return {
+        ...state,
+        customer: action.payload as User,
+        customerLoading: false,
+        error: null,
+      };
+    case UserActionKind.GET_CUSTOMER_FAILURE:
+      return { ...state, customerLoading: false, error: action.error! };
 
     default:
       return state;

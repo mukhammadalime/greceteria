@@ -47,9 +47,12 @@ const Dashboard = () => {
             {state.user && state.user.role !== "user" && (
               <OrdersByStatus stats={ordersState.stats} />
             )}
-            {ordersState.orders && (
-              <OrdersTable orders={ordersState.orders} recent />
-            )}
+
+            <OrdersTable
+              orders={ordersState.orders}
+              recent
+              loading={ordersState.loading}
+            />
           </div>
         </div>
       </div>

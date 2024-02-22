@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { OrderProps } from "../../utils/user-types";
 import OrderItem from "./OrderItem";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 export const OrdersTableHeader = () => {
   return (
@@ -20,10 +21,12 @@ export const OrdersTable = ({
   orders,
   recent,
   filterQuery,
+  loading,
 }: {
-  orders: OrderProps[] | null;
+  orders: OrderProps[] | [];
   recent?: boolean;
   filterQuery?: string;
+  loading: boolean;
 }) => {
   return (
     <div className="order-history">
@@ -35,9 +38,18 @@ export const OrdersTable = ({
       <div className="order-history__table">
         <table className="table">
           <OrdersTableHeader />
+
           <tbody>
-            {orders &&
-              orders.length > 0 &&
+            {loading && (
+              <tr>
+                <td>
+                  <LoadingSpinner />
+                </td>
+              </tr>
+            )}
+
+            {orders.length > 0 &&
+              !loading &&
               orders.map((order: OrderProps) => (
                 <OrderItem
                   key={order._id}
@@ -50,12 +62,12 @@ export const OrdersTable = ({
                 />
               ))}
 
-            {orders?.length === 0 && (
+            {orders.length === 0 && !loading && (
               <tr className="order-history__empty">
                 <td>
                   {filterQuery
                     ? "No orders with that filter."
-                    : "No orders yet."}
+                    : `No${recent ? " recent" : ""} orders yet.`}
                 </td>
               </tr>
             )}

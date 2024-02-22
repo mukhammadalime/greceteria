@@ -10,6 +10,7 @@ export interface User {
   phoneNumber: string;
   wishlisted: string[];
   compare: string[];
+  status: string;
 }
 
 export interface AddressItemTypes {
@@ -129,3 +130,9 @@ export type RevenueItemTypes = {
   old: number;
   difference: number;
 };
+
+export interface CustomersStatsTypes {
+  total: number;
+  new: number;
+  thisMonth: number;
+}

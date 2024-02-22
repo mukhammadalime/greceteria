@@ -38,7 +38,7 @@ function App() {
   const {
     state: { user, loading },
   } = useContext(UserContext);
-  console.log("user:", user);
+  // console.log("user:", user);
   const { dispatch } = useContext(ProductContext);
   const { auth, setAuth } = useContext(AuthContext);
   const refresh = useRefreshToken();

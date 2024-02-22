@@ -7,7 +7,6 @@ import { UserContext } from "../store/UserContext";
 import { OrderContext } from "../store/OrderContext";
 import { getAllOrders, getMyOrders } from "../api/orders";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
-import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { orderPriceOptions, orderSortOptions } from "../data/helperData";
 import useToggleOptions from "../hooks/useToggleOptions";
 
@@ -67,16 +66,14 @@ const OrderHistory = () => {
                 open={filtersOpen[1]}
               />
             </div>
-            {loading && <LoadingSpinner />}
 
-            {orders === null && <h1>Something went wrong.</h1>}
+            {orders === null && !loading && <h1>Something went wrong.</h1>}
 
-            {orders && !loading && (
-              <OrdersTable
-                orders={filterQuery || sortQuery ? uniqueArr : orders}
-                filterQuery={filterQuery}
-              />
-            )}
+            <OrdersTable
+              orders={filterQuery || sortQuery ? uniqueArr : orders}
+              filterQuery={filterQuery}
+              loading={loading}
+            />
           </div>
         </div>
       </div>

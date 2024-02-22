@@ -1,120 +1,41 @@
 import { Link } from "react-router-dom";
-import usePaginate from "../../hooks/usePaginate";
 import DashboardNav from "../../components/dashboard/DashboardNav";
-import PaginationButtons from "../../components/UI/PaginationButtons";
 import FilterOptions from "../../components/UI/FilterOptions";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { getCustomersApi } from "../../api/customers";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
 
-const sortOptions = [
-  "Sort by: Active",
-  "Sort by: Inactive",
-  "Sort by: Pending",
+export const sortOptions = [
+  { name: "Sort by: Active", id: "active" },
+  { name: "Sort by: Inactive", id: "inactive" },
+  { name: "Sort by: Pending", id: "pending" },
 ];
-
-const customers = [
-  {
-    id: "#123",
-    name: "Laura Wilson",
-    email: "laurawilson2324wdaw@gmail.com ",
-    phoneNumber: "+821057012806",
-    numOfProducts: 5,
-    status: "Active",
-  },
-  {
-    id: "#234",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 6,
-    status: "Inactive",
-  },
-  {
-    id: "#355",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 7,
-    status: "Active",
-  },
-  {
-    id: "#400",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 10,
-    status: "Active",
-  },
-  {
-    id: "#444",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 13,
-    status: "Inactive",
-  },
-  {
-    id: "#244",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 5,
-    status: "Pending",
-  },
-  {
-    id: "#563",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 10,
-    status: "Active",
-  },
-
-  {
-    id: "#254",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 7,
-    status: "Active",
-  },
-
-  {
-    id: "#632",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 13,
-    status: "Pending",
-  },
-  {
-    id: "#643",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 6,
-    status: "Active",
-  },
-  {
-    id: "#224",
-    name: "Laura Wilson",
-    email: "laurawilson@gmail.com",
-    phoneNumber: "+821057012806",
-    numOfProducts: 5,
-    status: "Active",
-  },
-];
-interface customersTypes {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  numOfProducts: number;
-  status: string;
-}
 
 const Customers = () => {
-  const { handlePageClick, pageCount, currentItems } = usePaginate(customers);
+  const [selectedSort, setSelectedSort] = useState<String>("");
   const [sortOpen, setSortOpen] = useState(false);
+  const [reload, setReload] = useState<boolean>(false);
+
+  const {
+    state: { customers, customersLoading },
+    dispatch,
+  } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    // We do no fetch customers if there is already data until the 'reload' button is clicked.
+    if (customers.length !== 0 && !reload) return;
+
+    const getCustomers = async () => {
+      await getCustomersApi(dispatch, axiosPrivate);
+      setReload(false);
+    };
+
+    getCustomers();
+  }, [axiosPrivate, dispatch, reload, customers]);
 
   return (
     <div className="section-sm">
@@ -124,21 +45,25 @@ const Customers = () => {
 
           <div className="customers">
             <div className="filter__top">
-              {/* <FilterOptions
+              <FilterOptions
                 options={sortOptions}
                 title="Sort By: Status"
-                onOpenHandler={() => setSortOpen((prev) => !prev)}
+                onToggle={() => setSortOpen((prev) => !prev)}
+                onSelect={(arg: string) => setSelectedSort(arg)}
                 open={sortOpen}
-              /> */}
+              />
             </div>
 
             <div className="order-history">
               <div className="order-history__header">
-                <h2>Customer List (1234)</h2>
-                <PaginationButtons
-                  pageCount={pageCount}
-                  handlePageClick={handlePageClick}
-                />
+                <h2>Customer List ({customers?.length || 0})</h2>
+                <button
+                  className="reload"
+                  disabled={reload && true}
+                  onClick={() => setReload(true)}
+                >
+                  <ReloadIcon />
+                </button>
               </div>
 
               <div className="order-history__table">
@@ -153,30 +78,47 @@ const Customers = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentItems.map((customer: customersTypes, i: number) => (
-                      <tr className="table__item" key={i}>
-                        <td>{customer.name}</td>
+                    {customers.length > 0 &&
+                      customers.map((customer) => (
+                        <tr className="table__item" key={customer._id}>
+                          <td>
+                            <p>{customer.name}</p>
+                          </td>
+                          <td>
+                            <p>{customer.email}</p>
+                          </td>
+                          <td>
+                            <p>{customer.phoneNumber || "not added"}</p>
+                          </td>
+                          <td>
+                            <p>{customer.status}</p>
+                          </td>
+                          <td>
+                            <Link
+                              to={`/customers/${customer._id}`}
+                              className="view-details"
+                            >
+                              View Details
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+
+                    {customers.length === 0 && !customersLoading && (
+                      <tr className="order-history__empty">
+                        <td>No Customers found</td>
+                      </tr>
+                    )}
+
+                    {customersLoading && customers.length === 0 && (
+                      <tr>
                         <td>
-                          <p>{customer.email}</p>
-                        </td>
-                        <td>{customer.phoneNumber}</td>
-                        <td>{customer.status}</td>
-                        <td>
-                          <Link
-                            to="/customers/details"
-                            className="view-details"
-                          >
-                            View Details
-                          </Link>
+                          <LoadingSpinner />
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
-
-                {/* <div className="order-history__empty">
-                  <h2>No Customers found</h2>
-                </div> */}
               </div>
             </div>
           </div>

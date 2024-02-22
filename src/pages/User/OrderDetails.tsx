@@ -26,22 +26,22 @@ const OrderDetails = () => {
         <div className="dashboard">
           <DashboardNav activeNavItem="Order History" />
 
-          {state.loading && <LoadingSpinner />}
-
-          {!state.order && !state.loading && <h2>Something went wrong!</h2>}
-
           {state.order && !state.loading && (
             <div className="order-details">
               <div className="order-details__info">
                 <div className="order-details__header">
                   <h2>Order Details</h2>
-                  <span onClick={() => navigate(-1)}>Back To List</span>
+                  <span onClick={() => navigate(-1)}>Back</span>
                 </div>
                 <OrderDetailsContent order={state.order} />
                 <OrderedItemsTable items={state.order.orderedProducts} />
               </div>
             </div>
           )}
+
+          {state.loading && <LoadingSpinner />}
+
+          {!state.order && !state.loading && <h2>Something went wrong!</h2>}
         </div>
       </div>
     </div>

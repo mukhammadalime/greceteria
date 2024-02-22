@@ -37,14 +37,25 @@
     }
   }
 
+  &__cancelled,
   &__notes {
-    margin: 0 2rem;
-
     h1 {
       color: #1a1a1a;
       font-weight: 500;
       font-size: 1.7rem;
     }
+  }
+
+  &__cancelled {
+    margin: 0 2rem 2rem;
+    h1 {
+      color: red;
+    }
+  }
+
+  &__notes {
+    margin: 0 2rem;
+
     p {
       font-size: 1.4rem;
       font-weight: 400;

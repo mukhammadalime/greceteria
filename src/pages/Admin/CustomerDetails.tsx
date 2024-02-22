@@ -1,119 +1,46 @@
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import WarningModal from "../../components/modals/WarningModal";
 import { OrdersTable } from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-
-const addresses = [
-  {
-    id: 1,
-    name: "Laura Wilson",
-    address: "4140 Parker Rd. Allentown, New Mexico 31134",
-    phoneNumber: "+82 1054678921",
-  },
-  {
-    id: 2,
-    name: "Amelia",
-    address: "5250 Parker Rd. Allentown, California 35522",
-    phoneNumber: "+82 1054678921",
-  },
-  {
-    id: 3,
-    name: "Laura",
-    address: "4140 Parker Rd. Allentown, New Mexico 31134",
-    phoneNumber: "+82 1054653921",
-  },
-];
-
-const orders = [
-  {
-    id: "#123",
-    date: "8 Sep, 2020",
-    total: "$135.00",
-    numOfProducts: 5,
-    status: "Delivered",
-  },
-  {
-    id: "#234",
-    date: "14 Aug, 2021",
-    total: "$150.00",
-    numOfProducts: 6,
-    status: "Delivered",
-  },
-  {
-    id: "#355",
-    date: "12 Jan, 2022",
-    total: "$300.00",
-    numOfProducts: 7,
-    status: "Delivered",
-  },
-  {
-    id: "#400",
-    date: "12 Mar, 2022",
-    total: "$490.00",
-    numOfProducts: 10,
-    status: "Delivered",
-  },
-  {
-    id: "#444",
-    date: "20 Apr, 2022",
-    total: "$500.00",
-    numOfProducts: 13,
-    status: "Processing",
-  },
-  {
-    id: "#244",
-    date: "8 Sep, 2020",
-    total: "$135.00",
-    numOfProducts: 5,
-    status: "Delivered",
-  },
-  {
-    id: "#563",
-    date: "12 Mar, 2022",
-    total: "$490.00",
-    numOfProducts: 10,
-    status: "Delivered",
-  },
-
-  {
-    id: "#254",
-    date: "12 Jan, 2022",
-    total: "$300.00",
-    numOfProducts: 7,
-    status: "Delivered",
-  },
-
-  {
-    id: "#632",
-    date: "20 Apr, 2022",
-    total: "$500.00",
-    numOfProducts: 13,
-    status: "Processing",
-  },
-  {
-    id: "#643",
-    date: "14 Aug, 2021",
-    total: "$150.00",
-    numOfProducts: 6,
-    status: "Delivered",
-  },
-  {
-    id: "#224",
-    date: "8 Sep, 2020",
-    total: "$135.00",
-    numOfProducts: 5,
-    status: "Delivered",
-  },
-];
+import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { getCustomerApi } from "../../api/customers";
+import { useParams } from "react-router-dom";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import { toast } from "react-toastify";
+import { getUserOrders } from "../../api/orders";
+import { OrderContext } from "../../store/OrderContext";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
   const emailRef = useRef<HTMLParagraphElement>(null);
+  const { customerId } = useParams();
+  const {
+    state: { customer, user, customerLoading },
+    dispatch,
+  } = useContext(UserContext);
+  const {
+    state: { orders, loading },
+    dispatch: orderDisatch,
+  } = useContext(OrderContext);
+  const axiosPrivate = useAxiosPrivate();
 
-  const copyEmailHandler = () => {
+  useEffect(() => {
+    (async () => {
+      await getCustomerApi(dispatch, axiosPrivate, customerId as string);
+    })();
+    (async () => {
+      await getUserOrders(orderDisatch, axiosPrivate, customerId as string);
+    })();
+  }, [axiosPrivate, customerId, dispatch, orderDisatch]);
+
+  // Copy email to clipboard
+  const copyEmailHandler = async () => {
     const email = emailRef.current?.textContent;
+    if ((await navigator.clipboard.readText()) === email) return;
     navigator.clipboard.writeText(email!);
+    toast.success("Email copied.");
   };
 
   return (
@@ -125,47 +52,64 @@ const CustomerDetails = () => {
           id=""
         />
       )}
+
       <div className="section-sm">
         <div className="container">
           <div className="dashboard">
             <DashboardNav activeNavItem="Customers" />
 
-            <div className="customer-details dashboard__main">
-              <div className="user__details">
-                <div className="user__details--left">
-                  <img src="/assets/images/users/default.jpg" alt="" />
-                  <div className="user__details--info">
-                    <h5>Laura Wilson</h5>
-                    <p>laurawilson</p>
-                    <p ref={emailRef}>
-                      <ContentCopyIcon onClick={copyEmailHandler} />
-                      laurawilson@gmail.com
-                    </p>
+            {customer && !customerLoading && (
+              <div className="customer-details dashboard__main">
+                <div className="user__details">
+                  <div className="user__details--left">
+                    <img src={customer?.photo} alt="" />
+                    <div className="user__details--info">
+                      <h5>{customer?.name}</h5>
+                      <p>{customer?.username}</p>
+                      {customer?.phoneNumber && <p>{customer?.phoneNumber}</p>}
+                      <p ref={emailRef}>
+                        <ContentCopyIcon onClick={copyEmailHandler} />
+                        {customer?.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="address-book">
+                    <div className="address-book__header">
+                      Shipping Addresses
+                    </div>
+                    <div className="address-book__items">
+                      {customer.addresses?.length > 0 &&
+                        customer.addresses?.map((item) => (
+                          <div className="address-book__item" key={item._id}>
+                            <h5>{item.name}</h5>
+                            <p>{`${item.address1}, ${
+                              item.address2 ? item.address2 : ""
+                            }, ${item.city}, ${item.postalCode}, `}</p>
+                            <span>{item.phoneNumber}</span>
+                          </div>
+                        ))}
+                      {customer?.addresses.length === 0 && (
+                        <p className="no-addresses">No addresses yet</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="address-book">
-                  <div className="address-book__header">Shipping Addresses</div>
-                  <div className="address-book__items">
-                    {addresses.map((item) => (
-                      <div className="address-book__item" key={item.name}>
-                        <h5>{item.name}</h5>
-                        <p>{item.address}</p>
-                        <span>{item.phoneNumber}</span>
-                      </div>
-                    ))}
+                {user?._id !== customer?._id && (
+                  <div className="customer-details__actions">
+                    <button
+                      className="button add-button"
+                      onClick={() => setWarningModal(true)}
+                      children="Make me Manager"
+                    />
                   </div>
-                </div>
+                )}
+
+                <OrdersTable orders={orders} loading={loading} />
               </div>
-              <div className="customer-details__actions">
-                <button
-                  className="button add-button"
-                  onClick={() => setWarningModal(true)}
-                >
-                  Make me Manager
-                </button>
-              </div>
-              {/* <OrdersTable orders={orders} text={""} /> */}
-            </div>
+            )}
+
+            {customerLoading && <LoadingSpinner />}
           </div>
         </div>
       </div>

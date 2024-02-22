@@ -127,6 +127,7 @@ export const getOrdersRevenueStats = async (
   dispatch: React.Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
+  dispatch({ type: OrderActionKind.GET_REVENUE_STATS_START });
   try {
     const { data } = await axiosPrivate(`orders/revenue-stats`);
 
@@ -138,11 +139,14 @@ export const getOrdersRevenueStats = async (
     const error =
       err.response?.data.message ||
       "Something went wrong. Please come back later.";
+    dispatch({
+      type: OrderActionKind.GET_REVENUE_STATS_FAILURE,
+      payload: error,
+    });
     toast.error(error);
   }
 };
 
-//// OVERAL
 export const updateOrder = async (
   dispatch: React.Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance,
@@ -155,6 +159,28 @@ export const updateOrder = async (
 
     dispatch({
       type: OrderActionKind.UPDATE_ORDER_SUCCESS,
+      payload: data.data,
+    });
+  } catch (err: any) {
+    const error =
+      err.response?.data.message ||
+      "Something went wrong. Please come back later.";
+    toast.error(error);
+  }
+};
+
+////////////////////////////////////////////////////////////////
+export const getUserOrders = async (
+  dispatch: React.Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
+  id: string
+): Promise<void> => {
+  try {
+    dispatch({ type: OrderActionKind.GET_ORDERS_START });
+    const { data } = await axiosPrivate(`orders/user/${id}`);
+
+    dispatch({
+      type: OrderActionKind.GET_ORDERS_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {

@@ -47,7 +47,7 @@ const AddressItem = ({
             className={`address-book__select ${
               selectedAddressId === addressItem._id && "selected"
             }`}
-          ></span>
+          />
         )}
       </div>
     </>

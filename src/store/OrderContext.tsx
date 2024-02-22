@@ -6,7 +6,7 @@ import {
 } from "../utils/user-types";
 
 interface OrderInitialStateTypes {
-  orders: OrderProps[] | null;
+  orders: OrderProps[] | [];
   customOrders: OrderProps[] | [];
   order: OrderProps | null;
   loading: boolean;
@@ -29,9 +29,17 @@ export interface StatsTypes {
 
 // An enum with all the types of actions to use in our reducer
 export enum OrderActionKind {
+  GET_ORDER_START = "GET_ORDER_START",
+  GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS",
+  GET_ORDER_FAILURE = "GET_ORDER_FAILURE",
+
   GET_ORDERS_START = "GET_ORDERS_START",
   GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS",
   GET_ORDERS_FAILURE = "GET_ORDERS_FAILURE",
+
+  GET_USER_ORDERS_START = "GET_USER_ORDERS_START",
+  GET_USER_ORDERS_SUCCESS = "GET_USER_ORDERS_SUCCESS",
+  GET_USER_ORDERS_FAILURE = "GET_USER_ORDERS_FAILURE",
 
   GET_ORDERS_STATS_START = "GET_ORDERS_STATS_START",
   GET_ORDERS_STATS_SUCCESS = "GET_ORDERS_STATS_SUCCESS",
@@ -40,10 +48,6 @@ export enum OrderActionKind {
   GET_REVENUE_STATS_START = "GET_REVENUE_STATS_START",
   GET_REVENUE_STATS_SUCCESS = "GET_REVENUE_STATS_SUCCESS",
   GET_REVENUE_STATS_FAILURE = "GET_REVENUE_STATS_FAILURE",
-
-  GET_ORDER_START = "GET_ORDER_START",
-  GET_ORDER_SUCCESS = "GET_ORDER_SUCCESS",
-  GET_ORDER_FAILURE = "GET_ORDER_FAILURE",
 
   UPDATE_ORDER_START = "UPDATE_ORDER_START",
   UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS",
@@ -64,14 +68,11 @@ const RevenueItemInitialState: RevenueItemTypes = {
 };
 
 const INITIAL_STATE: OrderInitialStateTypes = {
-  orders: null,
-  customOrders: [],
+  orders: [],
   order: null,
   loading: false,
   updateLoading: false,
   error: null,
-  filterQuery: "",
-  sortQuery: "",
   stats: {
     total: 0,
     toBePacked: 0,
@@ -89,6 +90,10 @@ const INITIAL_STATE: OrderInitialStateTypes = {
     cancelled: 0,
   },
   revenueLoading: false,
+  /// Filtering
+  customOrders: [],
+  filterQuery: "",
+  sortQuery: "",
 };
 
 interface OrderContextTypes {
@@ -111,7 +116,7 @@ const OrderReducer = (
 ): typeof INITIAL_STATE => {
   switch (action.type) {
     case OrderActionKind.GET_ORDERS_START:
-      return { ...state, loading: true, error: null };
+      return { ...state, orders: [], loading: true, error: null };
     case OrderActionKind.GET_ORDERS_SUCCESS:
       return {
         ...state,
@@ -122,7 +127,47 @@ const OrderReducer = (
     case OrderActionKind.GET_ORDERS_FAILURE:
       return {
         ...state,
-        orders: null,
+        orders: [],
+        loading: false,
+        error: action.error!,
+      };
+
+    /////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
+
+    case OrderActionKind.GET_ORDER_START:
+      return { ...state, loading: true, error: null };
+    case OrderActionKind.GET_ORDER_SUCCESS:
+      return {
+        ...state,
+        order: action.payload as OrderProps,
+        loading: false,
+        error: null,
+      };
+    case OrderActionKind.GET_ORDER_FAILURE:
+      return {
+        ...state,
+        order: null,
+        loading: false,
+        error: action.error!,
+      };
+
+    /////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
+
+    case OrderActionKind.GET_USER_ORDERS_START:
+      return { ...state, loading: true, error: null };
+    case OrderActionKind.GET_USER_ORDERS_SUCCESS:
+      return {
+        ...state,
+        orders: action.payload as OrderProps[],
+        loading: false,
+        error: null,
+      };
+    case OrderActionKind.GET_USER_ORDERS_FAILURE:
+      return {
+        ...state,
+        orders: [],
         loading: false,
         error: action.error!,
       };
@@ -162,35 +207,14 @@ const OrderReducer = (
     /////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////
 
-    case OrderActionKind.GET_ORDER_START:
-      return { ...state, loading: true, error: null };
-    case OrderActionKind.GET_ORDER_SUCCESS:
-      return {
-        ...state,
-        order: action.payload as OrderProps,
-        loading: false,
-        error: null,
-      };
-    case OrderActionKind.GET_ORDER_FAILURE:
-      return {
-        ...state,
-        order: null,
-        loading: false,
-        error: action.error!,
-      };
-
-    /////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////
-
     case OrderActionKind.UPDATE_ORDER_START:
       return { ...state, updateLoading: true, error: null };
     case OrderActionKind.UPDATE_ORDER_SUCCESS:
-      const updatedItemIndex = state.orders!.findIndex(
+      const updatedItemIndex = (state.orders as OrderProps[]).findIndex(
         (item) => item._id === (action.payload as OrderProps)._id
       );
       const ordersCopy: OrderProps[] = [...state.orders!];
       ordersCopy[updatedItemIndex] = action.payload as OrderProps;
-
       return {
         ...state,
         order: action.payload as OrderProps,
@@ -216,7 +240,7 @@ export const OrderContextProvider = ({
   /// If the orders were filtered before, it returns the filtered ones. If there weren't, it just returns all orders
   const filterOrdersHandler = (query: string) => {
     const range = query.split("-").map((i) => Number(i));
-    const filtered = state.orders!.filter(
+    const filtered = (state.orders as OrderProps[]).filter(
       (i) => i.totalPrice >= range[0] && i.totalPrice <= range[1]
     );
     if (!query) return state.orders!;

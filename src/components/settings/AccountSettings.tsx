@@ -25,7 +25,6 @@ const AccountSettings = ({ user }: { user: User | null }) => {
   };
 
   const { state, dispatch } = useContext(UserContext);
-  console.log("state:", state);
 
   const axiosPrivate = useAxiosPrivate();
 

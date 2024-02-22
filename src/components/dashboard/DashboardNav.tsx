@@ -59,14 +59,14 @@ const navAdminItems = [
     icon: <UserIcon />,
   },
   {
-    name: "Categories",
-    link: "/categories",
-    icon: <CategroyIcon />,
-  },
-  {
     name: "Statistics",
     link: "/statistics",
     icon: <StatisticsIcon />,
+  },
+  {
+    name: "Categories",
+    link: "/categories",
+    icon: <CategroyIcon />,
   },
   {
     name: "Settings",
