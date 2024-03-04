@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Counter from "../UI/Counter";
 import WarningModal from "../modals/WarningModal";
 import { CartProductProps } from "../../utils/user-types";
 import { Link } from "react-router-dom";
+import { deleteProductCart } from "../../api/cart";
+import { CartContext } from "../../store/CartContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
+  console.log("cartItem:", cartItem);
   const [warningModal, setWarningModal] = useState(() => false);
+
+  const { dispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
+
+  const onDeleteProduct = async (setLoading: (arg: boolean) => void) => {
+    await deleteProductCart(
+      dispatch,
+      cartItem.productId,
+      axiosPrivate,
+      setLoading
+    );
+  };
 
   return (
     <>
@@ -13,7 +29,7 @@ const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
         <WarningModal
           text="Are your sure that you want to remove this product from your cart?"
           closeModal={() => setWarningModal(false)}
-          id={cartItem.productId}
+          actionHandler={onDeleteProduct}
         />
       )}
 

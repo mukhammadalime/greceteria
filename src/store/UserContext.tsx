@@ -12,7 +12,7 @@ interface UserInitialStateTypes {
   updateMeLoading: boolean;
   error: string | null;
   customer: User | null;
-  customers: User[] | [];
+  customers: User[] | null;
   customersLoading: boolean;
   customerLoading: boolean;
   customersStats: CustomersStatsTypes;
@@ -87,14 +87,14 @@ export interface UserAction {
 }
 
 const INITIAL_STATE: UserInitialStateTypes = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user")!) || null,
   loading: false,
   verifyLoading: false,
   resetLoading: false,
   changePassLoading: false,
   updateMeLoading: false,
   error: null,
-  customers: [],
+  customers: null,
   customersLoading: false,
   customer: null,
   customerLoading: false,
@@ -125,6 +125,7 @@ const UserReducer = (
       return { ...state, loading: true, error: null };
     case UserActionKind.GETME_SUCCESS:
       localStorage.setItem("persist", JSON.stringify(true));
+      localStorage.setItem("user", JSON.stringify(action.payload));
       return {
         ...state,
         user: action.payload as User,
@@ -133,12 +134,14 @@ const UserReducer = (
       };
     case UserActionKind.GETME_FAILURE:
       localStorage.removeItem("persist");
+      localStorage.removeItem("user");
       return { ...state, user: null, loading: false, error: action.error! };
 
     //// UPDATE ME
     case UserActionKind.UPDATE_ME_START:
       return { ...state, updateMeLoading: true, error: null };
     case UserActionKind.UPDATE_ME_SUCCESS:
+      localStorage.setItem("user", JSON.stringify(action.payload));
       return {
         ...state,
         user: action.payload as User,
@@ -154,7 +157,6 @@ const UserReducer = (
     case UserActionKind.CHANGE_PASSWORD_SUCCESS:
       return {
         ...state,
-        user: action.payload as User,
         changePassLoading: false,
         error: null,
       };
@@ -165,6 +167,7 @@ const UserReducer = (
     case UserActionKind.VERIFY_START:
       return { ...state, user: null, verifyLoading: true, error: null };
     case UserActionKind.VERIFY_SUCCESS:
+      localStorage.setItem("user", JSON.stringify(action.payload));
       return {
         ...state,
         user: action.payload as User,
@@ -183,6 +186,7 @@ const UserReducer = (
     case UserActionKind.RESET_PASSWORD_START:
       return { ...state, user: null, resetLoading: true, error: null };
     case UserActionKind.RESET_PASSWORD_SUCCESS:
+      localStorage.setItem("user", JSON.stringify(action.payload));
       return {
         ...state,
         user: action.payload as User,
@@ -251,15 +255,11 @@ export const UserContextProvider = ({
 
   useEffect(() => {
     let isMounted = true;
-    const controller = new AbortController();
+    // const controller = new AbortController();
 
     const getUser = async () => {
-      dispatch({ type: UserActionKind.GETME_START });
       try {
-        const { data } = await axiosPrivate.get("/users/me", {
-          signal: controller.signal,
-          headers: { "Content-Type": "application/json" },
-        });
+        const { data } = await axiosPrivate.get("/users/me");
         isMounted &&
           dispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
       } catch (err) {
@@ -275,7 +275,7 @@ export const UserContextProvider = ({
 
     return () => {
       isMounted = false;
-      controller.abort();
+      // controller.abort();
     };
   }, [auth.accessToken, axiosPrivate]);
 

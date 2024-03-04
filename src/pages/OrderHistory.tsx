@@ -9,9 +9,11 @@ import { getAllOrders, getMyOrders } from "../api/orders";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { orderPriceOptions, orderSortOptions } from "../data/helperData";
 import useToggleOptions from "../hooks/useToggleOptions";
+import { AuthContext } from "../store/AuthContext";
 
 const OrderHistory = () => {
   const { state } = useContext(UserContext);
+  const { auth } = useContext(AuthContext);
   const {
     state: { loading, orders, customOrders, filterQuery, sortQuery },
     dispatch,
@@ -20,22 +22,16 @@ const OrderHistory = () => {
   } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
 
-  const uniqueArr = Array.from(
-    new Set(customOrders.map((i) => JSON.stringify(i)))
-  ).map((i) => JSON.parse(i));
-
   useEffect(() => {
-    if (!state.user) return;
-    const getOrdersForUser = async () => {
+    if (!auth.accessToken) return;
+    const getOrdersForUser = async () =>
       await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt");
-    };
-
     const getOrdersForAdmin = async () =>
       await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt");
 
-    state.user.role === "user" && getOrdersForUser();
-    state.user.role !== "user" && getOrdersForAdmin();
-  }, [axiosPrivate, dispatch, state.user]);
+    if (state.user?.role === "user") getOrdersForUser();
+    if (state.user?.role !== "user") getOrdersForAdmin();
+  }, [auth.accessToken, axiosPrivate, dispatch, state.user?.role]);
 
   // This function opens the requested filter and closed other remaining open filters.
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
@@ -57,6 +53,11 @@ const OrderHistory = () => {
                 onToggle={toggleOptionsHandler.bind(null, 0)}
                 onSelect={(id: string) => filterOrders(id)}
                 open={filtersOpen[0]}
+                defaultValue={
+                  filterQuery
+                    ? orderPriceOptions.find((i) => i.id === filterQuery)?.name
+                    : "Select Price"
+                }
               />
               <FilterOptions
                 options={orderSortOptions}
@@ -64,13 +65,18 @@ const OrderHistory = () => {
                 onToggle={toggleOptionsHandler.bind(null, 1)}
                 onSelect={(id: string) => sortOrders(id)}
                 open={filtersOpen[1]}
+                defaultValue={
+                  sortQuery
+                    ? orderSortOptions.find((i) => i.id === sortQuery)?.name
+                    : "Sort By Status"
+                }
               />
             </div>
 
-            {orders === null && !loading && <h1>Something went wrong.</h1>}
+            {/* {orders === null && !loading && <h1>Something went wrong.</h1>} */}
 
             <OrdersTable
-              orders={filterQuery || sortQuery ? uniqueArr : orders}
+              orders={filterQuery || sortQuery ? customOrders : orders}
               filterQuery={filterQuery}
               loading={loading}
             />

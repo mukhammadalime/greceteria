@@ -7,6 +7,7 @@ import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { getCustomersApi } from "../../api/customers";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
+import { AuthContext } from "../../store/AuthContext";
 
 export const sortOptions = [
   { name: "Sort by: Active", id: "active" },
@@ -23,19 +24,18 @@ const Customers = () => {
     state: { customers, customersLoading },
     dispatch,
   } = useContext(UserContext);
+  const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     // We do no fetch customers if there is already data until the 'reload' button is clicked.
-    if (customers.length !== 0 && !reload) return;
+    if ((customers && !reload) || !auth.accessToken) return;
 
-    const getCustomers = async () => {
+    (async () => {
       await getCustomersApi(dispatch, axiosPrivate);
       setReload(false);
-    };
-
-    getCustomers();
-  }, [axiosPrivate, dispatch, reload, customers]);
+    })();
+  }, [axiosPrivate, dispatch, reload, customers, auth.accessToken]);
 
   return (
     <div className="section-sm">
@@ -78,43 +78,42 @@ const Customers = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {customers.length > 0 &&
-                      customers.map((customer) => (
-                        <tr className="table__item" key={customer._id}>
-                          <td>
-                            <p>{customer.name}</p>
-                          </td>
-                          <td>
-                            <p>{customer.email}</p>
-                          </td>
-                          <td>
-                            <p>{customer.phoneNumber || "not added"}</p>
-                          </td>
-                          <td>
-                            <p>{customer.status}</p>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/customers/${customer._id}`}
-                              className="view-details"
-                            >
-                              View Details
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-
-                    {customers.length === 0 && !customersLoading && (
-                      <tr className="order-history__empty">
-                        <td>No Customers found</td>
-                      </tr>
-                    )}
-
-                    {customersLoading && customers.length === 0 && (
+                    {customersLoading && !customers && (
                       <tr>
                         <td>
                           <LoadingSpinner />
                         </td>
+                      </tr>
+                    )}
+
+                    {customers?.map((customer) => (
+                      <tr className="table__item" key={customer._id}>
+                        <td>
+                          <p>{customer.name}</p>
+                        </td>
+                        <td>
+                          <p>{customer.email}</p>
+                        </td>
+                        <td>
+                          <p>{customer.phoneNumber || "not added"}</p>
+                        </td>
+                        <td>
+                          <p>{customer.status}</p>
+                        </td>
+                        <td>
+                          <Link
+                            to={`/customers/${customer._id}`}
+                            className="view-details"
+                          >
+                            View Details
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+
+                    {customers?.length === 0 && (
+                      <tr className="order-history__empty">
+                        <td>No Customers found</td>
                       </tr>
                     )}
                   </tbody>

@@ -12,28 +12,31 @@ import {
   getOrdersStats,
   getRecentOrdersForAdmin,
 } from "../../api/orders";
+import { AuthContext } from "../../store/AuthContext";
 
 const Dashboard = () => {
   const { state } = useContext(UserContext);
+  const { auth } = useContext(AuthContext);
   const { state: ordersState, dispatch } = useContext(OrderContext);
-
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    if (!state.user) return;
-    const getOrdersForUser = async () =>
-      await getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
+    if (!auth.accessToken) return;
 
-    const getOrdersForAdmin = async () =>
-      await getRecentOrdersForAdmin(dispatch, axiosPrivate);
+    if (state.user?.role !== "user") {
+      (async () => {
+        await getRecentOrdersForAdmin(dispatch, axiosPrivate);
+      })();
+      (async () => {
+        await getOrdersStats(dispatch, axiosPrivate);
+      })();
+    }
 
-    const getOrdersStatsForAdmin = async () =>
-      await getOrdersStats(dispatch, axiosPrivate);
-
-    state.user.role === "user" && getOrdersForUser();
-    state.user.role !== "user" && getOrdersForAdmin();
-    state.user.role !== "user" && getOrdersStatsForAdmin();
-  }, [axiosPrivate, dispatch, state.user]);
+    if (state.user?.role === "user")
+      (async () => {
+        await getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
+      })();
+  }, [auth.accessToken, axiosPrivate, dispatch, state.user?.role]);
 
   if (state.user === null) return <LoginFirst />;
 
@@ -44,7 +47,7 @@ const Dashboard = () => {
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
             <UserDetails user={state.user} />
-            {state.user && state.user.role !== "user" && (
+            {state.user && state.user.role === "admin" && (
               <OrdersByStatus stats={ordersState.stats} />
             )}
 

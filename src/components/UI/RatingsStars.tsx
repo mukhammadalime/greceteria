@@ -16,7 +16,8 @@ const RatingsStars = (props: {
       >
         <Rating
           name="text-feedback"
-          value={props.ratingsAverage}
+          value={props.ratingsAverage ?? 0}
+          defaultValue={props.ratingsAverage ?? 0}
           readOnly
           precision={0.1}
           emptyIcon={

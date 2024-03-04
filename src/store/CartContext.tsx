@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-} from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { CartProps } from "../utils/user-types";
 import { getCartApi } from "../api/cart";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
@@ -101,20 +95,17 @@ export const CartContextProvider = ({
 
   const axiosPrivate = useAxiosPrivate();
 
-  const getCart = useCallback(
-    async () => await getCartApi(dispatch, axiosPrivate),
-    [axiosPrivate]
-  );
-
   // Fetch cart on every refresh to keep the data up to date with the database.
   useEffect(() => {
-    auth.accessToken && getCart();
-  }, [auth.accessToken, getCart]);
+    if (!auth.accessToken) return;
+    (async () => {
+      await getCartApi(dispatch, axiosPrivate);
+    })();
+  }, [auth.accessToken, axiosPrivate]);
 
   const values = {
     state,
     dispatch,
-    getCart,
   };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;

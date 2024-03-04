@@ -7,18 +7,22 @@ import { getOneOrder } from "../../api/orders";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { OrderContext } from "../../store/OrderContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import { AuthContext } from "../../store/AuthContext";
 
 const OrderDetails = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const { state, dispatch } = useContext(OrderContext);
+  const { auth } = useContext(AuthContext);
+
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    if (!auth.accessToken) return;
     (async () => {
       await getOneOrder(dispatch, axiosPrivate, orderId as string);
     })();
-  }, [axiosPrivate, dispatch, orderId]);
+  }, [auth.accessToken, axiosPrivate, dispatch, orderId]);
 
   return (
     <div className="section-sm">

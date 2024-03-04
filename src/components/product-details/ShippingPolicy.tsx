@@ -1,6 +1,6 @@
-const ShippingPolicy = () => {
+const ShippingPolicy = ({ show }: { show: boolean }) => {
   return (
-    <div className="shipping">
+    <div className="shipping" style={{ display: show ? "block" : "none" }}>
       <div className="container">
         <div className="shipping__content">
           <div className="shipping__header">

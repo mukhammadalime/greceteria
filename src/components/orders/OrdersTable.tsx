@@ -23,7 +23,7 @@ export const OrdersTable = ({
   filterQuery,
   loading,
 }: {
-  orders: OrderProps[] | [];
+  orders: OrderProps[] | null;
   recent?: boolean;
   filterQuery?: string;
   loading: boolean;
@@ -40,7 +40,7 @@ export const OrdersTable = ({
           <OrdersTableHeader />
 
           <tbody>
-            {loading && (
+            {(loading || !orders) && (
               <tr>
                 <td>
                   <LoadingSpinner />
@@ -48,21 +48,19 @@ export const OrdersTable = ({
               </tr>
             )}
 
-            {orders.length > 0 &&
-              !loading &&
-              orders.map((order: OrderProps) => (
-                <OrderItem
-                  key={order._id}
-                  orderNumber={order.orderNumber}
-                  numOfProducts={order.orderedProducts.length}
-                  totalPrice={order.totalPrice}
-                  status={order.status}
-                  id={order._id}
-                  createdAt={order.createdAt}
-                />
-              ))}
+            {orders?.map((order: OrderProps) => (
+              <OrderItem
+                key={order._id}
+                orderNumber={order.orderNumber}
+                numOfProducts={order.orderedProducts.length}
+                totalPrice={order.totalPrice}
+                status={order.status}
+                id={order._id}
+                createdAt={order.createdAt}
+              />
+            ))}
 
-            {orders.length === 0 && !loading && (
+            {orders?.length === 0 && !loading && (
               <tr className="order-history__empty">
                 <td>
                   {filterQuery

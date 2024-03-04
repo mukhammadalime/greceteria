@@ -22,48 +22,44 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useContext, useEffect } from "react";
-import { ToastContainer, Flip, toast } from "react-toastify";
+import { useCallback, useContext, useEffect } from "react";
+import { ToastContainer, Flip } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
 import { ProductContext } from "./store/ProductContext";
 import { getProductsApi } from "./api/products";
 import ProductsByCategory from "./pages/User/ProductsByCategory";
 import useRefreshToken from "./hooks/auth/useRefresh";
-import { UserContext } from "./store/UserContext";
-import LoadingSpinner from "./components/UI/LoadingSpinner";
+import { UserActionKind, UserContext } from "./store/UserContext";
 import { AuthContext } from "./store/AuthContext";
 
 function App() {
   const {
-    state: { user, loading },
+    state: { user },
+    dispatch: userDispatch,
   } = useContext(UserContext);
-  // console.log("user:", user);
   const { dispatch } = useContext(ProductContext);
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+
   const refresh = useRefreshToken();
+
+  const verifyRefreshToken = useCallback(async () => {
+    userDispatch({ type: UserActionKind.GETME_START });
+    try {
+      await refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [refresh, userDispatch]);
 
   useEffect(() => {
     const persist = JSON.parse(localStorage.getItem("persist")!);
-    const verifyRefreshToken = async () => {
-      setAuth({ accessToken: null });
-      try {
-        await refresh();
-      } catch (err) {
-        console.error(err);
-      } finally {
-      }
-    };
+    if (!auth?.accessToken && persist) verifyRefreshToken();
 
-    !auth?.accessToken && persist && verifyRefreshToken();
-  }, []);
-
-  useEffect(() => {
-    const getProducts = async () => await getProductsApi(dispatch);
-    getProducts();
+    (async () => {
+      await getProductsApi(dispatch);
+    })();
   }, [dispatch]);
-
-  if (loading && user === null) return <LoadingSpinner />;
 
   return (
     <>

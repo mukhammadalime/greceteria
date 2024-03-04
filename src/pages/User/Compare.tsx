@@ -31,7 +31,7 @@ const Compare = () => {
         <ul className="compare-list">
           {compare.length > 0 &&
             compare.map(
-              (item): ReactNode => <CompareItem key={item.id} product={item} />
+              (item): ReactNode => <CompareItem key={item._id} product={item} />
             )}
 
           {/* TODO: */}

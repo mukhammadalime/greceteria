@@ -24,7 +24,7 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
   const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
-  const product = products.find((i) => i.id === productId) as ProductItemTypes;
+  const product = products.find((i) => i._id === productId) as ProductItemTypes;
 
   let discountPercent: number = 0;
   if (product.discountedPrice > 0) {

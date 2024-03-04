@@ -50,7 +50,7 @@ export const createOrder = async (
   order: any
 ): Promise<void> => {
   try {
-    const { data } = await axiosPrivate.post(`/orders`, order);
+    await axiosPrivate.post(`/orders`, order);
 
     toast.success("New Order has been accepted.");
   } catch (err: any) {
@@ -69,7 +69,7 @@ export const getAllOrders = async (
 ): Promise<void> => {
   try {
     dispatch({ type: OrderActionKind.GET_ORDERS_START });
-    const { data } = await axiosPrivate(`orders?${quary || ""}`);
+    const { data } = await axiosPrivate(`orders?${quary || ""}&limit=100`);
 
     dispatch({
       type: OrderActionKind.GET_ORDERS_SUCCESS,

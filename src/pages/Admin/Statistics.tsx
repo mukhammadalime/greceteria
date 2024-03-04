@@ -7,10 +7,12 @@ import { OrderContext } from "../../store/OrderContext";
 import { UserContext } from "../../store/UserContext";
 import { getOrdersRevenueStats } from "../../api/orders";
 import { getCustomersStats } from "../../api/customers";
+import { AuthContext } from "../../store/AuthContext";
 
 const Statistics = () => {
   const axiosPrivate = useAxiosPrivate();
   const { state, dispatch } = useContext(OrderContext);
+  const { auth } = useContext(AuthContext);
   const { state: userState, dispatch: userDispatch } = useContext(UserContext);
 
   /// Current month
@@ -19,13 +21,15 @@ const Statistics = () => {
   }).format(new Date(Date.now()));
 
   useEffect(() => {
+    if (!auth.accessToken) return;
+
     (async () => {
       await getOrdersRevenueStats(dispatch, axiosPrivate);
     })();
     (async () => {
       await getCustomersStats(userDispatch, axiosPrivate);
     })();
-  }, [axiosPrivate, dispatch, userDispatch]);
+  }, [auth.accessToken, axiosPrivate, dispatch, userDispatch]);
 
   return (
     <div className="section-sm">

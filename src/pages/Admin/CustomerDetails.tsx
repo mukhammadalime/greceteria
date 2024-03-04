@@ -11,6 +11,7 @@ import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import { toast } from "react-toastify";
 import { getUserOrders } from "../../api/orders";
 import { OrderContext } from "../../store/OrderContext";
+import { AuthContext } from "../../store/AuthContext";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
@@ -24,16 +25,18 @@ const CustomerDetails = () => {
     state: { orders, loading },
     dispatch: orderDisatch,
   } = useContext(OrderContext);
+  const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
+    if (!auth.accessToken) return;
     (async () => {
       await getCustomerApi(dispatch, axiosPrivate, customerId as string);
     })();
     (async () => {
       await getUserOrders(orderDisatch, axiosPrivate, customerId as string);
     })();
-  }, [axiosPrivate, customerId, dispatch, orderDisatch]);
+  }, [auth.accessToken, axiosPrivate, customerId, dispatch, orderDisatch]);
 
   // Copy email to clipboard
   const copyEmailHandler = async () => {
@@ -45,13 +48,12 @@ const CustomerDetails = () => {
 
   return (
     <>
-      {warningModal && (
+      {/* {warningModal && (
         <WarningModal
-          text="Are your sure that you want to make this user manager?"
+          text="Are you sure that you want to make this user manager?"
           closeModal={() => setWarningModal(false)}
-          id=""
         />
-      )}
+      )} */}
 
       <div className="section-sm">
         <div className="container">

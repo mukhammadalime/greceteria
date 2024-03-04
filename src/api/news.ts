@@ -10,7 +10,7 @@ export const getNewsApi = async (
 ): Promise<void> => {
   try {
     dispatch({ type: NewsActionKind.GET_NEWS_START });
-    const { data } = await axios("news?sort=createdAt");
+    const { data } = await axios("news?sort=createdAt&limit=20");
 
     dispatch({
       type: NewsActionKind.GET_NEWS_SUCCESS,

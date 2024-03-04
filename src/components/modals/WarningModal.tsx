@@ -1,24 +1,18 @@
 import ReactDOM from "react-dom";
 import CloseIcon from "../UI/Icons/CloseIcon";
-import { useContext, useState } from "react";
-import { CartContext } from "../../store/CartContext";
-import { deleteProductCart } from "../../api/cart";
+import { useState } from "react";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
 };
 
-const WarningOverlay = ({ closeModal, text, id }: WarningModalProps) => {
+const WarningOverlay = ({
+  closeModal,
+  text,
+  actionHandler,
+}: WarningModalProps) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { state, dispatch } = useContext(CartContext);
-  const axiosPrivate = useAxiosPrivate();
-
-  const onDeleteProductFromCart = async () => {
-    await deleteProductCart(dispatch, id, axiosPrivate, setLoading);
-    closeModal();
-  };
 
   return (
     <div className="warning">
@@ -32,8 +26,8 @@ const WarningOverlay = ({ closeModal, text, id }: WarningModalProps) => {
       <div className="warning__bottom">
         <button
           className="button"
-          onClick={onDeleteProductFromCart}
-          disabled={state.updateLoading && true}
+          onClick={() => actionHandler(setLoading)}
+          disabled={loading && true}
           children={loading ? <LoadingButtonSpinner /> : "Confirm"}
         />
         <button className="button" onClick={closeModal}>
@@ -44,7 +38,11 @@ const WarningOverlay = ({ closeModal, text, id }: WarningModalProps) => {
   );
 };
 
-const WarningModal = ({ closeModal, text, id }: WarningModalProps) => {
+const WarningModal = ({
+  closeModal,
+  text,
+  actionHandler,
+}: WarningModalProps) => {
   return (
     <>
       {ReactDOM.createPortal(
@@ -52,7 +50,11 @@ const WarningModal = ({ closeModal, text, id }: WarningModalProps) => {
         document.getElementById("backdrop-root")!
       )}
       {ReactDOM.createPortal(
-        <WarningOverlay closeModal={closeModal} text={text} id={id} />,
+        <WarningOverlay
+          closeModal={closeModal}
+          text={text}
+          actionHandler={actionHandler}
+        />,
         document.getElementById("modal-root")!
       )}
     </>
@@ -62,7 +64,7 @@ const WarningModal = ({ closeModal, text, id }: WarningModalProps) => {
 interface WarningModalProps {
   closeModal: () => void;
   text: string;
-  id: string;
+  actionHandler: (fn: (arg: boolean) => void) => Promise<void>;
 }
 
 export default WarningModal;

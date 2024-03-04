@@ -2,7 +2,7 @@ import debounce from "debounce";
 import { useContext, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { CartContext } from "../../store/CartContext";
-import { addToCart, updateCart } from "../../api/cart";
+import { addToCart, deleteProductCart, updateCart } from "../../api/cart";
 import LoadingButtonSpinner from "./Icons/LoadingButtonSpinner";
 import React from "react";
 import LoadingCounterSpinner from "./Icons/LoadingCounterSpinner";
@@ -36,7 +36,7 @@ const Counter = ({
   };
 
   // This function is executed after 300 milliseconds after click and terminated if another click comes before 300 milliseconds. This prevents the user to send many requests to the backend.
-  const onUpdateHandler = async (): Promise<void> => {
+  const onUpdateCart = async (): Promise<void> => {
     const quantity = Number(counterRef.current?.value);
 
     if (forCart && !warningModal)
@@ -47,16 +47,20 @@ const Counter = ({
   const onAddToCart = async () => {
     const quantity = Number(counterRef.current?.value);
     await addToCart(dispatch, id, quantity, axiosPrivate, setBtnLoading);
-    counterRef.current!.value = "1";
+  };
+
+  const onDeleteProduct = async (setLoading: (arg: boolean) => void) => {
+    await deleteProductCart(dispatch, id, axiosPrivate, setLoading);
+    setWarningModal(false);
   };
 
   return (
     <>
       {warningModal && forCart && (
         <WarningModal
-          text="Are your sure that you want to remove this product from your cart?"
+          text="Are you sure that you want to remove this product from your cart?"
           closeModal={() => setWarningModal(false)}
-          id={id}
+          actionHandler={onDeleteProduct}
         />
       )}
       <div className={`counter${isMobile || isSmall ? " counter-s" : ""}`}>
@@ -64,7 +68,7 @@ const Counter = ({
           className="decrement"
           disabled={forCart && state.updateLoading && true}
           onMouseUp={changeInputvalue.bind(null, -1)}
-          onClick={debounce(onUpdateHandler, 300)}
+          onClick={debounce(onUpdateCart, 300)}
           children={counterLoading ? <LoadingCounterSpinner /> : "-"}
         />
         <input
@@ -78,7 +82,7 @@ const Counter = ({
           className="increment"
           disabled={forCart && state.updateLoading && true}
           onMouseUp={changeInputvalue.bind(null, 1)}
-          onClick={debounce(onUpdateHandler, 300)}
+          onClick={debounce(onUpdateCart, 300)}
           children={counterLoading ? <LoadingCounterSpinner /> : "+"}
         />
       </div>

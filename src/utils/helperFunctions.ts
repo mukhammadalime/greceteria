@@ -54,3 +54,49 @@ export const removeImagesHandler = (
     return dataTransfer.files;
   });
 };
+
+export const formatDate = function (date: Date) {
+  const calcDaysPassed = (date1: Date, date2: Date) =>
+    Math.round(
+      Math.abs((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24))
+    );
+
+  const daysPassed = calcDaysPassed(new Date(), new Date(date));
+
+  const userLocale =
+    navigator.languages && navigator.languages.length
+      ? navigator.languages[0]
+      : navigator.language;
+
+  if (daysPassed === 0) return "Today";
+  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  else {
+    return new Intl.DateTimeFormat(userLocale).format(new Date(date));
+  }
+};
+
+export const returnUpdatedState = <T>(items: T[], item: T, id: string) => {
+  const updatingItemIndex = items.findIndex((i: any) => i._id === id);
+  const itemsCopy: T[] = [...items];
+  itemsCopy[updatingItemIndex] = item as T;
+
+  return itemsCopy;
+};
+
+/// This will remove dublicate elements based on id
+export const removeDublicate = <T extends { _id: string }>(items: T[]) => {
+  const ids = Array.from(new Set(items.map((i) => i._id)));
+  let newArr: T[] = [];
+  for (let i = 0; i < ids.length; i++) {
+    const item = items.find((b) => b._id === ids[i]);
+    if (item) newArr.push(item);
+  }
+  return newArr;
+};
+
+export const makeUniqueArray = <T>(items: T[]) => {
+  return Array.from(new Set(items.map((i) => JSON.stringify(i)))).map((i) =>
+    JSON.parse(i)
+  );
+};

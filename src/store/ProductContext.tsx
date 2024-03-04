@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react";
 import { ProductItemTypes } from "../utils/user-types";
+import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[];
@@ -36,7 +37,7 @@ export enum ProductActionKind {
 // An interface for our actions
 export interface ProductAction {
   type: ProductActionKind;
-  payload?: ProductItemTypes[] | ProductItemTypes | [];
+  payload?: ProductItemTypes[] | ProductItemTypes;
   error?: string;
 }
 
@@ -117,15 +118,16 @@ const ProductReducer = (
     case ProductActionKind.UPDATE_PRODUCT_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.UPDATE_PRODUCT_SUCCESS:
-      const updatedItemIndex = state.products.findIndex(
-        (item) => item.id === (action.payload as ProductItemTypes).id
+      const product = action.payload as ProductItemTypes;
+      const updatedProducts = returnUpdatedState(
+        state.products,
+        product,
+        product._id
       );
-      const productsCopy: ProductItemTypes[] = [...state.products];
-      productsCopy[updatedItemIndex] = action.payload as ProductItemTypes;
       return {
         ...state,
-        products: productsCopy,
-        product: action.payload as ProductItemTypes,
+        products: updatedProducts,
+        product,
         addUpdateDeleteLoading: false,
         error: null,
       };
@@ -141,7 +143,7 @@ const ProductReducer = (
     case ProductActionKind.DELETE_PRODUCT_SUCCESS:
       return {
         ...state,
-        products: state.products.filter((i) => i.id !== state.product?.id),
+        products: state.products.filter((i) => i._id !== state.product?._id),
         addUpdateDeleteLoading: false,
         error: null,
       };

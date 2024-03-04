@@ -1,6 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 import { NewsItemTypes } from "../utils/user-types";
 import { getNewsApi } from "../api/news";
+import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface NewsInitialStateTypes {
   news: NewsItemTypes[];
@@ -8,7 +9,6 @@ interface NewsInitialStateTypes {
   newsLoading: boolean;
   newsItemLoading: boolean;
   addUpdateDeleteLoading: boolean;
-  newsItemRefs: Array<HTMLTextAreaElement> | null;
   error: string | null;
 }
 
@@ -33,8 +33,6 @@ export enum NewsActionKind {
   DELETE_NEWSITEM_START = "DELETE_NEWSITEM_START",
   DELETE_NEWSITEM_SUCCESS = "DELETE_NEWSITEM_SUCCESS",
   DELETE_NEWSITEM_FAILURE = "DELETE_NEWSITEM_FAILURE",
-
-  SET_REFS = "SET_REFS",
 }
 
 // An interface for our actions
@@ -50,7 +48,6 @@ const INITIAL_STATE: NewsInitialStateTypes = {
   newsLoading: false,
   newsItemLoading: false,
   addUpdateDeleteLoading: false,
-  newsItemRefs: null,
   error: null,
 };
 
@@ -118,15 +115,16 @@ const NewsReducer = (
     case NewsActionKind.UPDATE_NEWSITEM_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case NewsActionKind.UPDATE_NEWSITEM_SUCCESS:
-      const updatedItemIndex = state.news.findIndex(
-        (item) => item._id === (action.payload as NewsItemTypes)._id
+      const newsItem = action.payload as NewsItemTypes;
+      const updatedNews = returnUpdatedState(
+        state.news,
+        newsItem,
+        newsItem._id
       );
-      const newsCopy: NewsItemTypes[] = [...state.news];
-      newsCopy[updatedItemIndex] = action.payload as NewsItemTypes;
       return {
         ...state,
-        news: newsCopy,
-        newsItem: action.payload as NewsItemTypes,
+        news: updatedNews,
+        newsItem,
         addUpdateDeleteLoading: false,
         error: null,
       };
@@ -144,12 +142,6 @@ const NewsReducer = (
       };
     case NewsActionKind.DELETE_NEWSITEM_FAILURE:
       return { ...state, addUpdateDeleteLoading: false, error: action.error! };
-
-    case NewsActionKind.SET_REFS:
-      return {
-        ...state,
-        newsItemRefs: action.payload as Array<HTMLTextAreaElement>,
-      };
 
     default:
       return state;

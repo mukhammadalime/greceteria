@@ -20,8 +20,13 @@ function getLabelText(value: number) {
   return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
 }
 
-export default function HoverRating() {
-  const [value, setValue] = useState<number | null>(() => 4.5);
+export default function HoverRating({
+  value,
+  setValue,
+}: {
+  value: number | null;
+  setValue: (arg: number | null) => void;
+}) {
   const [hover, setHover] = useState(() => -1);
 
   return (
@@ -37,10 +42,10 @@ export default function HoverRating() {
         precision={0.5}
         getLabelText={getLabelText}
         className="add-review__icon"
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           setValue(newValue);
         }}
-        onChangeActive={(event, newHover) => {
+        onChangeActive={(_, newHover) => {
           setHover(newHover);
         }}
         emptyIcon={

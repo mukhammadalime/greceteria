@@ -15,7 +15,7 @@ const CompareItem = ({ product }: { product: ProductItemTypes }) => {
       <div className="compare-item__img-box">
         {!product.inStock && <span className="stock-out">Out of Stock</span>}
 
-        <Link to={`/products/${product.id}`} draggable="false">
+        <Link to={`/products/${product._id}`} draggable="false">
           <img
             draggable="false"
             className="compare-item__img"
@@ -23,7 +23,7 @@ const CompareItem = ({ product }: { product: ProductItemTypes }) => {
             alt=""
           />
         </Link>
-        <ActionsBox id={product.id} />
+        <ActionsBox id={product._id} />
       </div>
       <div className="compare-item__main">
         <h2 className="compare-item__title">

@@ -183,7 +183,7 @@ export const getCompareWishlistProducts = async (
   let itemsList: ProductItemTypes[] = [];
   for (let i = 0; i < items.length!; i++) {
     itemsList.push(
-      products.find((item) => item.id === items[i]) as ProductItemTypes
+      products.find((item) => item._id === items[i]) as ProductItemTypes
     );
   }
 

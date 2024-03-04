@@ -8,7 +8,7 @@ const ProductCard = ({ item }: { item: ProductItemTypes }) => {
       <ProductCardImg
         image={item.images[0].imageUrl}
         inStock={item.inStock}
-        id={item.id}
+        id={item._id}
       />
       <ProductCardDetails
         name={item.name}
@@ -16,7 +16,7 @@ const ProductCard = ({ item }: { item: ProductItemTypes }) => {
         discountedPrice={item.discountedPrice}
         inStock={item.inStock}
         ratingsAverage={item.ratingsAverage}
-        id={item.id}
+        id={item._id}
       />
     </div>
   );

@@ -9,6 +9,7 @@ export interface User {
   token: string;
   phoneNumber: string;
   wishlisted: string[];
+  orderedProducts: string[];
   compare: string[];
   status: string;
 }
@@ -24,7 +25,7 @@ export interface AddressItemTypes {
 }
 
 export interface ProductItemTypes {
-  id: string;
+  _id: string;
   name: string;
   slug: string;
   price: number;
@@ -41,6 +42,7 @@ export interface ProductItemTypes {
   createdAt: Date;
   category: { name: string; _id: string };
   reviews: ReviewItemTypes[];
+  reviewsCount: number;
 }
 
 export interface ReviewItemTypes {
@@ -48,7 +50,17 @@ export interface ReviewItemTypes {
   rating: number;
   review: string;
   createdAt: Date;
-  user: { name: string; photo: string; username: string };
+  updatedAt: Date;
+  user: { _id: string; name: string; photo: string; username: string };
+  replies: ReviewReplyItemTypes[];
+}
+
+export interface ReviewReplyItemTypes {
+  _id: string;
+  text: string;
+  user: { _id: string; name: string; photo: string; username: string };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CategoryItemTypes {

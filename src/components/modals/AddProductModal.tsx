@@ -103,7 +103,7 @@ const AddProductOverlay = ({
           imagesForServer,
           imagesForClient,
           closeModal,
-          product,
+          product as ProductItemTypes,
           axiosPrivate
         );
         break;
@@ -111,7 +111,7 @@ const AddProductOverlay = ({
         await deleteProduct(
           dispatch,
           closeModal,
-          product?.id,
+          product?._id as string,
           navigate,
           axiosPrivate
         );
@@ -158,7 +158,7 @@ const AddProductOverlay = ({
               placeholder="250g | 1.2kg"
               ref={weightRef}
               type="number"
-              defaultValue={product?.weight.replace(/\D/g, "")}
+              defaultValue={product?.weight.replace(/kg|g/g, "")}
             />
             <FilterOptions
               options={weightOptions}

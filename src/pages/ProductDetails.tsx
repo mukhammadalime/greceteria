@@ -1,4 +1,3 @@
-import ReviewsList from "../components/reviews/ReviewsList";
 import ProductInfo from "../components/product-details/ProductInfo";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,6 +5,7 @@ import { useContext, useEffect } from "react";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { getProductApi } from "../api/products";
+import ProductReviewsAndShipping from "../components/product-details/ProductReviewsAndShipping";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -17,10 +17,9 @@ const ProductDetails = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    const getProduct = async () =>
-      await getProductApi(dispatch, params.productId, navigate);
-
-    getProduct();
+    (async () => {
+      await getProductApi(dispatch, params.productId);
+    })();
   }, [dispatch, params.productId, navigate]);
 
   return (
@@ -29,7 +28,7 @@ const ProductDetails = () => {
       {!productLoading && product && (
         <>
           <ProductInfo product={product!} />
-          <ReviewsList reviews={product?.reviews} />
+          <ProductReviewsAndShipping />
           <CustomProductsCarousel text="Related Products" products={products} />
         </>
       )}

@@ -61,7 +61,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
                 )}
                 <div className="product__info--title">
                   {product.brandName ? `[${product.brandName}]` : ""}{" "}
-                  {product.name} {product.features ? product.features : ""}{" "}
+                  {product.features ? product.features : ""} {product.name}{" "}
                   {product.weight ? product.weight : ""}
                 </div>
                 <div className="product__info--ratings">
@@ -104,7 +104,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
                 category={product.category.name}
                 store={product.store}
                 inStock={product.inStock}
-                id={product.id}
+                id={product._id}
               />
             </div>
           </div>

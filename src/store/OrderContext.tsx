@@ -1,13 +1,14 @@
-import { createContext, useReducer } from "react";
+import { createContext, useCallback, useEffect, useReducer } from "react";
 import {
   OrderProps,
   RevenueDataTypes,
   RevenueItemTypes,
 } from "../utils/user-types";
+import { makeUniqueArray, returnUpdatedState } from "../utils/helperFunctions";
 
 interface OrderInitialStateTypes {
-  orders: OrderProps[] | [];
-  customOrders: OrderProps[] | [];
+  orders: OrderProps[] | null;
+  customOrders: OrderProps[] | null;
   order: OrderProps | null;
   loading: boolean;
   updateLoading: boolean;
@@ -68,7 +69,7 @@ const RevenueItemInitialState: RevenueItemTypes = {
 };
 
 const INITIAL_STATE: OrderInitialStateTypes = {
-  orders: [],
+  orders: null,
   order: null,
   loading: false,
   updateLoading: false,
@@ -91,7 +92,7 @@ const INITIAL_STATE: OrderInitialStateTypes = {
   },
   revenueLoading: false,
   /// Filtering
-  customOrders: [],
+  customOrders: null,
   filterQuery: "",
   sortQuery: "",
 };
@@ -116,7 +117,7 @@ const OrderReducer = (
 ): typeof INITIAL_STATE => {
   switch (action.type) {
     case OrderActionKind.GET_ORDERS_START:
-      return { ...state, orders: [], loading: true, error: null };
+      return { ...state, orders: null, loading: true, error: null };
     case OrderActionKind.GET_ORDERS_SUCCESS:
       return {
         ...state,
@@ -127,7 +128,7 @@ const OrderReducer = (
     case OrderActionKind.GET_ORDERS_FAILURE:
       return {
         ...state,
-        orders: [],
+        orders: null,
         loading: false,
         error: action.error!,
       };
@@ -156,7 +157,7 @@ const OrderReducer = (
     /////////////////////////////////////////////////////////////////////////////
 
     case OrderActionKind.GET_USER_ORDERS_START:
-      return { ...state, loading: true, error: null };
+      return { ...state, orders: null, loading: true, error: null };
     case OrderActionKind.GET_USER_ORDERS_SUCCESS:
       return {
         ...state,
@@ -167,7 +168,7 @@ const OrderReducer = (
     case OrderActionKind.GET_USER_ORDERS_FAILURE:
       return {
         ...state,
-        orders: [],
+        orders: null,
         loading: false,
         error: action.error!,
       };
@@ -210,15 +211,12 @@ const OrderReducer = (
     case OrderActionKind.UPDATE_ORDER_START:
       return { ...state, updateLoading: true, error: null };
     case OrderActionKind.UPDATE_ORDER_SUCCESS:
-      const updatedItemIndex = (state.orders as OrderProps[]).findIndex(
-        (item) => item._id === (action.payload as OrderProps)._id
-      );
-      const ordersCopy: OrderProps[] = [...state.orders!];
-      ordersCopy[updatedItemIndex] = action.payload as OrderProps;
+      const order = action.payload as OrderProps;
+      const updatedOrders = returnUpdatedState(state.orders!, order, order._id);
       return {
         ...state,
-        order: action.payload as OrderProps,
-        orders: ordersCopy as OrderProps[],
+        order,
+        orders: updatedOrders,
         updateLoading: false,
         error: null,
       };
@@ -238,49 +236,87 @@ export const OrderContextProvider = ({
   const [state, dispatch] = useReducer(OrderReducer, INITIAL_STATE);
 
   /// If the orders were filtered before, it returns the filtered ones. If there weren't, it just returns all orders
-  const filterOrdersHandler = (query: string) => {
-    const range = query.split("-").map((i) => Number(i));
-    const filtered = (state.orders as OrderProps[]).filter(
-      (i) => i.totalPrice >= range[0] && i.totalPrice <= range[1]
-    );
-    if (!query) return state.orders!;
-    return filtered.length > 0 ? filtered : state.orders!;
-  };
+  const filterOrdersHandler = useCallback(
+    (query: string) => {
+      const range = query.split("-").map((i) => Number(i));
+      const filtered = (state.orders as OrderProps[]).filter(
+        (i) => i.totalPrice >= range[0] && i.totalPrice <= range[1]
+      );
+      // If there is no filter query, we just return all orders.
+      if (!query) return state.orders;
+      return filtered.length > 0 ? filtered : [];
+    },
+    [state.orders]
+  );
 
   /// Filtering the orders based on the price
-  const filterOrders = (filter: string) => {
-    state.filterQuery = filter;
+  const filterOrders = useCallback(
+    (filter: string) => {
+      state.filterQuery = filter;
 
-    let filtered: OrderProps[] = [];
-    /// We filter the orders here
-    filtered = filterOrdersHandler(filter);
+      let filtered: OrderProps[] = [];
+      /// We filter the orders here
+      filtered = filterOrdersHandler(filter)!;
 
-    /// If the orders got sorted before, we sort the filtered orders and return them.
-    if (state.sortQuery) {
-      const sorted = filtered!.filter((i) => i.status === state.sortQuery);
-      const unsorted = filtered!.filter((i) => i.status !== state.sortQuery);
-      state.customOrders = [...sorted, ...unsorted];
-      return;
-    }
+      /// If the orders got sorted before, we sort the filtered orders and return them.
+      if (state.sortQuery) {
+        const sorted = filtered!.filter((i) => i.status === state.sortQuery);
+        const unsorted = filtered!.filter((i) => i.status !== state.sortQuery);
+        state.customOrders = makeUniqueArray([...sorted, ...unsorted]);
+        return;
+      }
 
-    /// If the orders did not get sorted before, we just return the filtered orders without sorting
-    state.customOrders = filtered;
-  };
+      /// If the orders did not get sorted before, we just return the filtered orders without sorting
+      state.customOrders = filtered;
+    },
+    [filterOrdersHandler, state]
+  );
 
   /// Sorting the orders based on the status
-  const sortOrders = (status: string) => {
-    state.sortQuery = status;
-    /// We check if the orders got filtered before
-    const possibleFiltered = filterOrdersHandler(state.filterQuery);
+  const sortOrders = useCallback(
+    (status: string) => {
+      console.log("status:", status);
 
-    /// Getting 'wanted to be sort' orders
-    const sorted = possibleFiltered!.filter((i) => i.status === status);
+      state.sortQuery = status;
 
-    /// If the sorted products's length is 0, we just return the possible filtered orders.
-    /// If the sorted products' length is greater than 0, we sort the orders.
-    state.customOrders =
-      sorted.length === 0 ? possibleFiltered : [...sorted, ...possibleFiltered];
-  };
+      /// We check if the orders got filtered before
+      const possibleFiltered = filterOrdersHandler(state.filterQuery)!;
+      /// Getting 'wanted to be sort' orders
+      const sorted = possibleFiltered.filter((i) => i.status === status);
+
+      // If the user wants to clear sorting, we just return the possibleFiltered (which is state.orders if there is not filterQuery or filtered array if there is filterQuery)
+      if (status === "") {
+        state.customOrders = possibleFiltered;
+        return;
+      }
+
+      // If there are no orders with the status with which the user want to sort, we return the customOrders when there're already customOrders or possibleFiltered when there aren't customOrders before.
+      if (status !== "" && sorted.length === 0) {
+        state.customOrders =
+          state.customOrders?.length! > 0
+            ? state.customOrders
+            : possibleFiltered;
+        return;
+      }
+
+      state.customOrders = makeUniqueArray([...sorted, ...possibleFiltered]);
+    },
+    [filterOrdersHandler, state]
+  );
+
+  /// The logic behind this function is that if the admin enters orderdetails after he filters or sorts the orders, and updates the order, customOrders will be updated too with the updated order. After the user goes back to the orders page, the customOrders will be updated.
+  useEffect(() => {
+    if (!state.updateLoading && (state.filterQuery || state.sortQuery)) {
+      filterOrders(state.filterQuery);
+      sortOrders(state.sortQuery);
+    }
+  }, [
+    filterOrders,
+    sortOrders,
+    state.filterQuery,
+    state.sortQuery,
+    state.updateLoading,
+  ]);
 
   const values = {
     state,

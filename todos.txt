@@ -8,9 +8,7 @@ Tasks To Complete
 - fix ordertable when moving from dashboard to order history or vice versa
 - Enable admin to change 'Shipping Policy' and 'Terms & Conditions'(with editor)
 - Fix the condition when there is left only one product or category or news in grid container
+- Enable user to login with email
 
 // TODAY'S TODOS
-- Fetching reviews
-- Writing, updating and deleting review.
-- Enabling admin to delete the review.
 - Connecting logging in & signing up with github and google

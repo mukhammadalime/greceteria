@@ -31,7 +31,7 @@ const ProductsByCategory = () => {
         {category?.products?.length! > 0 ? (
           <div className="all-products">
             {category?.products?.map((item: ProductItemTypes) => (
-              <ProductCard item={item} key={item.id} />
+              <ProductCard item={item} key={item._id} />
             ))}
           </div>
         ) : (

@@ -46,7 +46,6 @@
 
     &--ratings {
       display: flex;
-      margin-bottom: 0.4rem;
       .ratings {
         display: flex;
         align-items: center;
@@ -300,7 +299,6 @@
 .reviews {
   &__header {
     padding: 0 1.6rem;
-    margin-bottom: 2.8rem;
     box-shadow: 0 1px 0 0 #e5e5e5;
     text-align: center;
 
@@ -328,32 +326,47 @@
     }
   }
 
+  &__main {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 2rem 0;
+  }
+
   .review {
     margin: 0 auto;
     max-width: 80rem;
-    padding: 2rem 0;
-    border-bottom: 1px solid #e5e5e5;
+    display: grid;
+    padding-bottom: 1rem;
 
-    &:last-child {
-      border-bottom: unset;
+    &:not(:first-child) {
+      padding-top: 1rem;
+      border-top: 1px solid #e5e5e5;
     }
 
     &__top {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.5rem;
 
       .user-details {
         display: flex;
         align-items: center;
 
         &__img {
+          width: 4rem;
+          height: 4rem;
+          margin-right: 1rem;
+
           img {
-            width: 4rem;
-            height: 4rem;
+            width: inherit;
+            height: inherit;
             border-radius: 100%;
             overflow: hidden;
-            margin-right: 1.2rem;
+          }
+        }
+
+        &__info {
+          h2 {
+            color: #1a1a1a;
           }
         }
       }
@@ -365,10 +378,67 @@
       color: #808080;
       font-weight: 400;
     }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+
+      .delete {
+        color: red;
+      }
+      .edit {
+        color: #00b207;
+      }
+
+      button {
+        font-size: 1.6rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+    }
+  }
+
+  .view-replies {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -0.5rem;
+    transition: transform 0.15s linear;
+
+    h1 {
+      user-select: none;
+      font-size: 1.45rem;
+      font-weight: 500;
+      color: #1a1a1a;
+      cursor: pointer;
+
+      &:active {
+        transform: scale(0.96);
+      }
+    }
+  }
+
+  &__load-more {
+    margin: 0 auto;
+    padding: 1rem 0 0;
+    border-top: 1px solid #e5e5e5;
+    max-width: 80rem;
+    display: grid;
+    place-items: center;
+
+    button {
+      color: #00b207;
+      font-size: 1.6rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
   }
 
   &__empty {
-    margin: -1rem 0 1.8rem;
     h2 {
       font-weight: 500;
       font-size: 1.8rem;
@@ -377,20 +447,14 @@
   }
 
   @media (max-width: 768px) {
-    &__header {
-      margin-bottom: 1.4rem;
-    }
-
     .review {
-      padding: 1rem 0;
-
       &__top {
         margin-bottom: 0.6rem;
       }
     }
 
-    &__empty {
-      margin: 0 0 1.4rem;
+    &__main {
+      padding: 1rem 0;
     }
   }
   @media (max-width: 600px) {
@@ -402,13 +466,48 @@
   }
 }
 
+.replies {
+  border-top: 1px solid #e5e5e5;
+  margin-top: 1rem;
+
+  &__main {
+    margin-left: 4rem;
+
+    .review {
+      padding: 1rem 0;
+
+      &:last-child {
+        border-bottom: unset;
+      }
+
+      &:last-child {
+        padding: 1rem 0 0;
+      }
+    }
+
+    .user-details__info {
+      h2 {
+        line-height: 1.2;
+        font-weight: 600;
+
+        &:first-child {
+          font-size: 1.5rem;
+        }
+
+        &:last-child {
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
+}
+
 .add-review {
   max-width: 80rem;
-  margin: 0 auto;
+  margin: 1rem auto 0;
   display: grid;
   padding: 1rem 0;
   border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
 
   label {
     font-size: 1.6rem;
@@ -421,7 +520,17 @@
   }
 
   button {
+    display: flex;
     justify-self: right;
+    width: 14.3rem;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+      width: 13.1rem;
+    }
+    @media (max-width: 768px) {
+      width: 12rem;
+    }
   }
 
   &__icon {
@@ -436,7 +545,17 @@
   }
 }
 
+.no-border {
+  border-top: unset;
+}
+
 .shipping {
+  padding: 2rem 0;
+  border-bottom: 1px solid #e5e5e5;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+  }
   &__content {
     max-width: 60rem;
     margin: 0 auto;

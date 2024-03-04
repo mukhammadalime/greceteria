@@ -2,10 +2,16 @@ import { RevenueItemTypes } from "../../utils/user-types";
 import ArrowCircleIcon from "../UI/Icons/ArrowCircleIcon";
 import EqualIcon from "../UI/Icons/EqualIcon";
 
-const OrderStatisticsItem = ({ item }: { item: RevenueItemTypes }) => {
+const OrderStatisticsItem = ({
+  item,
+  texts,
+}: {
+  item: RevenueItemTypes;
+  texts: string[];
+}) => {
   return (
     <div className="orders-stat__item">
-      <h2>Today's Revenue</h2>
+      <h2>{texts[0]} Revenue</h2>
       <div className="orders-stat__img">
         <img src="/assets/icons/money-icon.svg" alt="" />
         <span>${item.new.toFixed(2)}</span>
@@ -31,7 +37,9 @@ const OrderStatisticsItem = ({ item }: { item: RevenueItemTypes }) => {
           </>
         )}
 
-        <span> yesterday (${item.old.toFixed(2)})</span>
+        <span>
+          {texts[1]} (${item.old.toFixed(2)})
+        </span>
       </div>
     </div>
   );

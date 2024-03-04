@@ -10,7 +10,7 @@ export const getProductsApi = async (
 ): Promise<void> => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCTS_START });
-    const { data } = await axios("/products");
+    const { data } = await axios("/products?limit=20");
 
     dispatch({
       type: ProductActionKind.GET_PRODUCTS_SUCCESS,
@@ -30,8 +30,7 @@ export const getProductsApi = async (
 
 export const getProductApi = async (
   dispatch: React.Dispatch<ProductAction>,
-  id: string | undefined,
-  navigate: (arg: string) => void
+  id: string | undefined
 ): Promise<void> => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCT_START });
@@ -50,7 +49,6 @@ export const getProductApi = async (
       err.response?.data.message ||
       "Something went wrong. Please come back later.";
     toast.error(error);
-    setTimeout(() => navigate("/"), 4000);
   }
 };
 
@@ -98,7 +96,7 @@ export const updateProduct = async (
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  product: ProductItemTypes | undefined,
+  product: ProductItemTypes,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
@@ -114,11 +112,13 @@ export const updateProduct = async (
     formData
   );
 
+  updatedFormData.append("reviewsCount", String(product.reviewsCount));
+
   try {
     dispatch({ type: ProductActionKind.UPDATE_PRODUCT_START });
 
     const { data } = await axiosPrivate.patch(
-      `/products/${product?.id}`,
+      `/products/${product._id}`,
       updatedFormData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
@@ -144,7 +144,7 @@ export const updateProduct = async (
 export const deleteProduct = async (
   dispatch: React.Dispatch<ProductAction>,
   closeModal: () => void,
-  id: string | undefined,
+  id: string,
   navigate: (arg: string) => void,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
