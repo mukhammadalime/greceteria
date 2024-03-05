@@ -17,7 +17,7 @@ const WishlistedItem = ({
   id,
 }: WishlistedItemProps) => {
   const [addToCartLoading, setAddToCartLoading] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { dispatch } = useContext(UserContext);
   const { state, dispatch: cartDispatch } = useContext(CartContext);
   const axiosPrivate = useAxiosPrivate();
@@ -28,9 +28,12 @@ const WishlistedItem = ({
   };
 
   const onRemoveFromWishlist = async () => {
-    setLoading(true);
-    await removeFromWishlist(dispatch, id, axiosPrivate);
-    setLoading(false);
+    setWishlistUpdated(true);
+    setTimeout(
+      async () => await removeFromWishlist(dispatch, id, axiosPrivate),
+      500
+    );
+    setTimeout(() => setWishlistUpdated(false), 500);
   };
 
   return (
@@ -61,15 +64,14 @@ const WishlistedItem = ({
           className="button button-md"
           disabled={!inStock && true}
           onClick={onAddToCart}
-        >
-          {addToCartLoading ? <LoadingButtonSpinner /> : "Add to Cart"}
-        </button>
+          children={addToCartLoading ? <LoadingButtonSpinner /> : "Add to Cart"}
+        />
         <button
           className="delete-item"
-          disabled={loading && true}
+          disabled={wishlistUpdated && true}
           onClick={onRemoveFromWishlist}
         >
-          {loading ? (
+          {wishlistUpdated ? (
             <LoadingCounterSpinner />
           ) : (
             <img src="/assets/icons/delete-icon.svg" alt="" />

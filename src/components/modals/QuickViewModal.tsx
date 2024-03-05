@@ -19,13 +19,13 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
   const {
     state: { products },
   } = useContext(ProductContext);
-  const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
-  const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
+  const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
   const product = products.find((i) => i._id === productId) as ProductItemTypes;
 
+  /// Calculate discountPercent
   let discountPercent: number = 0;
   if (product.discountedPrice > 0) {
     const priceGap = product.price - product.discountedPrice;
@@ -33,15 +33,11 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
   }
 
   const onToggleWishlist = async () => {
-    if (state.user?.wishlisted.includes(productId)) {
-      setWishlistRemoved(true);
-      await removeFromWishlist(dispatch, productId, axiosPrivate);
-      setWishlistRemoved(false);
-      return;
-    }
-    setWishlistAdded(true);
-    await addToWishlist(dispatch, productId, axiosPrivate);
-    setWishlistAdded(false);
+    const added = state.user?.wishlisted.includes(productId);
+    setWishlistUpdated(true);
+    if (added) await removeFromWishlist(dispatch, productId, axiosPrivate);
+    else await addToWishlist(dispatch, productId, axiosPrivate);
+    setWishlistUpdated(false);
   };
 
   return (
@@ -88,13 +84,13 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
             <button
               className="wishlist"
               onClick={onToggleWishlist}
-              disabled={(wishlistAdded || wishlistRemoved) && true}
+              disabled={wishlistUpdated && true}
             >
-              {(state.user?.wishlisted.includes(productId) || wishlistAdded) &&
-                !wishlistRemoved && <FavoriteIcon className="full-icon" />}
-              {(!state.user?.wishlisted.includes(productId) ||
-                wishlistRemoved) &&
-                !wishlistAdded && <FavoriteBorderIcon />}
+              {state.user?.wishlisted.includes(productId) ? (
+                <FavoriteIcon className="full-icon" />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
             </button>
           </div>
         </div>

@@ -155,10 +155,10 @@ const AddProductOverlay = ({
           <div className="weight-inputBox">
             <TextInput
               label="Product weight"
-              placeholder="250g | 1.2kg"
+              placeholder="250g | 1.2kg | 1L"
               ref={weightRef}
               type="number"
-              defaultValue={product?.weight.replace(/kg|g/g, "")}
+              defaultValue={product?.weight.replace(/kg|g|l/g, "")}
             />
             <FilterOptions
               options={weightOptions}

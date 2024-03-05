@@ -127,7 +127,7 @@ const ProductReducer = (
       return {
         ...state,
         products: updatedProducts,
-        product,
+        product: { ...product, reviewsCount: state.product?.reviewsCount! },
         addUpdateDeleteLoading: false,
         error: null,
       };

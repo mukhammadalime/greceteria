@@ -19,10 +19,8 @@ const ProductCardImg = (props: {
   inStock: boolean;
   id: string;
 }) => {
-  const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
-  const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
-  const [compareAdded, setCompareAdded] = useState<boolean>(false);
-  const [compareRemoved, setCompareRemoved] = useState<boolean>(false);
+  const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
+  const [compareUpdated, setCompareUpdated] = useState<boolean>(false);
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
   const {
     state: { user },
@@ -31,29 +29,19 @@ const ProductCardImg = (props: {
   const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
-    if (!user?.wishlisted.includes(props.id)) {
-      setWishlistAdded(true);
-      await addToWishlist(dispatch, props.id, axiosPrivate);
-      setWishlistAdded(false);
-      return;
-    }
-    setWishlistRemoved(true);
-    await removeFromWishlist(dispatch, props.id, axiosPrivate);
-    setWishlistRemoved(false);
+    const added = user?.wishlisted.includes(props.id);
+    setWishlistUpdated(true);
+    if (added) await removeFromWishlist(dispatch, props.id, axiosPrivate);
+    else await addToWishlist(dispatch, props.id, axiosPrivate);
+    setWishlistUpdated(false);
   };
 
   const onToggleCompare = async () => {
-    const alreadyAdded = user?.compare.includes(props.id);
-    if (!alreadyAdded) {
-      setCompareAdded(true);
-      await addToCompare(dispatch, props.id, axiosPrivate);
-      setCompareAdded(false);
-    }
-    if (alreadyAdded) {
-      setCompareRemoved(true);
-      await removeFromCompare(dispatch, props.id, axiosPrivate);
-      setCompareRemoved(false);
-    }
+    const added = user?.compare.includes(props.id);
+    setCompareUpdated(true);
+    if (added) await removeFromCompare(dispatch, props.id, axiosPrivate);
+    else await addToCompare(dispatch, props.id, axiosPrivate);
+    setCompareUpdated(false);
   };
 
   return (
@@ -77,12 +65,13 @@ const ProductCardImg = (props: {
           <button
             className="favs-item"
             onClick={onToggleWishlist}
-            disabled={(wishlistAdded || wishlistRemoved) && true}
+            disabled={wishlistUpdated && true}
           >
-            {(user?.wishlisted.includes(props.id) || wishlistAdded) &&
-              !wishlistRemoved && <FavoriteIcon className="full-icon" />}
-            {(!user?.wishlisted.includes(props.id) || wishlistRemoved) &&
-              !wishlistAdded && <FavoriteBorderIcon />}
+            {user?.wishlisted.includes(props.id) ? (
+              <FavoriteIcon className="full-icon" />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
           </button>
           <div className="favs-item" onClick={() => setShowQuickView(true)}>
             <svg>
@@ -92,12 +81,13 @@ const ProductCardImg = (props: {
           <button
             className="favs-item"
             onClick={onToggleCompare}
-            disabled={(compareAdded || compareRemoved) && true}
+            disabled={compareUpdated && true}
           >
-            {(user?.compare.includes(props.id) || compareAdded) &&
-              !compareRemoved && <CompareIconFull />}
-            {(!user?.compare.includes(props.id) || compareRemoved) &&
-              !compareAdded && <CompareIcon />}
+            {user?.compare.includes(props.id) ? (
+              <CompareIconFull />
+            ) : (
+              <CompareIcon />
+            )}
           </button>
         </div>
       </div>

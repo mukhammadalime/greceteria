@@ -7,8 +7,10 @@ import { UserContext } from "../../store/UserContext";
 import { getCompareWishlistProducts } from "../../api/user";
 import { ProductItemTypes } from "../../utils/user-types";
 import { ProductContext } from "../../store/ProductContext";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
 const Wishlist = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [wishlist, setWishlist] = useState<ProductItemTypes[] | []>([]);
 
   const {
@@ -19,10 +21,13 @@ const Wishlist = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    user && getCompareWishlistProducts(products, user.wishlisted, setWishlist);
+    if (products.length === 0 || !user) return;
+    getCompareWishlistProducts(products, user.wishlisted, setWishlist);
+    setTimeout(() => setLoading(false), 200);
   }, [products, user]);
 
   if (user === null) return <LoginFirst />;
+  if (loading) return <LoadingSpinner />;
 
   return (
     <>

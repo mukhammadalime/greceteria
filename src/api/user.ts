@@ -67,9 +67,7 @@ export const updateMe = async (
       type: UserActionKind.UPDATE_ME_FAILURE,
       error: err.response?.data.message,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
@@ -155,7 +153,6 @@ export const addDeleteUpdateAddress = async (
 
   try {
     dispatch({ type: UserActionKind.UPDATE_ME_START });
-
     const { data } = await axiosPrivate.patch("users/updateMe", {
       addresses: newAddresses,
     });
@@ -168,9 +165,7 @@ export const addDeleteUpdateAddress = async (
       type: UserActionKind.UPDATE_ME_FAILURE,
       error: err.response?.data.message,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
@@ -186,94 +181,73 @@ export const getCompareWishlistProducts = async (
       products.find((item) => item._id === items[i]) as ProductItemTypes
     );
   }
-
   setProducts(itemsList);
 };
 
 export const addToWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string,
+  id: string,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
-    const { data } = await axiosPrivate.patch("/users/wishlist/add", {
-      productId,
-    });
-
-    dispatch({
-      type: UserActionKind.UPDATE_ME_SUCCESS,
-      payload: data.data,
+    dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: id });
+    await axiosPrivate.patch("/users/wishlist/add", {
+      productId: id,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    dispatch({ type: UserActionKind.ADD_TO_WISHLIST_FAIL });
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
 
 export const removeFromWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string,
+  id: string,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
-    const { data } = await axiosPrivate.patch("/users/wishlist/remove", {
-      productId,
-    });
-
-    dispatch({
-      type: UserActionKind.UPDATE_ME_SUCCESS,
-      payload: data.data,
+    dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: id });
+    await axiosPrivate.patch("/users/wishlist/remove", {
+      productId: id,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST_FAIL, payload: id });
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
 
 export const addToCompare = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string,
+  id: string,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
-    const { data } = await axiosPrivate.patch("/users/compare/add", {
-      productId,
-    });
-
-    dispatch({
-      type: UserActionKind.UPDATE_ME_SUCCESS,
-      payload: data.data,
+    dispatch({ type: UserActionKind.ADD_TO_COMPARE, payload: id });
+    await axiosPrivate.patch("/users/compare/add", {
+      productId: id,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    dispatch({ type: UserActionKind.ADD_TO_COMPARE_FAIL });
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
 
 export const removeFromCompare = async (
   dispatch: React.Dispatch<UserAction>,
-  productId: string,
+  id: string,
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
-    const { data } = await axiosPrivate.patch("/users/compare/remove", {
-      productId,
-    });
-
-    dispatch({
-      type: UserActionKind.UPDATE_ME_SUCCESS,
-      payload: data.data,
+    dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE, payload: id });
+    await axiosPrivate.patch("/users/compare/remove", {
+      productId: id,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE_FAIL, payload: id });
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };

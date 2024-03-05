@@ -8,7 +8,7 @@ import { ProductContext } from "../../store/ProductContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
 const Compare = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [compare, setCompare] = useState<ProductItemTypes[] | []>([]);
   const {
     state: { user },
@@ -18,7 +18,8 @@ const Compare = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    user && getCompareWishlistProducts(products, user.compare, setCompare);
+    if (products.length === 0 || !user) return;
+    getCompareWishlistProducts(products, user.compare, setCompare);
     setTimeout(() => setLoading(false), 200);
   }, [products, user]);
 

@@ -41,29 +41,17 @@ export enum UserActionKind {
   RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE",
 
   /////////////////////////////////////////
-  GET_COMPARE_START = "GET_COMPARE_START",
-  GET_COMPARE_SUCCESS = "GET_COMPARE_SUCCESS",
-  GET_COMPARE_FAILURE = "GET_COMPARE_FAILURE",
+  ADD_TO_COMPARE = "ADD_TO_COMPARE",
+  ADD_TO_COMPARE_FAIL = "ADD_TO_COMPARE_FAIL",
 
-  ADD_TO_COMPARE_START = "ADD_TO_COMPARE_START",
-  ADD_TO_COMPARE_SUCCESS = "ADD_TO_COMPARE_SUCCESS",
-  ADD_TO_COMPARE_FAILURE = "ADD_TO_COMPARE_FAILURE",
+  REMOVE_FROM_COMPARE = "REMOVE_FROM_COMPARE",
+  REMOVE_FROM_COMPARE_FAIL = "REMOVE_FROM_COMPARE_FAIL",
 
-  REMOVE_FROM_COMPARE_START = "REMOVE_FROM_COMPARE_START",
-  REMOVE_FROM_COMPARE_SUCCESS = "REMOVE_FROM_COMPARE_SUCCESS",
-  REMOVE_FROM_COMPARE_FAILURE = "REMOVE_FROM_COMPARE_FAILURE",
+  ADD_TO_WISHLIST = "ADD_TO_WISHLIST",
+  ADD_TO_WISHLIST_FAIL = "ADD_TO_WISHLIST_FAIL",
 
-  GET_WISHLIST_START = "GET_WISHLIST_START",
-  GET_WISHLIST_SUCCESS = "GET_WISHLIST_SUCCESS",
-  GET_WISHLIST_FAILURE = "GET_WISHLIST_FAILURE",
-
-  ADD_TO_WISHLIST_START = "ADD_TO_WISHLIST_START",
-  ADD_TO_WISHLIST_SUCCESS = "ADD_TO_WISHLIST_SUCCESS",
-  ADD_TO_WISHLIST_FAILURE = "ADD_TO_WISHLIST_FAILURE",
-
-  REMOVE_FROM_WISHLIST_START = "REMOVE_FROM_WISHLIST_START",
-  REMOVE_FROM_WISHLIST_SUCCESS = "REMOVE_FROM_WISHLIST_SUCCESS",
-  REMOVE_FROM_WISHLIST_FAILURE = "REMOVE_FROM_WISHLIST_FAILURE",
+  REMOVE_FROM_WISHLIST = "REMOVE_FROM_WISHLIST",
+  REMOVE_FROM_WISHLIST_FAIL = "REMOVE_FROM_WISHLIST_FAIL",
 
   /////////////////////////////////////////
   GET_CUSTOMERS_START = "GET_CUSTOMERS_START",
@@ -82,7 +70,7 @@ export enum UserActionKind {
 // An interface for our actions
 export interface UserAction {
   type: UserActionKind;
-  payload?: User | User[] | CustomersStatsTypes;
+  payload?: User | User[] | CustomersStatsTypes | string;
   error?: string;
 }
 
@@ -150,6 +138,58 @@ const UserReducer = (
       };
     case UserActionKind.UPDATE_ME_FAILURE:
       return { ...state, updateMeLoading: false, error: action.error! };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    //// ADD TO WISHLIST
+    case UserActionKind.ADD_TO_WISHLIST:
+      state.user?.wishlisted.push(action.payload as string);
+      return { ...state, user: state.user };
+
+    //// ADD TO WISHLIST FAIL
+    case UserActionKind.ADD_TO_WISHLIST_FAIL:
+      state.user?.wishlisted.pop();
+      return { ...state, user: state.user };
+
+    //// REMOVE FROM WISHLIST
+    case UserActionKind.REMOVE_FROM_WISHLIST:
+      const wishlisted = state.user?.wishlisted.filter(
+        (i) => i !== action.payload
+      );
+      return {
+        ...state,
+        user: { ...state.user, wishlisted: wishlisted as string[] } as User,
+      };
+    //// REMOVE FROM WISHLIST FAIL
+    case UserActionKind.REMOVE_FROM_WISHLIST_FAIL:
+      state.user?.wishlisted.push(action.payload as string);
+      return { ...state, user: state.user };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    //// ADD TO COMPARE
+    case UserActionKind.ADD_TO_COMPARE:
+      state.user?.compare.push(action.payload as string);
+      return { ...state, user: state.user };
+
+    //// ADD TO COMPARE FAIL
+    case UserActionKind.ADD_TO_COMPARE_FAIL:
+      state.user?.compare.pop();
+      return { ...state, user: state.user };
+
+    //// REMOVE FROM COMPARE
+    case UserActionKind.REMOVE_FROM_COMPARE:
+      const compare = state.user?.compare.filter((i) => i !== action.payload);
+      return {
+        ...state,
+        user: { ...state.user, compare: compare as string[] } as User,
+      };
+    //// REMOVE FROM COMPARE FAIL
+    case UserActionKind.REMOVE_FROM_COMPARE_FAIL:
+      state.user?.compare.push(action.payload as string);
+      return { ...state, user: state.user };
 
     //// CHANGE PASSWORD
     case UserActionKind.CHANGE_PASSWORD_START:
@@ -248,9 +288,7 @@ export const UserContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(UserReducer, INITIAL_STATE);
-
   const { auth } = useContext(AuthContext);
-
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {

@@ -2,6 +2,7 @@
 export const weightOptions = [
   { name: "kg", id: "kg" },
   { name: "g", id: "g" },
+  { name: "l", id: "l" },
 ];
 
 export const inStockOptions = [
