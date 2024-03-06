@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { OrderProps } from "../../utils/user-types";
 import OrderItem from "./OrderItem";
-import OrderItemsSkeleton from "../../skeletons/OrderItemsSkeleton";
+import TableItemSkeleton from "../../skeletons/TableItemsSkeleton";
 
 export const OrdersTableHeader = () => {
   return (
@@ -16,6 +16,8 @@ export const OrdersTableHeader = () => {
     </thead>
   );
 };
+
+const orderItemsWidths = ["60%", "90%", "90%", "90%", "90%"];
 
 export const OrdersTable = ({
   orders,
@@ -40,7 +42,9 @@ export const OrdersTable = ({
           <OrdersTableHeader />
 
           <tbody>
-            {((loading && !orders) || !orders) && <OrderItemsSkeleton />}
+            {((loading && !orders) || !orders) && (
+              <TableItemSkeleton widths={orderItemsWidths} />
+            )}
 
             {orders?.map((order: OrderProps) => (
               <OrderItem

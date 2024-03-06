@@ -14,25 +14,26 @@ const NewsPage = () => {
   } = useContext(NewsContext);
 
   if (state.user === null) return <LoginFirst />;
-  if (newsLoading) return <LoadingSpinner />;
 
   return (
     <div className="section-md news-page">
       <div className="container">
         <NewsFilter />
 
-        {news.length > 0 && (
+        {newsLoading && <LoadingSpinner />}
+
+        {!newsLoading && news.length > 0 && (
           <div className="all-news">
             {news.map((item) => (
               <NewsCard newsItem={item} key={item._id} />
             ))}
           </div>
         )}
-        {news.length === 0 && (
+        {/* {news.length === 0 && (
           <div>
             <h2>Sorry, we couldn't find any news.</h2>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -4,13 +4,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard from "./productCard";
 import SectionHead from "./UI/SectionHeader";
 import { ProductItemTypes } from "../utils/user-types";
+import ProductCardSkeleton from "../skeletons/ProductCardSkeleton";
 
 const CustomProductsCarousel = ({
   text,
   products,
+  loading,
 }: {
   text: string;
   products: ProductItemTypes[];
+  loading?: boolean;
 }) => {
   return (
     <div className="section-sm">
@@ -25,11 +28,23 @@ const CustomProductsCarousel = ({
             disableOnInteraction: false,
           }}
         >
-          {products.map((product: ProductItemTypes) => (
-            <SwiperSlide key={product._id} style={{ width: "24rem" }}>
-              <ProductCard key={product._id} item={product} />
-            </SwiperSlide>
-          ))}
+          {loading ? (
+            <>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <SwiperSlide key={i} style={{ width: "25rem" }}>
+                  <ProductCardSkeleton />
+                </SwiperSlide>
+              ))}
+            </>
+          ) : (
+            <>
+              {products.map((product: ProductItemTypes) => (
+                <SwiperSlide key={product._id} style={{ width: "25rem" }}>
+                  <ProductCard key={product._id} item={product} />
+                </SwiperSlide>
+              ))}
+            </>
+          )}
         </Swiper>
       </div>
     </div>

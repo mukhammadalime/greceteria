@@ -128,6 +128,9 @@
 
   &__photo {
     img {
+      @media (max-width: 900px) {
+        max-width: 100%;
+      }
       @media (max-width: 768px) {
         max-width: unset;
         width: 100%;

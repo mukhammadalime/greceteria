@@ -7,6 +7,7 @@ import { NewsContext } from "../store/NewsContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { UserContext } from "../store/UserContext";
+import { formatDate } from "../utils/helperFunctions";
 
 const NewsDetails = () => {
   const { newsId } = useParams();
@@ -51,7 +52,7 @@ const NewsDetails = () => {
                 </svg>
                 News
               </h4>
-              <span>2 days ago</span>
+              <span>{formatDate(newsState.newsItem.createdAt)}</span>
             </div>
             <NewsImagesSlider images={newsState.newsItem?.images!} />
             <div className="news__title">

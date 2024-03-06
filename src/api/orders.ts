@@ -178,11 +178,11 @@ export const getUserOrders = async (
   id: string
 ): Promise<void> => {
   try {
-    dispatch({ type: OrderActionKind.GET_ORDERS_START });
+    dispatch({ type: OrderActionKind.GET_USER_ORDERS_START });
     const { data } = await axiosPrivate(`orders/user/${id}`);
 
     dispatch({
-      type: OrderActionKind.GET_ORDERS_SUCCESS,
+      type: OrderActionKind.GET_USER_ORDERS_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {

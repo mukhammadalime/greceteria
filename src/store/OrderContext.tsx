@@ -10,6 +10,7 @@ interface OrderInitialStateTypes {
   orders: OrderProps[] | null;
   customOrders: OrderProps[] | null;
   recentOrders: OrderProps[] | null;
+  userOrders: OrderProps[] | null;
   order: OrderProps | null;
   loading: boolean;
   updateLoading: boolean;
@@ -99,6 +100,7 @@ const INITIAL_STATE: OrderInitialStateTypes = {
   revenueLoading: false,
   recentOrders: null,
   recentLoading: false,
+  userOrders: null,
   /// Filtering
   customOrders: null,
   filterQuery: "",
@@ -190,18 +192,18 @@ const OrderReducer = (
     /////////////////////////////////////////////////////////////////////////////
 
     case OrderActionKind.GET_USER_ORDERS_START:
-      return { ...state, orders: null, loading: true, error: null };
+      return { ...state, userOrders: null, loading: true, error: null };
     case OrderActionKind.GET_USER_ORDERS_SUCCESS:
       return {
         ...state,
-        orders: action.payload as OrderProps[],
+        userOrders: action.payload as OrderProps[],
         loading: false,
         error: null,
       };
     case OrderActionKind.GET_USER_ORDERS_FAILURE:
       return {
         ...state,
-        orders: null,
+        userOrders: null,
         loading: false,
         error: action.error!,
       };

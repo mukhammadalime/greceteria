@@ -1,10 +1,9 @@
 import Banner from "../layout/banner";
-import Categories from "../components/category/CategoriesCarousel";
+import CategoriesCarousel from "../components/category/CategoriesCarousel";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import NewsCarousel from "../components/newsCard/NewsCarousel";
-import { useContext,  } from "react";
+import { useContext } from "react";
 import { ProductContext } from "../store/ProductContext";
-import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { CategoryContext } from "../store/CategoryContext";
 import { NewsContext } from "../store/NewsContext";
 import { UserContext } from "../store/UserContext";
@@ -27,19 +26,16 @@ const HomePage = () => {
   return (
     <>
       <Banner />
-      {categoriesLoading && <LoadingSpinner />}
-      {!categoriesLoading && <Categories categories={categories} />}
+      <CategoriesCarousel categories={categories} loading={categoriesLoading} />
 
-      {productsLoading && <LoadingSpinner />}
-
-      {!productsLoading && (
-          <CustomProductsCarousel
-            text="Top Rated Products"
-            products={products}
-          />
+      <CustomProductsCarousel
+        text="Top Rated Products"
+        products={products}
+        loading={productsLoading}
+      />
+      {state.user !== null && (
+        <NewsCarousel news={news} loading={newsLoading} />
       )}
-      {newsLoading && <LoadingSpinner />}
-      {state.user !== null && news.length > 0 && <NewsCarousel news={news} />}
     </>
   );
 };

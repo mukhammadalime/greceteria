@@ -5,10 +5,17 @@ import RightArrowIcon from "../UI/Icons/RightArrowIcon";
 import { Link } from "react-router-dom";
 import { CategoryItemTypes } from "../../utils/user-types";
 import CategoryItem from ".";
+import CategorySkeleton from "../../skeletons/CategorySkeleton";
 
-const Categories = ({ categories }: { categories: CategoryItemTypes[] }) => {
+const CategoriesCarousel = ({
+  categories,
+  loading,
+}: {
+  categories: CategoryItemTypes[];
+  loading: boolean;
+}) => {
   return (
-    <div className="section-md category">
+    <div className="category">
       <div className="container">
         <div
           className="section__head"
@@ -20,6 +27,7 @@ const Categories = ({ categories }: { categories: CategoryItemTypes[] }) => {
             <RightArrowIcon />
           </Link>
         </div>
+
         <div className="category__main">
           <Swiper
             grabCursor={true}
@@ -31,11 +39,23 @@ const Categories = ({ categories }: { categories: CategoryItemTypes[] }) => {
             }}
             draggable={true}
           >
-            {categories.map((category: CategoryItemTypes) => (
-              <SwiperSlide key={category._id}>
-                <CategoryItem category={category} key={category._id} />
-              </SwiperSlide>
-            ))}
+            {loading ? (
+              <>
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <SwiperSlide key={i}>
+                    <CategorySkeleton />
+                  </SwiperSlide>
+                ))}
+              </>
+            ) : (
+              <>
+                {categories.map((category: CategoryItemTypes) => (
+                  <SwiperSlide key={category._id}>
+                    <CategoryItem category={category} key={category._id} />
+                  </SwiperSlide>
+                ))}
+              </>
+            )}
           </Swiper>
         </div>
       </div>
@@ -43,4 +63,4 @@ const Categories = ({ categories }: { categories: CategoryItemTypes[] }) => {
   );
 };
 
-export default Categories;
+export default CategoriesCarousel;

@@ -21,7 +21,6 @@
     background-color: #fff;
     border: 1px solid #e5e5e5;
     height: min-content;
-    z-index: 10;
 
     &--head {
       height: 6rem;
@@ -374,7 +373,7 @@
         }
 
         .MuiSkeleton-root {
-          height: 3.2rem;
+          height: 2.8rem;
         }
       }
 
@@ -419,7 +418,7 @@
           font-size: 1.2rem;
 
           .MuiSkeleton-root {
-            height: 2.2rem;
+            height: 1.8rem;
           }
 
           .view-details {

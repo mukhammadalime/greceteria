@@ -1,5 +1,4 @@
 import "swiper/css";
-import { Autoplay } from "swiper";
 import TeamMember from "./TeamMember";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { TeamMemberTypes } from "../../utils/types";
@@ -57,16 +56,7 @@ const Team = () => {
             </p>
           </div>
           <div className="team__main">
-            <Swiper
-              grabCursor={true}
-              modules={[Autoplay]}
-              slidesPerView="auto"
-              autoplay={{
-                delay: 4000,
-                disableOnInteraction: false,
-              }}
-              draggable={true}
-            >
+            <Swiper grabCursor={true} slidesPerView="auto" loop={true}>
               {teamMembers.map((member: TeamMemberTypes) => (
                 <SwiperSlide key={member.id} className="team-member-carousel">
                   <TeamMember key={member.id} {...member} />

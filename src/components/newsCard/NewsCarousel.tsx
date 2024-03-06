@@ -4,8 +4,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SectionHead from "../UI/SectionHeader";
 import NewsCard from ".";
 import { NewsItemTypes } from "../../utils/user-types";
+import NewsItemSkeleton from "../../skeletons/NewsItemSkeleton";
 
-const NewsCarousel = ({ news }: { news: NewsItemTypes[] }) => {
+const NewsCarousel = ({
+  news,
+  loading,
+}: {
+  news: NewsItemTypes[];
+  loading: boolean;
+}) => {
   return (
     <div className="section-sm">
       <div className="container">
@@ -20,11 +27,23 @@ const NewsCarousel = ({ news }: { news: NewsItemTypes[] }) => {
               disableOnInteraction: false,
             }}
           >
-            {news.map((item: NewsItemTypes) => (
-              <SwiperSlide key={item._id} className="news-card-swiper">
-                <NewsCard newsItem={item} />
-              </SwiperSlide>
-            ))}
+            {loading ? (
+              <>
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <SwiperSlide key={i} className="news-card-swiper">
+                    <NewsItemSkeleton />
+                  </SwiperSlide>
+                ))}
+              </>
+            ) : (
+              <>
+                {news.map((item: NewsItemTypes) => (
+                  <SwiperSlide key={item._id} className="news-card-swiper">
+                    <NewsCard newsItem={item} />
+                  </SwiperSlide>
+                ))}
+              </>
+            )}
           </Swiper>
         </div>
       </div>

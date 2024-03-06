@@ -5,15 +5,16 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { getCustomersApi } from "../../api/customers";
-import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
 import { AuthContext } from "../../store/AuthContext";
+import CustomersSkeleton from "../../skeletons/TableItemsSkeleton";
 
 export const sortOptions = [
   { name: "Sort by: Active", id: "active" },
   { name: "Sort by: Inactive", id: "inactive" },
   { name: "Sort by: Pending", id: "pending" },
 ];
+const customerItemsWidths = ["100%", "100%", "100%", "100%", "100%"];
 
 const Customers = () => {
   const [selectedSort, setSelectedSort] = useState<String>("");
@@ -79,11 +80,7 @@ const Customers = () => {
                   </thead>
                   <tbody>
                     {customersLoading && !customers && (
-                      <tr>
-                        <td>
-                          <LoadingSpinner />
-                        </td>
-                      </tr>
+                      <CustomersSkeleton widths={customerItemsWidths} />
                     )}
 
                     {customers?.map((customer) => (
