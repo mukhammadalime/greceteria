@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { OrderProps } from "../../utils/user-types";
 import OrderItem from "./OrderItem";
-import LoadingSpinner from "../UI/LoadingSpinner";
+import OrderItemsSkeleton from "../../skeletons/OrderItemsSkeleton";
 
 export const OrdersTableHeader = () => {
   return (
@@ -40,13 +40,7 @@ export const OrdersTable = ({
           <OrdersTableHeader />
 
           <tbody>
-            {(loading || !orders) && (
-              <tr>
-                <td>
-                  <LoadingSpinner />
-                </td>
-              </tr>
-            )}
+            {((loading && !orders) || !orders) && <OrderItemsSkeleton />}
 
             {orders?.map((order: OrderProps) => (
               <OrderItem

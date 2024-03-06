@@ -19,9 +19,7 @@ export const getCartApi = async (
       type: CartActionKind.GET_CART_FAILURE,
       error: err.response?.data.message,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
@@ -43,9 +41,7 @@ export const addToCart = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
   setLoading && setLoading(false);
@@ -68,9 +64,7 @@ export const updateCart = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
   setLoading(false);
@@ -94,9 +88,7 @@ export const deleteProductCart = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
   setLoading(false);

@@ -12,10 +12,12 @@ import useToggleOptions from "../hooks/useToggleOptions";
 import { AuthContext } from "../store/AuthContext";
 
 const OrderHistory = () => {
-  const { state } = useContext(UserContext);
+  const {
+    state: { user },
+  } = useContext(UserContext);
   const { auth } = useContext(AuthContext);
   const {
-    state: { loading, orders, customOrders, filterQuery, sortQuery },
+    state: { orders, loading, customOrders, filterQuery, sortQuery },
     dispatch,
     filterOrders,
     sortOrders,
@@ -24,19 +26,22 @@ const OrderHistory = () => {
 
   useEffect(() => {
     if (!auth.accessToken) return;
-    const getOrdersForUser = async () =>
-      await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt");
-    const getOrdersForAdmin = async () =>
-      await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt");
-
-    if (state.user?.role === "user") getOrdersForUser();
-    if (state.user?.role !== "user") getOrdersForAdmin();
-  }, [auth.accessToken, axiosPrivate, dispatch, state.user?.role]);
+    /// FOR USER
+    (async () => {
+      user?.role === "user" &&
+        (await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt"));
+    })();
+    /// FOR ADMIN
+    (async () => {
+      user?.role !== "user" &&
+        (await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt"));
+    })();
+  }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
 
   // This function opens the requested filter and closed other remaining open filters.
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
 
-  if (state.user === null) return <LoginFirst />;
+  if (user === null) return <LoginFirst />;
 
   return (
     <div className="section-sm">

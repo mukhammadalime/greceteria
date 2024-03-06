@@ -8,12 +8,14 @@ export const getMyOrders = async (
   axiosPrivate: AxiosInstance,
   query?: string
 ): Promise<void> => {
+  const isRecent = query?.includes("limit=10");
+  const actionKind = isRecent ? "GET_RECENT_ORDERS" : "GET_ORDERS";
   try {
-    dispatch({ type: OrderActionKind.GET_ORDERS_START });
+    dispatch({ type: OrderActionKind[`${actionKind}_START`] });
     const { data } = await axiosPrivate(`orders/my-orders?${query}`);
 
     dispatch({
-      type: OrderActionKind.GET_ORDERS_SUCCESS,
+      type: OrderActionKind[`${actionKind}_SUCCESS`],
       payload: data.data,
     });
   } catch (err: any) {
@@ -88,11 +90,11 @@ export const getRecentOrdersForAdmin = async (
   axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
-    dispatch({ type: OrderActionKind.GET_ORDERS_START });
+    dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
     const { data } = await axiosPrivate(`orders/recent?sort=-createdAt`);
 
     dispatch({
-      type: OrderActionKind.GET_ORDERS_SUCCESS,
+      type: OrderActionKind.GET_RECENT_ORDERS_SUCCESS,
       payload: data.data,
     });
   } catch (err: any) {

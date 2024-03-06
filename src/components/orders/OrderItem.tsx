@@ -7,7 +7,7 @@ const OrderItem = ({
   status,
   id,
   createdAt,
-}: OrderItem) => {
+}: OrderItemProps) => {
   const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(
     new Date(createdAt)
   );
@@ -31,7 +31,7 @@ const OrderItem = ({
   );
 };
 
-interface OrderItem {
+interface OrderItemProps {
   orderNumber: number;
   numOfProducts: number;
   totalPrice: number;

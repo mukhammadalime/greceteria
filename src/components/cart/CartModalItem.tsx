@@ -45,13 +45,17 @@ const CartItem = ({
             <h5>Total: ${cartItem.subTotal.toFixed(2)}</h5>
           </div>
         </div>
-        <div className="delete-item" onClick={onDeleteProductFromCart}>
+        <button
+          className="delete-item"
+          onClick={onDeleteProductFromCart}
+          disabled={loading && true}
+        >
           {loading ? (
             <LoadingCounterSpinner />
           ) : (
             <img src="/assets/icons/delete-icon.svg" alt="" />
           )}
-        </div>
+        </button>
       </div>
     </>
   );

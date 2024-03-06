@@ -9,9 +9,11 @@ import { makeUniqueArray, returnUpdatedState } from "../utils/helperFunctions";
 interface OrderInitialStateTypes {
   orders: OrderProps[] | null;
   customOrders: OrderProps[] | null;
+  recentOrders: OrderProps[] | null;
   order: OrderProps | null;
   loading: boolean;
   updateLoading: boolean;
+  recentLoading: boolean;
   error: string | null;
   filterQuery: string;
   sortQuery: string;
@@ -37,6 +39,10 @@ export enum OrderActionKind {
   GET_ORDERS_START = "GET_ORDERS_START",
   GET_ORDERS_SUCCESS = "GET_ORDERS_SUCCESS",
   GET_ORDERS_FAILURE = "GET_ORDERS_FAILURE",
+
+  GET_RECENT_ORDERS_START = "GET_RECENT_ORDERS_START",
+  GET_RECENT_ORDERS_SUCCESS = "GET_RECENT_ORDERS_SUCCESS",
+  GET_RECENT_ORDERS_FAILURE = "GET_RECENT_ORDERS_FAILURE",
 
   GET_USER_ORDERS_START = "GET_USER_ORDERS_START",
   GET_USER_ORDERS_SUCCESS = "GET_USER_ORDERS_SUCCESS",
@@ -91,6 +97,8 @@ const INITIAL_STATE: OrderInitialStateTypes = {
     cancelled: 0,
   },
   revenueLoading: false,
+  recentOrders: null,
+  recentLoading: false,
   /// Filtering
   customOrders: null,
   filterQuery: "",
@@ -117,7 +125,11 @@ const OrderReducer = (
 ): typeof INITIAL_STATE => {
   switch (action.type) {
     case OrderActionKind.GET_ORDERS_START:
-      return { ...state, orders: null, loading: true, error: null };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
     case OrderActionKind.GET_ORDERS_SUCCESS:
       return {
         ...state,
@@ -130,6 +142,27 @@ const OrderReducer = (
         ...state,
         orders: null,
         loading: false,
+        error: action.error!,
+      };
+
+    case OrderActionKind.GET_RECENT_ORDERS_START:
+      return {
+        ...state,
+        recentLoading: true,
+        error: null,
+      };
+    case OrderActionKind.GET_RECENT_ORDERS_SUCCESS:
+      return {
+        ...state,
+        recentOrders: action.payload as OrderProps[],
+        recentLoading: false,
+        error: null,
+      };
+    case OrderActionKind.GET_RECENT_ORDERS_FAILURE:
+      return {
+        ...state,
+        recentOrders: null,
+        recentLoading: false,
         error: action.error!,
       };
 
@@ -275,8 +308,6 @@ export const OrderContextProvider = ({
   /// Sorting the orders based on the status
   const sortOrders = useCallback(
     (status: string) => {
-      console.log("status:", status);
-
       state.sortQuery = status;
 
       /// We check if the orders got filtered before
@@ -306,7 +337,11 @@ export const OrderContextProvider = ({
 
   /// The logic behind this function is that if the admin enters orderdetails after he filters or sorts the orders, and updates the order, customOrders will be updated too with the updated order. After the user goes back to the orders page, the customOrders will be updated.
   useEffect(() => {
-    if (!state.updateLoading && (state.filterQuery || state.sortQuery)) {
+    if (
+      !state.loading &&
+      !state.updateLoading &&
+      (state.filterQuery || state.sortQuery)
+    ) {
       filterOrders(state.filterQuery);
       sortOrders(state.sortQuery);
     }
@@ -314,6 +349,7 @@ export const OrderContextProvider = ({
     filterOrders,
     sortOrders,
     state.filterQuery,
+    state.loading,
     state.sortQuery,
     state.updateLoading,
   ]);

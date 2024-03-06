@@ -15,7 +15,9 @@ import {
 import { AuthContext } from "../../store/AuthContext";
 
 const Dashboard = () => {
-  const { state } = useContext(UserContext);
+  const {
+    state: { user },
+  } = useContext(UserContext);
   const { auth } = useContext(AuthContext);
   const { state: ordersState, dispatch } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
@@ -23,7 +25,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!auth.accessToken) return;
 
-    if (state.user?.role !== "user") {
+    if (user?.role !== "user") {
       (async () => {
         await getRecentOrdersForAdmin(dispatch, axiosPrivate);
       })();
@@ -32,13 +34,13 @@ const Dashboard = () => {
       })();
     }
 
-    if (state.user?.role === "user")
+    if (user?.role === "user")
       (async () => {
         await getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
       })();
-  }, [auth.accessToken, axiosPrivate, dispatch, state.user?.role]);
+  }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
 
-  if (state.user === null) return <LoginFirst />;
+  if (user === null) return <LoginFirst />;
 
   return (
     <div className="section-sm ">
@@ -46,15 +48,15 @@ const Dashboard = () => {
         <div className="dashboard">
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
-            <UserDetails user={state.user} />
-            {state.user && state.user.role === "admin" && (
+            <UserDetails user={user} />
+            {user && user.role === "admin" && (
               <OrdersByStatus stats={ordersState.stats} />
             )}
 
             <OrdersTable
-              orders={ordersState.orders}
+              orders={ordersState.recentOrders}
               recent
-              loading={ordersState.loading}
+              loading={ordersState.recentLoading}
             />
           </div>
         </div>
