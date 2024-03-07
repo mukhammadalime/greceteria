@@ -20,10 +20,17 @@ const LoginForm = () => {
 
   const onLoginHandler = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const username = userNameRef.current?.value!;
+    let email: string = "";
+    let username: string = "";
+    if (!userNameRef.current?.value.includes("@")) {
+      username = userNameRef.current?.value!;
+    } else if (userNameRef.current?.value.includes("@")) {
+      email = userNameRef.current?.value!;
+    }
     const password = passwordRef.current?.value!;
+    const userData = { username, email, password };
     setLoading(true);
-    await login(setAuth, location, navigate, dispatch, { username, password });
+    await login(setAuth, location, navigate, dispatch, userData);
     setLoading(false);
   };
 
@@ -36,7 +43,7 @@ const LoginForm = () => {
             <TextInput
               label="Email | Username"
               placeholder="Email | Username"
-              type="text"
+              type="email"
               ref={userNameRef}
             />
 

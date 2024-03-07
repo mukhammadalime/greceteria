@@ -9,13 +9,19 @@ export const login = async (
   location: { search: string },
   navigate: (arg: string) => void,
   userDispatch: React.Dispatch<UserAction>,
-  userData: { username?: string; password?: string; token?: string }
+  userData: {
+    username?: string;
+    password?: string;
+    token?: string;
+    email?: string;
+  }
 ) => {
   try {
     const { data } = await axios.post(
       `/users/login${userData.token ? `?token=${userData.token}` : ""}`,
       {
         username: userData?.username,
+        email: userData?.email,
         password: userData?.password,
       }
     );
@@ -42,29 +48,6 @@ export const login = async (
     toast.error(error);
   }
 };
-
-// export const gooleLogin = async (
-//   code: string,
-//   userDispatch: React.Dispatch<UserAction>,
-//   setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
-//   location: { search: string },
-//   navigate: (arg: string) => void
-// ) => {
-//   try {
-//     const { data } = await axios.get(`/users/login/google?code=${code}`);
-//     setAuth({ accessToken: data.accessToken });
-//     userDispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
-
-//     if (location.search.startsWith("?next-page"))
-//       navigate(`/${location.search.split("=")[1]}`);
-//     else navigate("/home");
-//     // window.location.reload();
-//   } catch (err: any) {
-//     console.log("err.response?.data.message:", err);
-//     const error = err.response?.data.message || "Something went wrong";
-//     toast.error(error);
-//   }
-// };
 
 export const logout = async (
   dispatch: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
