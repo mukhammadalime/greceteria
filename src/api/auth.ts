@@ -6,20 +6,19 @@ import { AxiosInstance } from "axios";
 
 export const login = async (
   setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
-  userData: { username: string | undefined; password: string | undefined },
   location: { search: string },
   navigate: (arg: string) => void,
-  userDispatch: React.Dispatch<UserAction>
+  userDispatch: React.Dispatch<UserAction>,
+  userData: { username?: string; password?: string; token?: string }
 ) => {
-  const { username, password } = userData;
-
-  if (!username || !password) toast.warning("Please fill in all the inputs.");
-
   try {
-    const { data } = await axios.post("/users/login", {
-      username,
-      password,
-    });
+    const { data } = await axios.post(
+      `/users/login${userData.token ? `?token=${userData.token}` : ""}`,
+      {
+        username: userData?.username,
+        password: userData?.password,
+      }
+    );
     setAuth({ accessToken: data.accessToken });
     userDispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
 
@@ -32,16 +31,40 @@ export const login = async (
       type: UserActionKind.GETME_FAILURE,
       error: err.response?.data.message,
     });
-    if (err.response?.data.message.startsWith("Your account")) {
-      navigate(`/auth/verify?username=${username}`);
+    if (
+      err.response?.data.message.startsWith("Your account") &&
+      !userData.token
+    ) {
+      navigate(`/auth/verify?username=${userData?.username}`);
     }
 
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
+
+// export const gooleLogin = async (
+//   code: string,
+//   userDispatch: React.Dispatch<UserAction>,
+//   setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
+//   location: { search: string },
+//   navigate: (arg: string) => void
+// ) => {
+//   try {
+//     const { data } = await axios.get(`/users/login/google?code=${code}`);
+//     setAuth({ accessToken: data.accessToken });
+//     userDispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
+
+//     if (location.search.startsWith("?next-page"))
+//       navigate(`/${location.search.split("=")[1]}`);
+//     else navigate("/home");
+//     // window.location.reload();
+//   } catch (err: any) {
+//     console.log("err.response?.data.message:", err);
+//     const error = err.response?.data.message || "Something went wrong";
+//     toast.error(error);
+//   }
+// };
 
 export const logout = async (
   dispatch: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,

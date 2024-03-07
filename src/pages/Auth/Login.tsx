@@ -6,6 +6,8 @@ import { login } from "../../api/auth";
 import { AuthContext } from "../../store/AuthContext";
 import { UserContext } from "../../store/UserContext";
 import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
+import { GoogleLogin } from "@react-oauth/google";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -16,12 +18,12 @@ const LoginForm = () => {
   const { dispatch } = useContext(UserContext);
   const { setAuth } = useContext(AuthContext);
 
-  const onLoginHandler = async (e: FormEvent<HTMLFormElement>) => {
+  const onLoginHandler = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const username = userNameRef.current?.value;
-    const password = passwordRef.current?.value;
+    const username = userNameRef.current?.value!;
+    const password = passwordRef.current?.value!;
     setLoading(true);
-    await login(setAuth, { username, password }, location, navigate, dispatch);
+    await login(setAuth, location, navigate, dispatch, { username, password });
     setLoading(false);
   };
 
@@ -30,16 +32,7 @@ const LoginForm = () => {
       <div className="container">
         <div className="form-wrapper">
           <h6>Sign in</h6>
-          <form className="form" onSubmit={onLoginHandler}>
-            <div className="third-party-login">
-              <button>
-                <img src="/assets/icons/google-icon.svg" alt="" /> Google
-              </button>
-              <button>
-                <img src="/assets/icons/github-icon.svg" alt="" /> GitHub
-              </button>
-            </div>
-            <div className="or">or</div>
+          <div className="form">
             <TextInput
               label="Email | Username"
               placeholder="Email | Username"
@@ -61,21 +54,36 @@ const LoginForm = () => {
                 Forgot you password?
               </h4>
             </div>
-            <button
-              className="button form__button"
-              disabled={loading && true}
-              children={loading ? <LoadingButtonSpinner /> : "Sign in"}
-            />
+            <div className="form__buttons">
+              <button
+                className="button form__button"
+                disabled={loading && true}
+                children={loading ? <LoadingButtonSpinner /> : "Sign in"}
+                type="submit"
+                onClick={onLoginHandler}
+              />
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  setLoading(true);
+                  const token = credentialResponse.credential!;
+                  await login(setAuth, location, navigate, dispatch, { token });
+                  setLoading(false);
+                }}
+                type="icon"
+                onError={() => {
+                  toast.error("Failed to sign in with google.");
+                }}
+              />
+            </div>
             <div className="form__signup">
               Don't have account?{" "}
               <Link
                 to={`/auth/signup${location.search}`}
                 className="form__signup--text"
-              >
-                Sing up
-              </Link>
+                children="Sign up"
+              />
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
