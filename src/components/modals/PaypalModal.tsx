@@ -94,7 +94,8 @@ const PaypalOverlay = ({
                         ?.authorizations?.[0];
                     console.log("transaction:", transaction);
 
-                    window.location.href = "http://localhost:3000/orders";
+                    window.location.href =
+                      "https://groceteria-client.vercel.app/orders";
 
                     console.log(
                       "Capture result",
@@ -111,9 +112,10 @@ const PaypalOverlay = ({
 
                 try {
                   await axiosPrivate.patch(`orders/${data.orderID}/cancel`);
-                  window.location.href = "http://localhost:3000/checkout";
+                  window.location.href =
+                    "https://groceteria-client.vercel.app/checkout";
                 } catch (error) {
-                  console.log("Hellow");
+                  console.log(error);
                 }
               },
               style: {

@@ -91,6 +91,7 @@ export interface CartProps {
   uset: string;
   totalPrice: number;
   totalQuantity: number;
+  _id: string;
 }
 
 export interface CartProductProps {
