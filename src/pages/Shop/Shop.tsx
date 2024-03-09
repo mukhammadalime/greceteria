@@ -1,5 +1,5 @@
 import Filter from "./Filter";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import ProductCard from "../../components/roductCardComponents/ProductCard";
 import { useContext, useEffect } from "react";
 import { ProductContext } from "../../store/ProductContext";
 import ProductCardSkeleton from "../../skeletons/ProductCardSkeleton";
