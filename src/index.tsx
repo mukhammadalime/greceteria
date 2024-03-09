@@ -29,9 +29,9 @@ root.render(
                 <ProductContextProvider>
                   <ReviewContextProvider>
                     <BrowserRouter>
-                      {/* <React.StrictMode> */}
-                      <App />
-                      {/* </React.StrictMode> */}
+                      <React.StrictMode>
+                        <App />
+                      </React.StrictMode>
                     </BrowserRouter>
                   </ReviewContextProvider>
                 </ProductContextProvider>
