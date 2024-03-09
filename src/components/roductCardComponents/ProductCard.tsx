@@ -1,5 +1,5 @@
 import { ProductItemTypes } from "../../utils/user-types";
-import ProductCardDetails from "./ProductCardDetails";
+import ProductCardDetails from "./ProductCardMain";
 import ProductCardImg from "./ProductCardImg";
 
 const ProductCard = ({ item }: { item: ProductItemTypes }) => {

@@ -9,6 +9,7 @@ const ProductCardDetails = ({
   price,
   inStock,
 }: ProductCardDetailsProps) => {
+  console.log("Hellow");
   return (
     <>
       <div className="product-item__details">
