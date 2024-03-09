@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import AddCategoryModal from "../../components/modals/AddCategoryModal";
 import { CategoryContext } from "../../store/CategoryContext";
 import { CategoryItemTypes } from "../../utils/user-types";
-import CategoryItem from "../../components/category";
+import CategoryItem from "../../components/category/CategoryItem";
 import { UserContext } from "../../store/UserContext";
 import CategorySkeleton from "../../skeletons/CategorySkeleton";
 

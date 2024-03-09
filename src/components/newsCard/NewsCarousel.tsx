@@ -2,7 +2,7 @@ import "swiper/css";
 import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionHead from "../UI/SectionHeader";
-import NewsCard from ".";
+import NewsCard from "./NewsCard";
 import { NewsItemTypes } from "../../utils/user-types";
 import NewsItemSkeleton from "../../skeletons/NewsItemSkeleton";
 

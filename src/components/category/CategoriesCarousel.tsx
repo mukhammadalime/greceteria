@@ -4,7 +4,7 @@ import { Autoplay } from "swiper";
 import RightArrowIcon from "../UI/Icons/RightArrowIcon";
 import { Link } from "react-router-dom";
 import { CategoryItemTypes } from "../../utils/user-types";
-import CategoryItem from ".";
+import CategoryItem from "./CategoryItem";
 import CategorySkeleton from "../../skeletons/CategorySkeleton";
 
 const CategoriesCarousel = ({

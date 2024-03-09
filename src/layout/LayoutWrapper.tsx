@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import Footer from "./footer";
-import Header from "./header";
+import Footer from "./footer/Footer";
+import Header from "./header/Header";
 import { useLayoutEffect } from "react";
 
 const LayoutWrapper = (props: { children: React.ReactNode }) => {
