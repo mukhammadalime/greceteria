@@ -10,6 +10,7 @@ import { UserContext } from "../store/UserContext";
 
 const HomePage = () => {
   const { state } = useContext(UserContext);
+  console.log("state:", state);
 
   const {
     state: { products, productsLoading },
