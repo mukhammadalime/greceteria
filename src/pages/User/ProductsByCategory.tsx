@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../store/CategoryContext";
 import { getCategory } from "../../api/categories";
-import ProductCard from "../../components/productCard/ProductCardMain";
+import ProductCard from "../../components/ProductCard/ProductCard";
 import { ProductItemTypes } from "../../utils/user-types";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 
