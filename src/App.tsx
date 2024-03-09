@@ -1,8 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import LayoutWrapper from "./layout/LayoutWrapper";
 import HomePage from "./pages/HomePage";
-import Auth from "./pages/Auth";
-import Shop from "./pages/Shop";
+import Shop from "./pages/Shop/Shop";
 import AboutUs from "./pages/AboutShop/AboutUs";
 import ContactUs from "./pages/AboutShop/ContactUs";
 import CustomerCenter from "./pages/AboutShop/CustomerCenter";
@@ -32,6 +31,7 @@ import ProductsByCategory from "./pages/User/ProductsByCategory";
 import useRefreshToken from "./hooks/auth/useRefresh";
 import { UserActionKind, UserContext } from "./store/UserContext";
 import { AuthContext } from "./store/AuthContext";
+import AuthPages from "./pages/Auth/AuthPages";
 
 function App() {
   const {
@@ -109,7 +109,7 @@ function App() {
             </>
           )}
 
-          {user === null && <Route path="/auth/*" element={<Auth />} />}
+          {user === null && <Route path="/auth/*" element={<AuthPages />} />}
 
           {/* Admin and Manager routes */}
           {user && user.role === "admin" && (

@@ -5,7 +5,7 @@ import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import Verification from "./Verification";
 
-const Auth = () => {
+const AuthPages = () => {
   return (
     <Routes>
       <Route path="/signin" element={<LoginForm />} />
@@ -19,4 +19,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default AuthPages;
