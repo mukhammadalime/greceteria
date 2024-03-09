@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import AddressList from "../addresses/AddressList";
 import AddAddressModal from "../modals/AddAddressModal";
 import { User } from "../../utils/user-types";
+import UserDetailsMain from "./UserDetailsMain";
 
 const UserDetails = ({ user }: { user: User }) => {
   const [addressModalShown, setAddressModalShown] = useState(() => false);
@@ -16,17 +16,14 @@ const UserDetails = ({ user }: { user: User }) => {
         />
       )}
       <div className="user__details">
-        <div className="user__details--left">
-          <img src={user.photo} alt="" />
-          <div className="user__details--info">
-            <h5>{user.name}</h5>
-            <p>{user.username}</p>
-            <p>{user.email}</p>
-            <div className="user__details--edit">
-              <Link to="/settings">Edit Profile </Link>
-            </div>
-          </div>
-        </div>
+        <UserDetailsMain
+          edit
+          photo={user.photo}
+          name={user.name}
+          username={user.username}
+          phoneNumber={user.phoneNumber}
+          email={user.email}
+        />
         <AddressList
           select={false}
           onOpenAddressModal={() => setAddressModalShown(true)}

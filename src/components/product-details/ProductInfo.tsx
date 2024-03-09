@@ -37,7 +37,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
           images={product.images}
           closeModal={() => setAddProductModal(false)}
           product={product}
-          categoryOptions={categories.map((i) => {
+          categoryOptions={categories!.map((i) => {
             return { name: i.name, id: i._id };
           })}
         />

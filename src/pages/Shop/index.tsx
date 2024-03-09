@@ -10,9 +10,11 @@ const Shop = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    for (let i = products.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [products[i], products[j]] = [products[j], products[i]];
+    if (products) {
+      for (let i = products.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [products[i], products[j]] = [products[j], products[i]];
+      }
     }
   }, [products]);
 
@@ -33,7 +35,7 @@ const Shop = () => {
                   </>
                 ) : (
                   <>
-                    {products.map((item) => (
+                    {products?.map((item) => (
                       <ProductCard key={item._id} item={item} />
                     ))}
                   </>

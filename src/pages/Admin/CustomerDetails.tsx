@@ -1,21 +1,19 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import WarningModal from "../../components/modals/WarningModal";
 import { OrdersTable } from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { getCustomerApi } from "../../api/customers";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
-import { toast } from "react-toastify";
 import { getUserOrders } from "../../api/orders";
 import { OrderContext } from "../../store/OrderContext";
 import { AuthContext } from "../../store/AuthContext";
+import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
-  const emailRef = useRef<HTMLParagraphElement>(null);
   const { customerId } = useParams();
   const {
     state: { customer, user, customerLoading },
@@ -38,14 +36,6 @@ const CustomerDetails = () => {
     })();
   }, [auth.accessToken, axiosPrivate, customerId, dispatch, orderDisatch]);
 
-  // Copy email to clipboard
-  const copyEmailHandler = async () => {
-    const email = emailRef.current?.textContent;
-    if ((await navigator.clipboard.readText()) === email) return;
-    navigator.clipboard.writeText(email!);
-    toast.success("Email copied.");
-  };
-
   return (
     <>
       {/* {warningModal && (
@@ -63,18 +53,14 @@ const CustomerDetails = () => {
             {customer && !customerLoading && (
               <div className="customer-details dashboard__main">
                 <div className="user__details">
-                  <div className="user__details--left">
-                    <img src={customer?.photo} alt="" />
-                    <div className="user__details--info">
-                      <h5>{customer?.name}</h5>
-                      <p>{customer?.username}</p>
-                      {customer?.phoneNumber && <p>{customer?.phoneNumber}</p>}
-                      <p ref={emailRef}>
-                        <ContentCopyIcon onClick={copyEmailHandler} />
-                        {customer?.email}
-                      </p>
-                    </div>
-                  </div>
+                  <UserDetailsMain
+                    edit
+                    photo={customer.photo}
+                    name={customer.name}
+                    username={customer.username}
+                    phoneNumber={customer.phoneNumber}
+                    email={customer.email}
+                  />
 
                   <div className="address-book">
                     <div className="address-book__header">

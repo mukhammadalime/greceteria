@@ -35,7 +35,8 @@ const Categories = () => {
             )}
 
             <div className="categories__main">
-              {state.categoriesLoading ? (
+              {(state.categoriesLoading && !state.categories) ||
+              !state.categories ? (
                 <>
                   {Array.from({ length: 12 }).map((_, i) => (
                     <CategorySkeleton key={i} />
@@ -43,7 +44,7 @@ const Categories = () => {
                 </>
               ) : (
                 <>
-                  {state.categories.map((category: CategoryItemTypes) => (
+                  {state.categories?.map((category: CategoryItemTypes) => (
                     <CategoryItem
                       category={category}
                       key={category._id}

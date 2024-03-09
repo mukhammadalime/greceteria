@@ -27,15 +27,12 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
   const { dispatch } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
 
-  const { month, date, year, hour, minutes } = useCustomizeDate(
-    order.createdAt
-  );
+  const { month, date, year, hour } = useCustomizeDate(order.createdAt);
   const {
     month: month1,
     date: date1,
     year: year1,
     hour: hour1,
-    minutes: minutes1,
   } = useCustomizeDate(order.deliveredAt || new Date(Date.now()));
 
   const onUpdateOrder = async (arg: string) => {
@@ -77,14 +74,14 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
             <div>
               <p>Order date:</p>
               <span>
-                {year}, {month} {date}, {hour}:{minutes}
+                {year}, {month} {date}, {hour}{" "}
               </span>
             </div>
             {order.deliveredAt && (
               <div>
                 <p>Delivered date:</p>
                 <span>
-                  {year1}, {month1} {date1}, {hour1}:{minutes1}
+                  {year1}, {month1} {date1}, {hour1}
                 </span>
               </div>
             )}

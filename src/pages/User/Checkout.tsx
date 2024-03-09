@@ -7,7 +7,8 @@ import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import BillCard from "../../components/cart/BillCard";
 import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
-import { createOrder } from "../../api/orders";
+import { loadStripe } from "@stripe/stripe-js";
+import PaypalModal from "../../components/modals/PaypalModal";
 
 const Checkout = () => {
   const notesRef = useRef<HTMLTextAreaElement>(null);
@@ -15,6 +16,8 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [paypalOpen, setPaypalOpen] = useState(false);
+  const [orderData, setOrderData] = useState<any>();
 
   ///////////////////////
   const axiosPrivate = useAxiosPrivate();
@@ -27,6 +30,7 @@ const Checkout = () => {
 
   const placeOrder = async () => {
     if (!cart) return;
+
     const shippingFee: number = cart?.totalPrice < 50 ? 5.0 : 0;
     const total: number = cart?.totalPrice + shippingFee;
     const order = {
@@ -38,10 +42,29 @@ const Checkout = () => {
       address: user?.addresses.find((i) => i._id === selectedAddressId),
       notes: notesRef.current?.value,
     };
+    setOrderData(order);
 
-    setLoading(true);
-    await createOrder(axiosPrivate, order);
-    setLoading(false);
+    if (paymentMethod === "Paypal") setPaypalOpen(true);
+
+    if (paymentMethod === "Stripe") {
+      setLoading(true);
+      try {
+        const { data } = await axiosPrivate(`orders/stripe-publishable-key`);
+
+        // 1) Get checkout session from API
+        const session = await axiosPrivate.post(
+          `orders/checkout-session`,
+          order
+        );
+
+        // 2) Create checkout form + charge credit card
+        const stripe = await loadStripe(data.publishableKey);
+        stripe?.redirectToCheckout({ sessionId: session.data.session.id });
+      } catch (err) {
+        console.log(err);
+      }
+      setLoading(false);
+    }
   };
 
   if (cartLoading) return <LoadingSpinner />;
@@ -52,6 +75,13 @@ const Checkout = () => {
         <AddAddressModal
           text="Add New Address"
           closeModal={() => setAddressModalShown(false)}
+        />
+      )}
+
+      {paypalOpen && (
+        <PaypalModal
+          closeModal={() => setPaypalOpen(false)}
+          orderData={orderData}
         />
       )}
       <div className="section-sm">

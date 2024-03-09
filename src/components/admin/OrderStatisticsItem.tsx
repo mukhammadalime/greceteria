@@ -32,7 +32,7 @@ const OrderStatisticsItem = ({
           <>
             <ArrowCircleIcon />
             <p>
-              {Math.abs(item.difference)}% <span>than</span>
+              {Math.abs(Number(item.difference.toFixed(2)))}% <span>than</span>
             </p>
           </>
         )}

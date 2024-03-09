@@ -8,7 +8,6 @@ import { CartContext } from "../../store/CartContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
-  console.log("cartItem:", cartItem);
   const [warningModal, setWarningModal] = useState(() => false);
 
   const { dispatch } = useContext(CartContext);

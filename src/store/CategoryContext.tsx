@@ -3,7 +3,7 @@ import { CategoryItemTypes } from "../utils/user-types";
 import { getCategoriesApi } from "../api/categories";
 
 interface CategoryInitialStateTypes {
-  categories: CategoryItemTypes[];
+  categories: CategoryItemTypes[] | null;
   categoriesLoading: boolean;
   category: CategoryItemTypes | null;
   categoryLoading: boolean;
@@ -37,7 +37,7 @@ export interface CategoryAction {
 }
 
 const INITIAL_STATE: CategoryInitialStateTypes = {
-  categories: [],
+  categories: null,
   category: null,
   categoriesLoading: false,
   categoryLoading: false,

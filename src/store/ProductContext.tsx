@@ -3,7 +3,7 @@ import { ProductItemTypes } from "../utils/user-types";
 import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface ProductsInitialStateTypes {
-  products: ProductItemTypes[];
+  products: ProductItemTypes[] | null;
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
@@ -42,7 +42,7 @@ export interface ProductAction {
 }
 
 const INITIAL_STATE: ProductsInitialStateTypes = {
-  products: [],
+  products: null,
   product: null,
   productsLoading: false,
   productLoading: false,
@@ -102,9 +102,10 @@ const ProductReducer = (
     case ProductActionKind.ADD_PRODUCT_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.ADD_PRODUCT_SUCCESS:
+      const allProducts = state.products ? state.products : [];
       return {
         ...state,
-        products: [...state.products, action.payload as ProductItemTypes],
+        products: [...allProducts, action.payload as ProductItemTypes],
         addUpdateDeleteLoading: false,
         error: null,
       };
@@ -141,9 +142,12 @@ const ProductReducer = (
     case ProductActionKind.DELETE_PRODUCT_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case ProductActionKind.DELETE_PRODUCT_SUCCESS:
+      const updatedProduts = state.products
+        ? state.products.filter((i) => i._id !== state.product?._id)
+        : [];
       return {
         ...state,
-        products: state.products.filter((i) => i._id !== state.product?._id),
+        products: updatedProduts,
         addUpdateDeleteLoading: false,
         error: null,
       };

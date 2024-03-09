@@ -59,7 +59,7 @@ const ReviewsList = ({ show }: { show: boolean }) => {
 
   if (loading) return <LoadingSpinner />;
 
-  const hasReview = reviews.find((i) => i.user._id === userState.user?._id);
+  const hasReview = reviews?.find((i) => i.user._id === userState.user?._id);
   const hasBought = userState.user?.orderedProducts.find(
     (i) => i === productId
   );
@@ -69,7 +69,7 @@ const ReviewsList = ({ show }: { show: boolean }) => {
       <div className="reviews__main">
         <div className="container">
           <div className="reviews">
-            {reviews.map((item) => (
+            {reviews?.map((item) => (
               <ReviewItem
                 review={item}
                 key={item._id}
@@ -79,20 +79,21 @@ const ReviewsList = ({ show }: { show: boolean }) => {
                 }}
               />
             ))}
-            {reviews.length === 0 && (
+            {reviews?.length === 0 && (
               <div className="reviews__empty">
                 <h2>No reviews yet</h2>
               </div>
             )}
-            {!((product?.reviewsCount as number) <= reviews.length) && (
-              <div className="reviews__load-more">
-                <button
-                  onClick={() => setPage((prev) => prev + 1)}
-                  disabled={moreLoading && true}
-                  children={moreLoading ? "Loading..." : "Load more"}
-                />
-              </div>
-            )}
+            {reviews &&
+              !((product?.reviewsCount as number) <= reviews.length) && (
+                <div className="reviews__load-more">
+                  <button
+                    onClick={() => setPage((prev) => prev + 1)}
+                    disabled={moreLoading && true}
+                    children={moreLoading ? "Loading..." : "Load more"}
+                  />
+                </div>
+              )}
           </div>
         </div>
       </div>

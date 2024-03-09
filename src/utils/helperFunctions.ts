@@ -76,11 +76,15 @@ export const formatDate = function (date: Date) {
   }
 };
 
-export const returnUpdatedState = <T>(items: T[], item: T, id: string) => {
+export const returnUpdatedState = <T>(
+  items: T[] | null,
+  item: T,
+  id: string
+) => {
+  if (!items) return null;
   const updatingItemIndex = items.findIndex((i: any) => i._id === id);
   const itemsCopy: T[] = [...items];
   itemsCopy[updatingItemIndex] = item as T;
-
   return itemsCopy;
 };
 

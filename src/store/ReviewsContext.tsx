@@ -3,7 +3,7 @@ import { ReviewItemTypes } from "../utils/user-types";
 import { removeDublicate, returnUpdatedState } from "../utils/helperFunctions";
 
 interface ReviewsInitialStateTypes {
-  reviews: ReviewItemTypes[];
+  reviews: ReviewItemTypes[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -35,7 +35,7 @@ export interface ReviewAction {
 }
 
 const INITIAL_STATE: ReviewsInitialStateTypes = {
-  reviews: [],
+  reviews: null,
   loading: false,
   error: null,
 };
@@ -54,12 +54,13 @@ const ReviewReducer = (
   state: ReviewsInitialStateTypes,
   action: ReviewAction
 ): typeof INITIAL_STATE => {
+  const stateReviews = state.reviews ? state.reviews : [];
   switch (action.type) {
     case ReviewActionKind.GET_REVIEWS_START:
       return { ...state, loading: true, reviews: [] };
     case ReviewActionKind.GET_REVIEWS_SUCCESS:
       const uniqueArr = removeDublicate([
-        ...state.reviews,
+        ...stateReviews,
         ...(action.payload as ReviewItemTypes[]),
       ]);
       return { ...state, reviews: uniqueArr, loading: false };
@@ -67,8 +68,8 @@ const ReviewReducer = (
       return { ...state, loading: false };
 
     case ReviewActionKind.CREATE_REVIEW:
-      state.reviews.push(action.payload as ReviewItemTypes);
-      return { ...state, reviews: state.reviews };
+      stateReviews?.push(action.payload as ReviewItemTypes);
+      return { ...state, reviews: stateReviews };
 
     case ReviewActionKind.EDIT_REVIEW:
       const review = action.payload as ReviewItemTypes;
@@ -83,7 +84,7 @@ const ReviewReducer = (
     case ReviewActionKind.DELETE_REVIEW:
       return {
         ...state,
-        reviews: state.reviews.filter((i) => i._id !== action.payload),
+        reviews: stateReviews.filter((i) => i._id !== action.payload),
       };
 
     /////////////// REPLIES ///////////////

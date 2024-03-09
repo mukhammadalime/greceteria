@@ -10,7 +10,7 @@ const NewsCarousel = ({
   news,
   loading,
 }: {
-  news: NewsItemTypes[];
+  news: NewsItemTypes[] | null;
   loading: boolean;
 }) => {
   return (
@@ -37,7 +37,7 @@ const NewsCarousel = ({
               </>
             ) : (
               <>
-                {news.map((item: NewsItemTypes) => (
+                {news?.map((item: NewsItemTypes) => (
                   <SwiperSlide key={item._id} className="news-card-swiper">
                     <NewsCard newsItem={item} />
                   </SwiperSlide>

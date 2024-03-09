@@ -5,7 +5,7 @@ import { returnUpdatedState } from "../utils/helperFunctions";
 import { AuthContext } from "./AuthContext";
 
 interface NewsInitialStateTypes {
-  news: NewsItemTypes[];
+  news: NewsItemTypes[] | null;
   newsItem: NewsItemTypes | null;
   newsLoading: boolean;
   newsItemLoading: boolean;
@@ -44,7 +44,7 @@ export interface NewsAction {
 }
 
 const INITIAL_STATE: NewsInitialStateTypes = {
-  news: [],
+  news: null,
   newsItem: null,
   newsLoading: false,
   newsItemLoading: false,
@@ -104,9 +104,10 @@ const NewsReducer = (
     case NewsActionKind.ADD_NEWSITEM_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case NewsActionKind.ADD_NEWSITEM_SUCCESS:
+      const allNews = state.news ? state.news : [];
       return {
         ...state,
-        news: [action.payload as NewsItemTypes, ...state.news],
+        news: [action.payload as NewsItemTypes, ...allNews],
         addUpdateDeleteLoading: false,
         error: null,
       };
@@ -118,7 +119,7 @@ const NewsReducer = (
     case NewsActionKind.UPDATE_NEWSITEM_SUCCESS:
       const newsItem = action.payload as NewsItemTypes;
       const updatedNews = returnUpdatedState(
-        state.news,
+        state.news!,
         newsItem,
         newsItem._id
       );
@@ -135,9 +136,12 @@ const NewsReducer = (
     case NewsActionKind.DELETE_NEWSITEM_START:
       return { ...state, addUpdateDeleteLoading: true, error: null };
     case NewsActionKind.DELETE_NEWSITEM_SUCCESS:
+      const updatedNews2 = state.news
+        ? state.news?.filter((i) => i._id !== state.newsItem?._id)
+        : [];
       return {
         ...state,
-        news: state.news.filter((i) => i._id !== state.newsItem?._id),
+        news: updatedNews2,
         addUpdateDeleteLoading: false,
         error: null,
       };

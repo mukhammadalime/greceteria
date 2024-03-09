@@ -12,7 +12,7 @@ const CustomProductsCarousel = ({
   loading,
 }: {
   text: string;
-  products: ProductItemTypes[];
+  products: ProductItemTypes[] | null;
   loading?: boolean;
 }) => {
   return (
@@ -38,7 +38,7 @@ const CustomProductsCarousel = ({
             </>
           ) : (
             <>
-              {products.map((product: ProductItemTypes) => (
+              {products?.map((product: ProductItemTypes) => (
                 <SwiperSlide key={product._id} style={{ width: "25rem" }}>
                   <ProductCard key={product._id} item={product} />
                 </SwiperSlide>

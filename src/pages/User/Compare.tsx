@@ -18,7 +18,7 @@ const Compare = () => {
   } = useContext(ProductContext);
 
   useEffect(() => {
-    if (products.length === 0 || !user) return;
+    if (!products || !user) return;
     getCompareWishlistProducts(products, user.compare, setCompare);
     setTimeout(() => setLoading(false), 200);
   }, [products, user]);

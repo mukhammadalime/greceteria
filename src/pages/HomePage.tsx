@@ -26,6 +26,7 @@ const HomePage = () => {
   return (
     <>
       <Banner />
+
       <CategoriesCarousel categories={categories} loading={categoriesLoading} />
 
       <CustomProductsCarousel

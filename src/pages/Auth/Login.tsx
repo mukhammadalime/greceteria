@@ -34,6 +34,17 @@ const LoginForm = () => {
     setLoading(false);
   };
 
+  const onGoogleLoginSuccess = async (token: string) => {
+    setLoading(true);
+    const data = { token };
+    await login(setAuth, location, navigate, dispatch, data);
+    setLoading(false);
+  };
+
+  const onGoogleLoginError = () => {
+    toast.error("Failed to sign in with google.");
+  };
+
   return (
     <div className="section-xl">
       <div className="container">
@@ -69,18 +80,13 @@ const LoginForm = () => {
                 type="submit"
                 onClick={onLoginHandler}
               />
-              <GoogleLogin
-                onSuccess={async (credentialResponse) => {
-                  setLoading(true);
-                  const token = credentialResponse.credential!;
-                  await login(setAuth, location, navigate, dispatch, { token });
-                  setLoading(false);
-                }}
-                type="icon"
-                onError={() => {
-                  toast.error("Failed to sign in with google.");
-                }}
-              />
+              <button disabled={loading && true}>
+                <GoogleLogin
+                  onSuccess={(res) => onGoogleLoginSuccess(res.credential!)}
+                  type="icon"
+                  onError={onGoogleLoginError}
+                />
+              </button>
             </div>
             <div className="form__signup">
               Don't have account?{" "}

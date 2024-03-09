@@ -36,7 +36,7 @@ const Filter = () => {
         <AddProductModal
           text="Add Product"
           closeModal={() => setAddProductModal(false)}
-          categoryOptions={categories.map((i) => {
+          categoryOptions={categories!.map((i) => {
             return { name: i.name, id: i._id };
           })}
         />
@@ -45,15 +45,18 @@ const Filter = () => {
       <div className="filter">
         <div className="container">
           <div className="filter__top">
-            <FilterOptions
-              options={categories.map((i) => {
-                return { name: i.name, id: i._id };
-              })}
-              title="Select Category"
-              onToggle={toggleOptionsHandler.bind(null, 0)}
-              onSelect={(id: string) => setSelectedCategory(id)}
-              open={filtersOpen[0]}
-            />
+            {categories && (
+              <FilterOptions
+                options={categories.map((i) => {
+                  return { name: i.name, id: i._id };
+                })}
+                title="Select Category"
+                onToggle={toggleOptionsHandler.bind(null, 0)}
+                onSelect={(id: string) => setSelectedCategory(id)}
+                open={filtersOpen[0]}
+              />
+            )}
+
             <FilterOptions
               options={productPriceOptions}
               title="Select Price"
@@ -112,7 +115,7 @@ const Filter = () => {
               </div>
               <div className="filter__result">
                 <p>
-                  {products.length}
+                  {products?.length}
                   <span>Products found.</span>
                 </p>
               </div>

@@ -4,8 +4,7 @@ const useCustomizeDate = (
   dateString: Date,
   monthType?: "2-digit" | "long" | "short" | "narrow"
 ) => {
-  const [minutes, setMinutes] = useState<number>();
-  const [hour, setHour] = useState<number>();
+  const [hour, setHour] = useState<string>();
   const [date, setDate] = useState<number>();
   const [year, setYear] = useState<number>();
   const [month, setMonth] = useState<string>();
@@ -18,11 +17,16 @@ const useCustomizeDate = (
     setMonth(month);
     setDate(parsedDate.getDate());
     setYear(parsedDate.getFullYear());
-    setHour(parsedDate.getHours());
-    setMinutes(parsedDate.getMinutes());
+    setHour(
+      parsedDate.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+      })
+    );
   }, [dateString, monthType]);
 
-  return { minutes, hour, date, year, month };
+  return { hour, date, year, month };
 };
 
 export default useCustomizeDate;

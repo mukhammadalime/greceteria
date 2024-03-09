@@ -17,13 +17,12 @@ export const getNewsApi = async (
       payload: data.data,
     });
   } catch (err: any) {
+    const error = err.response?.data.message || "Something went wrong.";
     dispatch({
       type: NewsActionKind.GET_NEWS_FAILURE,
-      error: err.response?.data.message,
+      error,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+
     toast.error(error);
   }
 };

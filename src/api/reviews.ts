@@ -13,7 +13,7 @@ export const getProductReviews = async (
   try {
     page === 1 && dispatch({ type: ReviewActionKind.GET_REVIEWS_START });
     const { data } = await axios(
-      `products/${productId}/reviews?sort=-createdAt&sort=-rating&page=${page}${
+      `products/${productId}/reviews?limit=5&sort=-createdAt&sort=-rating&page=${page}${
         userId ? `&userId=${userId}` : ""
       }`
     );

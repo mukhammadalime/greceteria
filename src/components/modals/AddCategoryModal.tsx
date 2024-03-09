@@ -42,12 +42,12 @@ const AddCategoryOverlay = ({
 
     switch (actionType) {
       case "add":
-        if (categoryState.categories.find((i) => i.name === name)) {
+        if (categoryState.categories?.find((i) => i.name === name)) {
           toast.error(`The category (${name}) already exists.`);
           return;
         }
         await addOrUpdateCategory(
-          categoryState.categories,
+          categoryState.categories!,
           dispatch,
           formData,
           closeModal,
@@ -57,7 +57,7 @@ const AddCategoryOverlay = ({
         break;
       case "update":
         await addOrUpdateCategory(
-          categoryState.categories,
+          categoryState.categories!,
           dispatch,
           formData,
           closeModal,
@@ -68,7 +68,7 @@ const AddCategoryOverlay = ({
         break;
       case "delete":
         await deleteCategory(
-          categoryState.categories,
+          categoryState.categories || [],
           dispatch,
           category?._id,
           axiosPrivate
