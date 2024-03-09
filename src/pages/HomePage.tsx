@@ -1,4 +1,4 @@
-import Banner from "../layout/banner";
+import Banner from "../layout/banner/Banner";
 import CategoriesCarousel from "../components/category/CategoriesCarousel";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import NewsCarousel from "../components/newsCard/NewsCarousel";
