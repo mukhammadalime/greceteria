@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import WarningModal from "../../components/modals/WarningModal";
+// import WarningModal from "../../components/modals/WarningModal";
 import { OrdersTable } from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import { UserContext } from "../../store/UserContext";
@@ -14,6 +14,7 @@ import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
+  console.log("warningModal:", warningModal);
   const { customerId } = useParams();
   const {
     state: { customer, user, customerLoading },

@@ -18,6 +18,7 @@ const customerItemsWidths = ["100%", "100%", "100%", "100%", "100%"];
 
 const Customers = () => {
   const [selectedSort, setSelectedSort] = useState<String>("");
+  console.log("selectedSort:", selectedSort);
   const [sortOpen, setSortOpen] = useState(false);
   const [reload, setReload] = useState<boolean>(false);
 

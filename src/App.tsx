@@ -59,7 +59,8 @@ function App() {
     (async () => {
       await getProductsApi(dispatch);
     })();
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth?.accessToken, dispatch]);
 
   return (
     <>

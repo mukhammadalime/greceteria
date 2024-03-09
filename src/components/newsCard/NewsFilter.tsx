@@ -13,6 +13,7 @@ const NewsFilter = () => {
   const [addNewsModal, setAddNewsModal] = useState(() => false);
   const [sortOpen, setSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState("");
+  console.log("sortOption:", sortOption);
 
   return (
     <>

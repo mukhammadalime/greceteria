@@ -1,5 +1,5 @@
 import WishlistedItem from "../../components/WishlistedItem";
-import CustomProductsCarousel from "../../components/CustomProductsCarousel";
+// import CustomProductsCarousel from "../../components/CustomProductsCarousel";
 import SectionHead from "../../components/UI/SectionHeader";
 import { useContext, useEffect, useState } from "react";
 import LoginFirst from "../../components/LoginFirst";
