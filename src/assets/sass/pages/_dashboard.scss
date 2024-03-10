@@ -314,18 +314,6 @@
     }
   }
 
-  &__empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-
-    td {
-      font-weight: 400;
-      font-size: 2rem;
-    }
-  }
-
   .table {
     width: 100%;
     border-spacing: 0;
@@ -389,6 +377,14 @@
         font-weight: 500;
         color: #00b207;
         justify-self: end;
+      }
+    }
+    &__empty {
+      td {
+        text-align: center;
+        padding: 1.5rem 0;
+        font-weight: 400;
+        font-size: 1.8rem;
       }
     }
   }

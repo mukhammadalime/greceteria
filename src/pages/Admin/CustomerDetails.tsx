@@ -21,7 +21,7 @@ const CustomerDetails = () => {
     dispatch,
   } = useContext(UserContext);
   const {
-    state: { userOrders, loading },
+    state: { userOrders, loading, error },
     dispatch: orderDisatch,
   } = useContext(OrderContext);
   const { auth } = useContext(AuthContext);
@@ -94,7 +94,11 @@ const CustomerDetails = () => {
                   </div>
                 )}
 
-                <OrdersTable orders={userOrders} loading={loading} />
+                <OrdersTable
+                  orders={userOrders}
+                  loading={loading}
+                  error={error}
+                />
               </div>
             )}
 

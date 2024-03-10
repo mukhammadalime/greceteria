@@ -4,10 +4,10 @@ import FilterOptions from "../UI/FilterOptions";
 import { useContext, useState } from "react";
 import { UserContext } from "../../store/UserContext";
 import { OrderProps } from "../../utils/user-types";
-import useCustomizeDate from "../../hooks/useCustomizeDate";
 import { updateOrder } from "../../api/orders";
 import { OrderContext } from "../../store/OrderContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import OrderDetailsAddress from "./OrderDetailsAddress";
 
 const statusOptions = [
   {
@@ -27,14 +27,6 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
   const { dispatch } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
 
-  const { month, date, year, hour } = useCustomizeDate(order.createdAt);
-  const {
-    month: month1,
-    date: date1,
-    year: year1,
-    hour: hour1,
-  } = useCustomizeDate(order.deliveredAt || new Date(Date.now()));
-
   const onUpdateOrder = async (arg: string) => {
     if (loading || order.status === arg) return;
     const actionType = arg === "on the way" ? "on-the-way" : "delivered";
@@ -52,41 +44,11 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
           total={order.totalPrice}
           shippingFee={order.deliveryFee}
         />
-        <div>
-          <div className="order-details__address">
-            <h4>Shipping Address</h4>
-            <div className="order-details__address--item">
-              <h5>
-                <span>Receiver: </span> {order.address.name}
-              </h5>
-              <h5>
-                <span>Address: </span>
-                {order.address.address1} {order.address?.address2}{" "}
-                {order.address.city} {order.address.postalCode}
-              </h5>
-              <h5>
-                <span>Phone number: </span>
-                {order.address.phoneNumber}
-              </h5>
-            </div>
-          </div>
-          <div className="order-details__date">
-            <div>
-              <p>Order date:</p>
-              <span>
-                {year}, {month} {date}, {hour}{" "}
-              </span>
-            </div>
-            {order.deliveredAt && (
-              <div>
-                <p>Delivered date:</p>
-                <span>
-                  {year1}, {month1} {date1}, {hour1}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        <OrderDetailsAddress
+          address={order.address}
+          createdAt={order.createdAt}
+          deliveredAt={order.deliveredAt}
+        />
       </div>
 
       {order.notes && (

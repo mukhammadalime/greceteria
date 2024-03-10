@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { OrderProps } from "../../utils/user-types";
 import OrderItem from "./OrderItem";
 import TableItemSkeleton from "../../skeletons/TableItemsSkeleton";
+import { useMemo } from "react";
 
-export const OrdersTableHeader = () => {
+const OrdersTableHeader = () => {
   return (
     <thead>
       <tr className="table__header">
@@ -24,12 +25,16 @@ export const OrdersTable = ({
   recent,
   filterQuery,
   loading,
+  error,
 }: {
   orders: OrderProps[] | null;
   recent?: boolean;
   filterQuery?: string;
+  error: string | null;
   loading: boolean;
 }) => {
+  const tableHeader = useMemo(() => <OrdersTableHeader />, []);
+
   return (
     <div className="order-history">
       <div className="order-history__header">
@@ -39,11 +44,17 @@ export const OrdersTable = ({
 
       <div className="order-history__table">
         <table className="table">
-          <OrdersTableHeader />
+          {tableHeader}
 
           <tbody>
-            {((loading && !orders) || !orders) && (
+            {((loading && !orders) || !orders) && !error && (
               <TableItemSkeleton widths={orderItemsWidths} />
+            )}
+
+            {error && !loading && (
+              <tr className="table__empty">
+                <td>{error}</td>
+              </tr>
             )}
 
             {orders?.map((order: OrderProps) => (
@@ -58,8 +69,8 @@ export const OrdersTable = ({
               />
             ))}
 
-            {orders?.length === 0 && !loading && (
-              <tr className="order-history__empty">
+            {orders?.length === 0 && (
+              <tr className="table__empty">
                 <td>
                   {filterQuery
                     ? "No orders with that filter."

@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const OrderDetailsPayment = ({
   orderNumber,
   paymentMethod,
@@ -45,4 +47,4 @@ interface OrderDetailsPaymentProps {
   shippingFee: number;
 }
 
-export default OrderDetailsPayment;
+export default memo(OrderDetailsPayment);

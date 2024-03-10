@@ -57,6 +57,7 @@ const Dashboard = () => {
               orders={ordersState.recentOrders}
               recent
               loading={ordersState.recentLoading}
+              error={ordersState.error}
             />
           </div>
         </div>

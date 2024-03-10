@@ -14,13 +14,9 @@ import { UserContext } from "../../store/UserContext";
 
 const Filter = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  console.log("selectedCategory:", selectedCategory);
   const [selectedPrice, setSelectedPrice] = useState<string>("");
-  console.log("selectedPrice:", selectedPrice);
   const [selectedSort, setSelectedSort] = useState<string>("");
-  console.log("selectedSort:", selectedSort);
   const [selectedRating, setSelectedRating] = useState<string>("");
-  console.log("selectedRating:", selectedRating);
   const { state } = useContext(UserContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
 

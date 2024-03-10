@@ -1,3 +1,4 @@
+import { memo } from "react";
 import CheckMarkIcon from "../UI/Icons/CheckMarkIcon";
 
 const orderStatuses = [
@@ -45,4 +46,4 @@ const OrderStatusBar = ({ status }: { status: string }) => {
   );
 };
 
-export default OrderStatusBar;
+export default memo(OrderStatusBar);

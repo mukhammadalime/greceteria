@@ -20,10 +20,11 @@ export const getMyOrders = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    const error = err.response?.data.message || "Something went wrong";
+    dispatch({
+      type: OrderActionKind[`${actionKind}_FAILURE`],
+      error: error,
+    });
   }
 };
 
@@ -41,26 +42,10 @@ export const getOneOrder = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
-  }
-};
-
-export const createOrder = async (
-  axiosPrivate: AxiosInstance,
-  order: any
-): Promise<void> => {
-  try {
-    await axiosPrivate.post(`/orders`, order);
-
-    toast.success("New Order has been accepted.");
-  } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    dispatch({
+      type: OrderActionKind.GET_ORDER_FAILURE,
+      error: err.response?.data.message || "Something went wrong.",
+    });
   }
 };
 
@@ -79,10 +64,10 @@ export const getAllOrders = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    dispatch({
+      type: OrderActionKind.GET_ORDERS_SUCCESS,
+      error: err.response?.data.message || "Something went wrong",
+    });
   }
 };
 
@@ -99,10 +84,10 @@ export const getRecentOrdersForAdmin = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    dispatch({
+      type: OrderActionKind.GET_RECENT_ORDERS_FAILURE,
+      error: err.response?.data.message || "Something went wrong",
+    });
   }
 };
 
@@ -119,10 +104,10 @@ export const getOrdersStats = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    dispatch({
+      type: OrderActionKind.GET_ORDERS_STATS_FAILURE,
+      payload: err.response?.data.message || "Something went wrong",
+    });
   }
 };
 
@@ -139,14 +124,10 @@ export const getOrdersRevenueStats = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
     dispatch({
       type: OrderActionKind.GET_REVENUE_STATS_FAILURE,
-      payload: error,
+      error: err.response?.data.message || "Something went wrong",
     });
-    toast.error(error);
   }
 };
 
@@ -165,10 +146,7 @@ export const updateOrder = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    toast.error(err.response?.data.message || "Something went wrong");
   }
 };
 
@@ -187,9 +165,9 @@ export const getUserOrders = async (
       payload: data.data,
     });
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    dispatch({
+      type: OrderActionKind.GET_USER_ORDERS_FAILURE,
+      error: err.response?.data.message || "Something went wrong",
+    });
   }
 };

@@ -59,7 +59,6 @@ export enum OrderActionKind {
 
   UPDATE_ORDER_START = "UPDATE_ORDER_START",
   UPDATE_ORDER_SUCCESS = "UPDATE_ORDER_SUCCESS",
-  UPDATE_ORDER_FAILURE = "UPDATE_ORDER_FAILURE",
 }
 
 // An interface for our actions
@@ -255,8 +254,6 @@ const OrderReducer = (
         updateLoading: false,
         error: null,
       };
-    case OrderActionKind.UPDATE_ORDER_FAILURE:
-      return { ...state, updateLoading: false, error: action.error! };
 
     default:
       return state;

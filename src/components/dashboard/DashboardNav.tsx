@@ -8,7 +8,7 @@ import DashboardIcon from "../UI/Icons/DashboardIcon";
 import StatisticsIcon from "../UI/Icons/StatisticsIcon";
 import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
-import { useContext, useState } from "react";
+import { memo, useCallback, useContext, useState } from "react";
 import { logout } from "../../api/auth";
 import { AuthContext } from "../../store/AuthContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
@@ -81,13 +81,14 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const { state } = useContext(UserContext);
   const { setAuth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
+
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
 
-  const onLogoutHandler = async () => {
+  const onLogoutHandler = useCallback(async () => {
     setLogoutLoading(true);
     await logout(setAuth, axiosPrivate);
     setLogoutLoading(false);
-  };
+  }, [axiosPrivate, setAuth]);
 
   return (
     <div className={`dashboard__nav${navOpen ? " nav-open" : ""}`}>
@@ -124,4 +125,4 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   );
 };
 
-export default DashboardNav;
+export default memo(DashboardNav);

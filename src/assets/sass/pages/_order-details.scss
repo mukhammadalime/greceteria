@@ -7,6 +7,15 @@
     overflow: hidden;
   }
 
+  &__error {
+    display: grid;
+    place-items: center;
+    h1 {
+      font-size: 2rem;
+      font-weight: 400;
+    }
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -20,11 +29,11 @@
       font-size: 2rem;
       font-weight: 500;
     }
-    span {
+    a {
       color: #00b207;
-      text-transform: capitalize;
       cursor: pointer;
       font-size: 1.6rem;
+      text-decoration: none;
     }
   }
 

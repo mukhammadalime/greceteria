@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useCallback, useState } from "react";
 
 const FilterOptions = ({
   options,
@@ -17,11 +17,14 @@ const FilterOptions = ({
 }) => {
   const [option, setOption] = useState<string | null>(defaultValue || title);
 
-  const setOptionHandler = (name: string, id: string) => {
-    setOption(name);
-    onSelect(id);
-    onToggle();
-  };
+  const setOptionHandler = useCallback(
+    (name: string, id: string) => {
+      setOption(name);
+      onSelect(id);
+      onToggle();
+    },
+    [onSelect, onToggle]
+  );
 
   return (
     <div className={`choose${open ? " options-open" : ""}`}>
@@ -44,4 +47,4 @@ const FilterOptions = ({
   );
 };
 
-export default React.memo(FilterOptions);
+export default FilterOptions;

@@ -8,3 +8,18 @@ Tasks To Complete
 - Enable admin to change 'Shipping Policy' and 'Terms & Conditions'(with editor)
 
 // TODAY'S TODOS
+- rename productCard component and its files
+- delete last git commits
+- payPal loading skeleton
+- refactor PayPal onSuccess, onApprove and onCancel functions
+- Show loading skeleton when the user has no orders and switches between dashboard and order history
+- customer loading skeletons on reload
+- fix ‘Something went wrong’ in orderDetails page
+- change save button text in modals
+- add loading spinner to every button
+- disable update or save button when there are no changes to the object.  
+- all inputs validation in all pages
+- fix product cards, news, categories responsive 
+- add no items text in pages
+- add error text in pages
+-  

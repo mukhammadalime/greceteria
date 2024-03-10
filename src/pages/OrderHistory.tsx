@@ -17,12 +17,14 @@ const OrderHistory = () => {
   } = useContext(UserContext);
   const { auth } = useContext(AuthContext);
   const {
-    state: { orders, loading, customOrders, filterQuery, sortQuery },
+    state: { orders, loading, customOrders, filterQuery, sortQuery, error },
     dispatch,
     filterOrders,
     sortOrders,
   } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
+  // This function opens the requested filter and closed other remaining open filters.
+  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
 
   useEffect(() => {
     if (!auth.accessToken) return;
@@ -38,9 +40,6 @@ const OrderHistory = () => {
     })();
   }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
 
-  // This function opens the requested filter and closed other remaining open filters.
-  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
-
   if (user === null) return <LoginFirst />;
 
   return (
@@ -49,7 +48,6 @@ const OrderHistory = () => {
         <div className="order-history-page dashboard">
           <DashboardNav activeNavItem="Order History" />
 
-          {/* Order History */}
           <div className="dashboard__main">
             <div className="filter__top">
               <FilterOptions
@@ -78,12 +76,11 @@ const OrderHistory = () => {
               />
             </div>
 
-            {/* {orders === null && !loading && <h1>Something went wrong.</h1>} */}
-
             <OrdersTable
               orders={filterQuery || sortQuery ? customOrders : orders}
               filterQuery={filterQuery}
               loading={loading}
+              error={error}
             />
           </div>
         </div>

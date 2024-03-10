@@ -1,7 +1,7 @@
 import "swiper/css";
 import { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ProductCard from "./roductCardComponents/ProductCard";
+import ProductCard from "./productCard/ProductCard";
 import SectionHead from "./UI/SectionHeader";
 import { ProductItemTypes } from "../utils/user-types";
 import ProductCardSkeleton from "../skeletons/ProductCardSkeleton";

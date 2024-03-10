@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { CartProductProps } from "../../utils/user-types";
 
 const OrderedItemsTable = ({ items }: { items: CartProductProps[] }) => {
@@ -30,4 +31,4 @@ const OrderedItemsTable = ({ items }: { items: CartProductProps[] }) => {
   );
 };
 
-export default OrderedItemsTable;
+export default memo(OrderedItemsTable);
