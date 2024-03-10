@@ -8,22 +8,29 @@ import { getCustomersApi } from "../../api/customers";
 import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
 import { AuthContext } from "../../store/AuthContext";
 import CustomersSkeleton from "../../skeletons/TableItemsSkeleton";
+import TableHeader from "../../components/TableHeader";
 
 export const sortOptions = [
   { name: "Sort by: Active", id: "active" },
   { name: "Sort by: Inactive", id: "inactive" },
   { name: "Sort by: Pending", id: "pending" },
+  { name: "Clear sorting", id: "" },
 ];
 const customerItemsWidths = ["100%", "100%", "100%", "100%", "100%"];
+const customersTableHeaderItems = ["NAME", "EMAIL", "TELEPHONE", "STATUS", ""];
 
 const Customers = () => {
-  const [selectedSort, setSelectedSort] = useState<String>("");
-  console.log("selectedSort:", selectedSort);
   const [sortOpen, setSortOpen] = useState(false);
   const [reload, setReload] = useState<boolean>(false);
-
   const {
-    state: { customers, customersLoading },
+    state: {
+      customers,
+      customersLoading,
+      customersError,
+      sortQuery,
+      sortedCustomers,
+    },
+    sortCustomers,
     dispatch,
   } = useContext(UserContext);
   const { auth } = useContext(AuthContext);
@@ -35,9 +42,12 @@ const Customers = () => {
 
     (async () => {
       await getCustomersApi(dispatch, axiosPrivate);
-      setReload(false);
+      if (reload) setReload(false);
     })();
-  }, [axiosPrivate, dispatch, reload, customers, auth.accessToken]);
+  }, [auth.accessToken, axiosPrivate, customers, dispatch, reload]);
+
+  // If there is sort query, we show sorted customers.
+  const customersArr = sortQuery ? sortedCustomers : customers;
 
   return (
     <div className="section-sm">
@@ -51,8 +61,9 @@ const Customers = () => {
                 options={sortOptions}
                 title="Sort By: Status"
                 onToggle={() => setSortOpen((prev) => !prev)}
-                onSelect={(arg: string) => setSelectedSort(arg)}
+                onSelect={(arg: string) => sortCustomers(arg)}
                 open={sortOpen}
+                query={sortQuery}
               />
             </div>
 
@@ -63,28 +74,26 @@ const Customers = () => {
                   className="reload"
                   disabled={reload && true}
                   onClick={() => setReload(true)}
-                >
-                  <ReloadIcon />
-                </button>
+                  children={<ReloadIcon />}
+                />
               </div>
 
               <div className="order-history__table">
                 <table className="table">
-                  <thead>
-                    <tr className="table__header">
-                      <th className="table__header--item">NAME</th>
-                      <th className="table__header--item">EMAIL</th>
-                      <th className="table__header--item">TELEPHONE</th>
-                      <th className="table__header--item">STATUS</th>
-                      <th className="table__header--item"></th>
-                    </tr>
-                  </thead>
+                  <TableHeader items={customersTableHeaderItems} />
                   <tbody>
-                    {customersLoading && !customers && (
-                      <CustomersSkeleton widths={customerItemsWidths} />
+                    {((customersLoading && !customers) || !customers) &&
+                      !customersError && (
+                        <CustomersSkeleton widths={customerItemsWidths} />
+                      )}
+
+                    {customersError && !customersLoading && (
+                      <tr className="table__empty">
+                        <td>{customersError}</td>
+                      </tr>
                     )}
 
-                    {customers?.map((customer) => (
+                    {customersArr?.map((customer) => (
                       <tr className="table__item" key={customer._id}>
                         <td>
                           <p>{customer.name}</p>

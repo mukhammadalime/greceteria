@@ -83,6 +83,7 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
                   onSelect={(arg: string) => onUpdateOrder(arg)}
                   open={optionsOpen}
                   defaultValue={order.status}
+                  forOrderDetails
                 />
               </div>
             </div>

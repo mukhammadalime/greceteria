@@ -17,12 +17,8 @@ export const getCustomersApi = async (
   } catch (err: any) {
     dispatch({
       type: UserActionKind.GET_CUSTOMERS_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong. ",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -42,12 +38,8 @@ export const getCustomerApi = async (
   } catch (err: any) {
     dispatch({
       type: UserActionKind.GET_CUSTOMER_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -64,13 +56,6 @@ export const getCustomersStats = async (
       payload: data.data,
     });
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.GET_CUSTOMERS_STATS_FAILURE,
-      error: err.response?.data.message,
-    });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    toast.error(err.response?.data.message || "Something went wrong.");
   }
 };

@@ -65,7 +65,7 @@ export const getAllOrders = async (
     });
   } catch (err: any) {
     dispatch({
-      type: OrderActionKind.GET_ORDERS_SUCCESS,
+      type: OrderActionKind.GET_ORDERS_FAILURE,
       error: err.response?.data.message || "Something went wrong",
     });
   }

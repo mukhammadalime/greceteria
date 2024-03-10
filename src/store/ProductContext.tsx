@@ -77,7 +77,7 @@ const ProductReducer = (
     case ProductActionKind.GET_PRODUCTS_FAILURE:
       return {
         ...state,
-        products: [],
+        products: null,
         productsLoading: false,
         error: action.error!,
       };

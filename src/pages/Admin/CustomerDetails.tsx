@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 // import WarningModal from "../../components/modals/WarningModal";
-import { OrdersTable } from "../../components/orders/OrdersTable";
+import OrdersTable from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
@@ -14,10 +14,9 @@ import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
-  console.log("warningModal:", warningModal);
   const { customerId } = useParams();
   const {
-    state: { customer, user, customerLoading },
+    state: { customer, user, customerLoading, customerError },
     dispatch,
   } = useContext(UserContext);
   const {
@@ -51,7 +50,10 @@ const CustomerDetails = () => {
           <div className="dashboard">
             <DashboardNav activeNavItem="Customers" />
 
-            {customer && !customerLoading && (
+            {((customerLoading && !customer) || !customer) &&
+              !customerError && <LoadingSpinner />}
+
+            {customer && (
               <div className="customer-details dashboard__main">
                 <div className="user__details">
                   <UserDetailsMain
@@ -84,6 +86,7 @@ const CustomerDetails = () => {
                     </div>
                   </div>
                 </div>
+
                 {user?._id !== customer?._id && (
                   <div className="customer-details__actions">
                     <button
@@ -102,7 +105,11 @@ const CustomerDetails = () => {
               </div>
             )}
 
-            {customerLoading && <LoadingSpinner />}
+            {customerError && !customerLoading && (
+              <div className="order-details__error">
+                <h1>{customerError}</h1>
+              </div>
+            )}
           </div>
         </div>
       </div>

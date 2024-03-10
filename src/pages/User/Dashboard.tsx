@@ -1,4 +1,4 @@
-import { OrdersTable } from "../../components/orders/OrdersTable";
+import OrdersTable from "../../components/orders/OrdersTable";
 import UserDetails from "../../components/dashboard/UserDetails";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import OrdersByStatus from "../../components/admin/OrdersByStatus";

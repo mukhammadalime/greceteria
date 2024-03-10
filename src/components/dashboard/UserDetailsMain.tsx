@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -10,14 +10,7 @@ const UserDetailsMain = ({
   phoneNumber,
   email,
   edit = false,
-}: {
-  edit: boolean;
-  photo: string;
-  name: string;
-  username: string;
-  phoneNumber: string;
-  email: string;
-}) => {
+}: UserDetailsMainProps) => {
   const emailRef = useRef<HTMLParagraphElement>(null);
 
   // Copy email to clipboard
@@ -49,4 +42,13 @@ const UserDetailsMain = ({
   );
 };
 
-export default UserDetailsMain;
+interface UserDetailsMainProps {
+  edit: boolean;
+  photo: string;
+  name: string;
+  username: string;
+  phoneNumber: string;
+  email: string;
+}
+
+export default memo(UserDetailsMain);

@@ -7,14 +7,13 @@ const FilterOptions = ({
   onToggle,
   open,
   defaultValue,
-}: {
-  options: { name: string; id: string }[];
-  title: string;
-  onSelect: (id: string) => void;
-  onToggle: () => void;
-  open: boolean;
-  defaultValue?: string;
-}) => {
+  query,
+  forOrderDetails,
+}: FilterOptionsProps) => {
+  // If there is query in state, we remember it and show the before set query option when the user comes back to it again.
+  defaultValue = query
+    ? options.find((i) => i.id === query)?.name
+    : defaultValue;
   const [option, setOption] = useState<string | null>(defaultValue || title);
 
   const setOptionHandler = useCallback(
@@ -25,6 +24,10 @@ const FilterOptions = ({
     },
     [onSelect, onToggle]
   );
+
+  // If there is query, we show the 'Clear' option. (not in OrderDetails page)
+  if (!forOrderDetails)
+    options = options.slice(0, query ? options.length : options.length - 1);
 
   return (
     <div className={`choose${open ? " options-open" : ""}`}>
@@ -46,5 +49,16 @@ const FilterOptions = ({
     </div>
   );
 };
+
+interface FilterOptionsProps {
+  options: { name: string; id: string }[];
+  title: string;
+  onSelect: (id: string) => void;
+  onToggle: () => void;
+  open: boolean;
+  defaultValue?: string;
+  query?: string;
+  forOrderDetails?: boolean;
+}
 
 export default FilterOptions;

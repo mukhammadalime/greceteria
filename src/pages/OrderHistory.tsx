@@ -1,4 +1,4 @@
-import { OrdersTable } from "../components/orders/OrdersTable";
+import OrdersTable from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
 import FilterOptions from "../components/UI/FilterOptions";
 import { useContext, useEffect } from "react";
@@ -56,11 +56,7 @@ const OrderHistory = () => {
                 onToggle={toggleOptionsHandler.bind(null, 0)}
                 onSelect={(id: string) => filterOrders(id)}
                 open={filtersOpen[0]}
-                defaultValue={
-                  filterQuery
-                    ? orderPriceOptions.find((i) => i.id === filterQuery)?.name
-                    : "Select Price"
-                }
+                query={filterQuery}
               />
               <FilterOptions
                 options={orderSortOptions}
@@ -68,11 +64,7 @@ const OrderHistory = () => {
                 onToggle={toggleOptionsHandler.bind(null, 1)}
                 onSelect={(id: string) => sortOrders(id)}
                 open={filtersOpen[1]}
-                defaultValue={
-                  sortQuery
-                    ? orderSortOptions.find((i) => i.id === sortQuery)?.name
-                    : "Sort By Status"
-                }
+                query={sortQuery}
               />
             </div>
 

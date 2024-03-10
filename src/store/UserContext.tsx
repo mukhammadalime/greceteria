@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import { CustomersStatsTypes, User } from "../utils/user-types";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "./AuthContext";
+import { makeUniqueArray } from "../utils/helperFunctions";
 
 interface UserInitialStateTypes {
   user: User | null;
@@ -12,10 +13,14 @@ interface UserInitialStateTypes {
   updateMeLoading: boolean;
   error: string | null;
   customer: User | null;
+  customerLoading: boolean;
+  customerError: string | null;
   customers: User[] | null;
   customersLoading: boolean;
-  customerLoading: boolean;
+  customersError: string | null;
   customersStats: CustomersStatsTypes;
+  sortedCustomers: User[] | null;
+  sortQuery: string;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -84,23 +89,29 @@ const INITIAL_STATE: UserInitialStateTypes = {
   error: null,
   customers: null,
   customersLoading: false,
+  customersError: null,
   customer: null,
   customerLoading: false,
+  customerError: null,
   customersStats: {
     total: 0,
     new: 0,
     thisMonth: 0,
   },
+  sortedCustomers: null,
+  sortQuery: "",
 };
 
 interface UserContextTypes {
   state: UserInitialStateTypes;
   dispatch: React.Dispatch<UserAction>;
+  sortCustomers: (arg: string) => void;
 }
 
 export const UserContext = createContext<UserContextTypes>({
   state: INITIAL_STATE,
   dispatch: () => {},
+  sortCustomers: () => {},
 });
 
 const UserReducer = (
@@ -243,39 +254,51 @@ const UserReducer = (
 
     ///// ADMIN
     case UserActionKind.GET_CUSTOMERS_START:
-      return { ...state, customersLoading: true, error: null };
+      return { ...state, customersLoading: true, customersError: null };
     case UserActionKind.GET_CUSTOMERS_SUCCESS:
       return {
         ...state,
         customers: action.payload as User[],
         customersLoading: false,
-        error: null,
+        customersError: null,
       };
     case UserActionKind.GET_CUSTOMERS_FAILURE:
-      return { ...state, customersLoading: false, error: action.error! };
+      return {
+        ...state,
+        customersLoading: false,
+        customersError: action.error!,
+        customers: null,
+      };
 
     case UserActionKind.GET_CUSTOMERS_STATS_START:
-      return { ...state, error: null };
+      return state;
     case UserActionKind.GET_CUSTOMERS_STATS_SUCCESS:
       return {
         ...state,
         customersStats: action.payload as CustomersStatsTypes,
-        error: null,
       };
-    case UserActionKind.GET_CUSTOMERS_STATS_FAILURE:
-      return { ...state, error: action.error! };
 
     case UserActionKind.GET_CUSTOMER_START:
-      return { ...state, customerLoading: true, error: null };
+      return {
+        ...state,
+        customerLoading: true,
+        customerError: null,
+        customer: null,
+      };
     case UserActionKind.GET_CUSTOMER_SUCCESS:
       return {
         ...state,
         customer: action.payload as User,
         customerLoading: false,
-        error: null,
+        customerError: null,
       };
     case UserActionKind.GET_CUSTOMER_FAILURE:
-      return { ...state, customerLoading: false, error: action.error! };
+      return {
+        ...state,
+        customerLoading: false,
+        customerError: action.error!,
+        customer: null,
+      };
 
     default:
       return state;
@@ -317,9 +340,23 @@ export const UserContextProvider = ({
     };
   }, [auth.accessToken, axiosPrivate]);
 
+  const sortCustomers = (status: string) => {
+    if (!state.customers) return;
+    const sorted = state.customers.filter((i) => i.status === status);
+
+    if (status === "") state.sortedCustomers = [];
+    else if (state.sortQuery && sorted.length === 0)
+      state.sortedCustomers = JSON.parse(JSON.stringify(state.sortedCustomers));
+    else
+      state.sortedCustomers = makeUniqueArray([...sorted, ...state.customers]);
+
+    state.sortQuery = status;
+  };
+
   const values = {
     state,
     dispatch,
+    sortCustomers,
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;

@@ -2,39 +2,18 @@ import { Link } from "react-router-dom";
 import { OrderProps } from "../../utils/user-types";
 import OrderItem from "./OrderItem";
 import TableItemSkeleton from "../../skeletons/TableItemsSkeleton";
-import { useMemo } from "react";
+import TableHeader from "../TableHeader";
 
-const OrdersTableHeader = () => {
-  return (
-    <thead>
-      <tr className="table__header">
-        <th className="table__header--item">ORDER ID</th>
-        <th className="table__header--item">DATE</th>
-        <th className="table__header--item">TOTAL</th>
-        <th className="table__header--item">STATUS</th>
-        <th className="table__header--item"></th>
-      </tr>
-    </thead>
-  );
-};
-
+const ordersTableHeaderItems = ["ORDER ID", "DATE", "TOTAL", "STATUS", ""];
 const orderItemsWidths = ["60%", "90%", "90%", "90%", "90%"];
 
-export const OrdersTable = ({
+const OrdersTable = ({
   orders,
   recent,
   filterQuery,
   loading,
   error,
-}: {
-  orders: OrderProps[] | null;
-  recent?: boolean;
-  filterQuery?: string;
-  error: string | null;
-  loading: boolean;
-}) => {
-  const tableHeader = useMemo(() => <OrdersTableHeader />, []);
-
+}: OrdersTableProps) => {
   return (
     <div className="order-history">
       <div className="order-history__header">
@@ -44,7 +23,7 @@ export const OrdersTable = ({
 
       <div className="order-history__table">
         <table className="table">
-          {tableHeader}
+          <TableHeader items={ordersTableHeaderItems} />
 
           <tbody>
             {((loading && !orders) || !orders) && !error && (
@@ -84,3 +63,13 @@ export const OrdersTable = ({
     </div>
   );
 };
+
+interface OrdersTableProps {
+  orders: OrderProps[] | null;
+  recent?: boolean;
+  filterQuery?: string;
+  error: string | null;
+  loading: boolean;
+}
+
+export default OrdersTable;
