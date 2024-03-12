@@ -5,11 +5,14 @@ import { CategoryItemTypes } from "../../utils/user-types";
 import CategoryItem from "../../components/category/CategoryItem";
 import { UserContext } from "../../store/UserContext";
 import CategorySkeleton from "../../skeletons/CategorySkeleton";
+import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(() => false);
 
-  const { state } = useContext(CategoryContext);
+  const {
+    state: { categories, categoriesLoading, error },
+  } = useContext(CategoryContext);
   const { state: userState } = useContext(UserContext);
 
   return (
@@ -35,8 +38,7 @@ const Categories = () => {
             )}
 
             <div className="categories__main">
-              {(state.categoriesLoading && !state.categories) ||
-              !state.categories ? (
+              {categoriesLoading && !categories ? (
                 <>
                   {Array.from({ length: 12 }).map((_, i) => (
                     <CategorySkeleton key={i} />
@@ -44,7 +46,7 @@ const Categories = () => {
                 </>
               ) : (
                 <>
-                  {state.categories?.map((category: CategoryItemTypes) => (
+                  {categories?.map((category: CategoryItemTypes) => (
                     <CategoryItem
                       category={category}
                       key={category._id}
@@ -52,6 +54,17 @@ const Categories = () => {
                     />
                   ))}
                 </>
+              )}
+
+              {!categoriesLoading && categories?.length === 0 && (
+                <EmptyOrErrorContainer
+                  text="No categories found. Please create a new category to be
+                shown here."
+                />
+              )}
+
+              {error && !categoriesLoading && (
+                <EmptyOrErrorContainer error={error} />
               )}
             </div>
           </div>

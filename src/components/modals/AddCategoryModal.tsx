@@ -4,7 +4,6 @@ import ModalActions from "./ModalActions";
 import TextInput from "../UI/Inputs/TextInput";
 import { addOrUpdateCategory, deleteCategory } from "../../api/categories";
 import { CategoryContext } from "../../store/CategoryContext";
-import { toast } from "react-toastify";
 import { CategoryItemTypes } from "../../utils/user-types";
 import { ActionTypeProps } from "../../utils/types";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
@@ -18,22 +17,34 @@ const AddCategoryOverlay = ({
   closeModal,
   category,
 }: AddCategoryModalProps) => {
-  const [uploadedImage, setUploadedImage] = useState(
+  const [uploadedImage, setUploadedImage] = useState<string>(
     category?.image.imageUrl || ""
   );
   const nameRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
-
   const axiosPrivate = useAxiosPrivate();
 
-  const { state: categoryState, dispatch } = useContext(CategoryContext);
+  const {
+    state: { categories, addUpdateDeleteError, categoryLoading },
+    dispatch,
+  } = useContext(CategoryContext);
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const image = URL.createObjectURL((e.target as HTMLInputElement).files![0]);
+    const file = (e.target as HTMLInputElement).files![0];
+    if (!file) return;
+    const image = URL.createObjectURL(file);
     setUploadedImage(image);
   };
 
-  async function onAddOrDeleteOrUpdateCategory(actionType: ActionTypeProps) {
+  const onRemoveImage = () => {
+    const input = document.getElementById("image-input") as HTMLInputElement;
+    setUploadedImage("");
+    // The reason why I set input.value to empty string is that when I re-upload an image, onChange does not get triggered because onChange only gets triggered when the value in target control changes.
+    input.value = "";
+  };
+
+  async function onAddDeleteUpdateCategory(actionType: ActionTypeProps) {
+    if (!categories) return;
     const name = nameRef.current?.value;
     const image = imageRef.current?.files![0];
     const formData = new FormData();
@@ -42,12 +53,12 @@ const AddCategoryOverlay = ({
 
     switch (actionType) {
       case "add":
-        if (categoryState.categories?.find((i) => i.name === name)) {
-          toast.error(`The category (${name}) already exists.`);
+        if (name === "" && !uploadedImage) {
+          closeModal();
           return;
         }
         await addOrUpdateCategory(
-          categoryState.categories!,
+          categories,
           dispatch,
           formData,
           closeModal,
@@ -56,8 +67,14 @@ const AddCategoryOverlay = ({
         );
         break;
       case "update":
+        /// We just close the modal if the user does not change anything.
+        const sameName = name?.toLowerCase() === category?.name.toLowerCase();
+        if ((sameName && !uploadedImage.startsWith("blob")) || !uploadedImage) {
+          closeModal();
+          return;
+        }
         await addOrUpdateCategory(
-          categoryState.categories!,
+          categories,
           dispatch,
           formData,
           closeModal,
@@ -67,12 +84,7 @@ const AddCategoryOverlay = ({
         );
         break;
       case "delete":
-        await deleteCategory(
-          categoryState.categories || [],
-          dispatch,
-          category?._id,
-          axiosPrivate
-        );
+        await deleteCategory(categories, dispatch, category?._id, axiosPrivate);
         break;
 
       default:
@@ -104,39 +116,52 @@ const AddCategoryOverlay = ({
             disabled={uploadedImage ? true : false}
             onChange={onSelectFile}
             ref={imageRef}
+            id="image-input"
           />
         </div>
         {uploadedImage && (
           <div className="uploaded">
             <div className="uploaded__item">
-              <button children="Remove" onClick={() => setUploadedImage("")} />
+              <button children="Remove" onClick={onRemoveImage} />
               <img src={uploadedImage} alt="" />
             </div>
           </div>
         )}
       </div>
+      {addUpdateDeleteError && !categoryLoading && (
+        <div className="error-container">
+          <h1>{addUpdateDeleteError}</h1>
+        </div>
+      )}
       <ModalActions
         text={text}
         closeModal={closeModal}
-        onUpdateHandler={onAddOrDeleteOrUpdateCategory.bind(null, "update")}
-        onAddHandler={onAddOrDeleteOrUpdateCategory.bind(null, "add")}
-        onDeleteHandler={onAddOrDeleteOrUpdateCategory.bind(null, "delete")}
-        loading={categoryState.categoryLoading}
+        onUpdateHandler={onAddDeleteUpdateCategory.bind(null, "update")}
+        onAddHandler={onAddDeleteUpdateCategory.bind(null, "add")}
+        onDeleteHandler={onAddDeleteUpdateCategory.bind(null, "delete")}
+        loading={categoryLoading}
       />
     </div>
   );
 };
 
 const AddCategoryModal = (props: AddCategoryModalProps) => {
+  const { clearError } = useContext(CategoryContext);
+
+  const closeModalHandler = () => {
+    props.closeModal();
+    clearError();
+  };
+
   return (
     <>
       {ReactDOM.createPortal(
-        <Backdrop closeModal={props.closeModal} />,
+        <Backdrop closeModal={closeModalHandler} />,
         document.getElementById("backdrop-root")!
       )}
       {ReactDOM.createPortal(
         <AddCategoryOverlay
-          closeModal={props.closeModal}
+          closeModal={closeModalHandler}
           text={props.text}
           category={props.category}
         />,

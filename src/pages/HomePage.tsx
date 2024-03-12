@@ -28,7 +28,12 @@ const HomePage = () => {
     <>
       <Banner />
 
-      <CategoriesCarousel categories={categories} loading={categoriesLoading} />
+      {categories && (
+        <CategoriesCarousel
+          categories={categories}
+          loading={categoriesLoading}
+        />
+      )}
 
       <CustomProductsCarousel
         text="Top Rated Products"

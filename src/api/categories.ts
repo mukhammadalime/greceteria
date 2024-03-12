@@ -18,18 +18,14 @@ export const getCategoriesApi = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.GET_CATEGORIES_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
 export const getCategory = async (
   dispatch: React.Dispatch<CategoryAction>,
-  id: string | undefined
+  id: string
 ): Promise<void> => {
   try {
     dispatch({ type: CategoryActionKind.GET_CATEGORY_START });
@@ -42,12 +38,8 @@ export const getCategory = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.GET_CATEGORY_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -58,7 +50,7 @@ export const addOrUpdateCategory = async (
   closeModal: () => void,
   type: string,
   axiosPrivate: AxiosInstance,
-  id?: string | undefined
+  id?: string
 ): Promise<void> => {
   try {
     dispatch({ type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_START });
@@ -93,12 +85,8 @@ export const addOrUpdateCategory = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -119,11 +107,7 @@ export const deleteCategory = async (
   } catch (err: any) {
     dispatch({
       type: CategoryActionKind.DELETE_CATEGORY_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };

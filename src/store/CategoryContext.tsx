@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useLayoutEffect, useReducer } from "react";
 import { CategoryItemTypes } from "../utils/user-types";
 import { getCategoriesApi } from "../api/categories";
 
@@ -8,6 +8,7 @@ interface CategoryInitialStateTypes {
   category: CategoryItemTypes | null;
   categoryLoading: boolean;
   error: string | null;
+  addUpdateDeleteError: string | null;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -27,6 +28,8 @@ export enum CategoryActionKind {
   DELETE_CATEGORY_START = "DELETE_CATEGORY_START",
   DELETE_CATEGORY_SUCCESS = "DELETE_CATEGORY_SUCCESS",
   DELETE_CATEGORY_FAILURE = "DELETE_CATEGORY_FAILURE",
+
+  ADD_MANUAL_ERROR = "ADD_MANUAL_ERROR",
 }
 
 // An interface for our actions
@@ -42,16 +45,19 @@ const INITIAL_STATE: CategoryInitialStateTypes = {
   categoriesLoading: false,
   categoryLoading: false,
   error: null,
+  addUpdateDeleteError: null,
 };
 
 interface CategoryContextTypes {
   state: CategoryInitialStateTypes;
   dispatch: React.Dispatch<CategoryAction>;
+  clearError: () => void;
 }
 
 export const CategoryContext = createContext<CategoryContextTypes>({
   state: INITIAL_STATE,
   dispatch: () => {},
+  clearError: () => {},
 });
 
 const CategoryReducer = (
@@ -71,7 +77,7 @@ const CategoryReducer = (
     case CategoryActionKind.GET_CATEGORIES_FAILURE:
       return {
         ...state,
-        categories: [],
+        categories: null,
         categoriesLoading: false,
         error: action.error!,
       };
@@ -89,28 +95,36 @@ const CategoryReducer = (
       return { ...state, categoryLoading: false, error: action.error! };
 
     case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_START:
-      return { ...state, categoryLoading: true, error: null };
+      return { ...state, categoryLoading: true, addUpdateDeleteError: null };
     case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_SUCCESS:
       return {
         ...state,
         categories: action.payload as CategoryItemTypes[],
         categoryLoading: false,
-        error: null,
+        addUpdateDeleteError: null,
       };
     case CategoryActionKind.ADD_OR_UPDATE_CATEGORY_FAILURE:
-      return { ...state, categoryLoading: false, error: action.error! };
+      return {
+        ...state,
+        categoryLoading: false,
+        addUpdateDeleteError: action.error!,
+      };
 
     case CategoryActionKind.DELETE_CATEGORY_START:
-      return { ...state, categoryLoading: true, error: null };
+      return { ...state, categoryLoading: true, addUpdateDeleteError: null };
     case CategoryActionKind.DELETE_CATEGORY_SUCCESS:
       return {
         ...state,
         categories: action.payload as CategoryItemTypes[],
         categoryLoading: false,
-        error: null,
+        addUpdateDeleteError: null,
       };
     case CategoryActionKind.DELETE_CATEGORY_FAILURE:
-      return { ...state, categoryLoading: false, error: action.error! };
+      return {
+        ...state,
+        categoryLoading: false,
+        addUpdateDeleteError: action.error!,
+      };
 
     default:
       return state;
@@ -126,8 +140,12 @@ export const CategoryContextProvider = ({
 
   const getCategories = async () => await getCategoriesApi(dispatch);
 
+  const clearError = () => {
+    state.addUpdateDeleteError = null;
+  };
+
   // Fetch categories on every refresh to keep the data up to date with the database.
-  useEffect(() => {
+  useLayoutEffect(() => {
     getCategories();
   }, []);
 
@@ -135,6 +153,7 @@ export const CategoryContextProvider = ({
     state,
     dispatch,
     getCategories,
+    clearError,
   };
 
   return (

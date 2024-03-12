@@ -1,23 +1,23 @@
-import { useContext, useEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CategoryContext } from "../../store/CategoryContext";
 import { getCategory } from "../../api/categories";
 import ProductCard from "../../components/productcard/ProductCard";
 import { ProductItemTypes } from "../../utils/user-types";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
 
 const ProductsByCategory = () => {
   const { categoryId } = useParams();
   const {
-    state: { category, categoryLoading },
+    state: { category, categoryLoading, error },
     dispatch,
   } = useContext(CategoryContext);
 
-  useEffect(() => {
-    const getProductsByCategory = async () => {
-      await getCategory(dispatch, categoryId);
-    };
-    getProductsByCategory();
+  useLayoutEffect(() => {
+    (async () => {
+      await getCategory(dispatch, categoryId!);
+    })();
   }, [dispatch, categoryId]);
 
   if (categoryLoading) return <LoadingSpinner />;
@@ -28,17 +28,21 @@ const ProductsByCategory = () => {
         <h2>{category?.name}</h2>
       </div>
       <div className="container">
-        {category?.products?.length! > 0 ? (
+        {category?.products?.length! > 0 && (
           <div className="all-products">
             {category?.products?.map((item: ProductItemTypes) => (
               <ProductCard item={item} key={item._id} />
             ))}
           </div>
-        ) : (
-          <div className="no-products-found">
-            <h2>Sorry, we couldn't find any products.</h2>
-          </div>
         )}
+
+        {category?.products?.length! === 0 && (
+          <EmptyOrErrorContainer
+            text={`Sorry, we couldn't find any products.`}
+          />
+        )}
+
+        {error && <EmptyOrErrorContainer error={error} />}
       </div>
     </div>
   );

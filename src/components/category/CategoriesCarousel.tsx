@@ -11,7 +11,7 @@ const CategoriesCarousel = ({
   categories,
   loading,
 }: {
-  categories: CategoryItemTypes[] | null;
+  categories: CategoryItemTypes[];
   loading: boolean;
 }) => {
   return (
@@ -39,7 +39,7 @@ const CategoriesCarousel = ({
             }}
             draggable={true}
           >
-            {(loading && !categories) || !categories ? (
+            {loading && !categories ? (
               <>
                 {Array.from({ length: 8 }).map((_, i) => (
                   <SwiperSlide key={i}>
@@ -49,7 +49,7 @@ const CategoriesCarousel = ({
               </>
             ) : (
               <>
-                {categories?.map((category: CategoryItemTypes) => (
+                {categories.map((category: CategoryItemTypes) => (
                   <SwiperSlide key={category._id}>
                     <CategoryItem category={category} key={category._id} />
                   </SwiperSlide>

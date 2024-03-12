@@ -171,7 +171,7 @@ const OrderReducer = (
     /////////////////////////////////////////////////////////////////////////////
 
     case OrderActionKind.GET_ORDER_START:
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: true, error: null, order: null };
     case OrderActionKind.GET_ORDER_SUCCESS:
       return {
         ...state,

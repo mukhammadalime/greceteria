@@ -12,7 +12,7 @@ const ModalActions = ({
         className="button button-md"
         onClick={text.includes("Edit") ? onUpdateHandler : onAddHandler}
         disabled={loading && true}
-        children="Save Product"
+        children={text}
       />
       <div>
         {text.includes("Edit") && (
