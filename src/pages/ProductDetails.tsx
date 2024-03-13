@@ -1,26 +1,39 @@
 import ProductInfo from "../components/product-details/ProductInfo";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
-import { getProductApi } from "../api/products";
+import { getCustomProducts, getProduct } from "../api/products";
 import ProductReviewsAndShipping from "../components/product-details/ProductReviewsAndShipping";
+import EmptyOrErrorContainer from "../components/EmptyOrErrorContainer";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
-  const params = useParams();
+  const { productId } = useParams();
 
   const {
-    state: { productLoading, product, products },
+    state: {
+      productLoading,
+      product,
+      customProducts,
+      customProductsLoading,
+      productErr,
+    },
     dispatch,
   } = useContext(ProductContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const categoryId = localStorage.getItem("categoryId")!;
     (async () => {
-      await getProductApi(dispatch, params.productId);
+      await getProduct(dispatch, productId!, navigate);
     })();
-  }, [dispatch, params.productId, navigate]);
+    if (categoryId) {
+      (async () => {
+        await getCustomProducts(dispatch, `?category=${categoryId}`);
+      })();
+    }
+  }, [dispatch, productId, navigate]);
 
   return (
     <>
@@ -29,9 +42,15 @@ const ProductDetails = () => {
         <>
           <ProductInfo product={product!} />
           <ProductReviewsAndShipping />
-          <CustomProductsCarousel text="Related Products" products={products} />
+          <CustomProductsCarousel
+            text="Related Products"
+            products={customProducts?.filter((i) => i._id !== productId) || []}
+            loading={customProductsLoading}
+          />
         </>
       )}
+
+      {productErr && <EmptyOrErrorContainer error={productErr} />}
     </>
   );
 };

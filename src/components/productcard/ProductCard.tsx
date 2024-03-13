@@ -5,11 +5,7 @@ import ProductCardImg from "./ProductCardImg";
 const ProductCard = ({ item }: { item: ProductItemTypes }) => {
   return (
     <div className="product-item">
-      <ProductCardImg
-        image={item.images[0].imageUrl}
-        inStock={item.inStock}
-        id={item._id}
-      />
+      <ProductCardImg item={item} />
       <ProductCardDetails
         name={item.name}
         price={item.price}

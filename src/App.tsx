@@ -21,12 +21,10 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useLayoutEffect } from "react";
 import { ToastContainer, Flip } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
-import { ProductContext } from "./store/ProductContext";
-import { getProductsApi } from "./api/products";
 import ProductsByCategory from "./pages/User/ProductsByCategory";
 import useRefreshToken from "./hooks/auth/useRefresh";
 import { UserActionKind, UserContext } from "./store/UserContext";
@@ -38,7 +36,6 @@ function App() {
     state: { user },
     dispatch: userDispatch,
   } = useContext(UserContext);
-  const { dispatch } = useContext(ProductContext);
   const { auth } = useContext(AuthContext);
 
   const refresh = useRefreshToken();
@@ -52,15 +49,12 @@ function App() {
     }
   }, [refresh, userDispatch]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const persist = JSON.parse(localStorage.getItem("persist")!);
     if (!auth?.accessToken && persist) verifyRefreshToken();
 
-    (async () => {
-      await getProductsApi(dispatch);
-    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth?.accessToken, dispatch]);
+  }, [auth?.accessToken]);
 
   return (
     <>

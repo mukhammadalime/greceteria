@@ -57,7 +57,7 @@ const ReviewsList = ({ show }: { show: boolean }) => {
     setValue(4.5);
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <LoadingSpinner minHeight={false} />;
 
   const hasReview = reviews?.find((i) => i.user._id === userState.user?._id);
   const hasBought = userState.user?.orderedProducts.find(

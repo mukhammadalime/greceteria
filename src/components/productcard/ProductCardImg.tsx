@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   addToCompare,
   addToWishlist,
@@ -13,12 +13,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import CompareIconFull from "../UI/Icons/CompareIconFull";
+import { ProductItemTypes } from "../../utils/user-types";
 
-const ProductCardImg = (props: {
-  image: string;
-  inStock: boolean;
-  id: string;
-}) => {
+const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
+  const navigate = useNavigate();
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const [compareUpdated, setCompareUpdated] = useState<boolean>(false);
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
@@ -29,19 +27,24 @@ const ProductCardImg = (props: {
   const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
-    const added = user?.wishlisted.includes(props.id);
+    const added = user?.wishlisted.includes(item._id);
     setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, props.id, axiosPrivate);
-    else await addToWishlist(dispatch, props.id, axiosPrivate);
+    if (added) await removeFromWishlist(dispatch, item._id, axiosPrivate);
+    else await addToWishlist(dispatch, item._id, axiosPrivate);
     setWishlistUpdated(false);
   };
 
   const onToggleCompare = async () => {
-    const added = user?.compare.includes(props.id);
+    const added = user?.compare.includes(item._id);
     setCompareUpdated(true);
-    if (added) await removeFromCompare(dispatch, props.id, axiosPrivate);
-    else await addToCompare(dispatch, props.id, axiosPrivate);
+    if (added) await removeFromCompare(dispatch, item._id, axiosPrivate);
+    else await addToCompare(dispatch, item._id, axiosPrivate);
     setCompareUpdated(false);
+  };
+
+  const onNavigateHandler = () => {
+    localStorage.setItem("categoryId", item.category._id);
+    navigate(`/products/${item._id}`);
   };
 
   return (
@@ -49,25 +52,29 @@ const ProductCardImg = (props: {
       {showQuickView && (
         <QuickViewModal
           closeModal={() => setShowQuickView(false)}
-          productId={props.id}
+          item={item}
         />
       )}
       <div className="product-item__img-box">
-        <Link to={`/products/${props.id}`}>
-          <img className="product-item__img" src={props.image} alt="" />
-          {!props.inStock && (
+        <div onClick={onNavigateHandler}>
+          <img
+            className="product-item__img"
+            src={item.images[0].imageUrl}
+            alt=""
+          />
+          {!item.inStock && (
             <div className="stock-out product-item__stock-out">
               Out of stock
             </div>
           )}
-        </Link>
+        </div>
         <div className="favs">
           <button
             className="favs-item"
             onClick={onToggleWishlist}
             disabled={wishlistUpdated && true}
           >
-            {user?.wishlisted.includes(props.id) ? (
+            {user?.wishlisted.includes(item._id) ? (
               <FavoriteIcon className="full-icon" />
             ) : (
               <FavoriteBorderIcon />
@@ -83,7 +90,7 @@ const ProductCardImg = (props: {
             onClick={onToggleCompare}
             disabled={compareUpdated && true}
           >
-            {user?.compare.includes(props.id) ? (
+            {user?.compare.includes(item._id) ? (
               <CompareIconFull />
             ) : (
               <CompareIcon />

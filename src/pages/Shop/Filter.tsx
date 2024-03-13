@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { memo, useContext, useState } from "react";
 import CloseIcon from "../../components/UI/Icons/CloseIcon";
 import FilterOptions from "../../components/UI/FilterOptions";
 import AddProductModal from "../../components/modals/AddProductModal";
@@ -127,4 +127,4 @@ const Filter = () => {
   );
 };
 
-export default Filter;
+export default memo(Filter);

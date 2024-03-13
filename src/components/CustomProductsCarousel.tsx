@@ -10,11 +10,9 @@ const CustomProductsCarousel = ({
   text,
   products,
   loading,
-}: {
-  text: string;
-  products: ProductItemTypes[] | null;
-  loading?: boolean;
-}) => {
+}: CustomProductsCarouselProps) => {
+  if ((!products || products.length === 0) && !loading) return <></>;
+
   return (
     <div className="section-sm">
       <div className="container custom-products-box">
@@ -50,5 +48,11 @@ const CustomProductsCarousel = ({
     </div>
   );
 };
+
+interface CustomProductsCarouselProps {
+  text: string;
+  products: ProductItemTypes[] | null;
+  loading?: boolean;
+}
 
 export default CustomProductsCarousel;

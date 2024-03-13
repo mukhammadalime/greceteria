@@ -1,22 +1,24 @@
 import Filter from "./Filter";
 import ProductCard from "../../components/productcard/ProductCard";
-import { useContext, useEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { ProductContext } from "../../store/ProductContext";
 import ProductCardSkeleton from "../../skeletons/ProductCardSkeleton";
+import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
+import { getProducts } from "../../api/products";
 
 const Shop = () => {
   const {
-    state: { products, productsLoading },
+    state: { products, productsLoading, productsErr },
+    dispatch,
   } = useContext(ProductContext);
 
-  useEffect(() => {
-    if (products) {
-      for (let i = products.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [products[i], products[j]] = [products[j], products[i]];
-      }
+  useLayoutEffect(() => {
+    if (!products) {
+      (async () => {
+        await getProducts(dispatch, "?limit=20");
+      })();
     }
-  }, [products]);
+  }, [dispatch, products]);
 
   return (
     <>
@@ -24,25 +26,24 @@ const Shop = () => {
 
       <div className="section-md shop">
         <div className="container">
-          <div>
-            <div>
-              <div className="all-products">
-                {productsLoading ? (
-                  <>
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <ProductCardSkeleton key={i} />
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    {products?.map((item) => (
-                      <ProductCard key={item._id} item={item} />
-                    ))}
-                  </>
-                )}
-              </div>
-            </div>
+          <div className="all-products">
+            {productsLoading && !products && (
+              <>
+                {Array.from({ length: 20 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </>
+            )}
+
+            {products?.map((item) => (
+              <ProductCard key={item._id} item={item} />
+            ))}
           </div>
+
+          {productsErr && <EmptyOrErrorContainer error={productsErr} />}
+          {products?.length === 0 && (
+            <EmptyOrErrorContainer text="Sorry, there are no products yet." />
+          )}
         </div>
       </div>
     </>

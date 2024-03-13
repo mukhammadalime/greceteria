@@ -11,9 +11,10 @@ const CategoriesCarousel = ({
   categories,
   loading,
 }: {
-  categories: CategoryItemTypes[];
+  categories: CategoryItemTypes[] | null;
   loading: boolean;
 }) => {
+  if ((!categories || categories.length === 0) && !loading) return <></>;
   return (
     <div className="category">
       <div className="container">
@@ -49,7 +50,7 @@ const CategoriesCarousel = ({
               </>
             ) : (
               <>
-                {categories.map((category: CategoryItemTypes) => (
+                {categories?.map((category: CategoryItemTypes) => (
                   <SwiperSlide key={category._id}>
                     <CategoryItem category={category} key={category._id} />
                   </SwiperSlide>

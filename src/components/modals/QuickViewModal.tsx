@@ -3,7 +3,6 @@ import Counter from "../UI/Counter";
 import CloseIcon from "../UI/Icons/CloseIcon";
 import RatingsStars from "../UI/RatingsStars";
 import { ProductItemTypes } from "../../utils/user-types";
-import { ProductContext } from "../../store/ProductContext";
 import { useContext, useState } from "react";
 import { addToWishlist, removeFromWishlist } from "../../api/user";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -15,30 +14,23 @@ const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
 };
 
-const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
-  const {
-    state: { products },
-  } = useContext(ProductContext);
+const QuickViewOverlay = ({ closeModal, item }: QuickViewModalProps) => {
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
-  const product = products?.find(
-    (i) => i._id === productId
-  ) as ProductItemTypes;
-
   /// Calculate discountPercent
   let discountPercent: number = 0;
-  if (product.discountedPrice > 0) {
-    const priceGap = product.price - product.discountedPrice;
-    discountPercent = priceGap / (product.price / 100);
+  if (item.discountedPrice > 0) {
+    const priceGap = item.price - item.discountedPrice;
+    discountPercent = priceGap / (item.price / 100);
   }
 
   const onToggleWishlist = async () => {
-    const added = state.user?.wishlisted.includes(productId);
+    const added = state.user?.wishlisted.includes(item._id);
     setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, productId, axiosPrivate);
-    else await addToWishlist(dispatch, productId, axiosPrivate);
+    if (added) await removeFromWishlist(dispatch, item._id, axiosPrivate);
+    else await addToWishlist(dispatch, item._id, axiosPrivate);
     setWishlistUpdated(false);
   };
 
@@ -50,45 +42,43 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
       <div className="product__info">
         <div className="product__info--item">
           <div className="product__info--title">
-            {product.brandName ? `[${product.brandName}]` : ""} {product.name}{" "}
-            {product.features ? product.features : ""}{" "}
-            {product.weight ? product.weight : ""}
+            {item.brandName ? `[${item.brandName}]` : ""} {item.name}{" "}
+            {item.features ? item.features : ""}{" "}
+            {item.weight ? item.weight : ""}
           </div>
           <div className="product__info--ratings">
             <RatingsStars
-              ratingsAverage={product.ratingsAverage}
-              ratingsQuantity={product.ratingsQuantity}
+              ratingsAverage={item.ratingsAverage}
+              ratingsQuantity={item.ratingsQuantity}
             />
           </div>
           <div className="product__info--price">
-            {product.discountedPrice > 0 && (
+            {item.discountedPrice > 0 && (
               <>
-                <del className="discounted-price">
-                  ${product.price.toFixed(2)}
-                </del>
-                <h2>${product.discountedPrice.toFixed(2)}</h2>
+                <del className="discounted-price">${item.price.toFixed(2)}</del>
+                <h2>${item.discountedPrice.toFixed(2)}</h2>
                 <span className="sale-off">
                   {Math.round(discountPercent)}% Off
                 </span>
               </>
             )}
 
-            {!product.discountedPrice && <h2>${product.price}</h2>}
+            {!item.discountedPrice && <h2>${item.price}</h2>}
           </div>
         </div>
         <div className="product__info--item">
-          <p className="description">{product.description}</p>
+          <p className="description">{item.description}</p>
         </div>
         <div className="product__info--item">
           <div className="product__info--action">
-            <Counter id={productId} inStock={product.inStock} />
+            <Counter id={item._id} inStock={item.inStock} />
 
             <button
               className="wishlist"
               onClick={onToggleWishlist}
               disabled={wishlistUpdated && true}
             >
-              {state.user?.wishlisted.includes(productId) ? (
+              {state.user?.wishlisted.includes(item._id) ? (
                 <FavoriteIcon className="full-icon" />
               ) : (
                 <FavoriteBorderIcon />
@@ -99,10 +89,10 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
         <div className="product__info--item">
           <div className="product__info--last">
             <h5>
-              Category: <span>{product.category.name}</span>
+              Category: <span>{item.category.name}</span>
             </h5>
             <h5>
-              Store: <span>{product.store}</span>
+              Store: <span>{item.store}</span>
             </h5>
           </div>
         </div>
@@ -111,7 +101,7 @@ const QuickViewOverlay = ({ closeModal, productId }: QuickViewModalProps) => {
   );
 };
 
-const QuickViewModal = ({ closeModal, productId }: QuickViewModalProps) => {
+const QuickViewModal = ({ closeModal, item }: QuickViewModalProps) => {
   return (
     <>
       {ReactDOM.createPortal(
@@ -119,7 +109,7 @@ const QuickViewModal = ({ closeModal, productId }: QuickViewModalProps) => {
         document.getElementById("backdrop-root")!
       )}
       {ReactDOM.createPortal(
-        <QuickViewOverlay closeModal={closeModal} productId={productId} />,
+        <QuickViewOverlay closeModal={closeModal} item={item} />,
         document.getElementById("modal-root")!
       )}
     </>
@@ -128,7 +118,7 @@ const QuickViewModal = ({ closeModal, productId }: QuickViewModalProps) => {
 
 interface QuickViewModalProps {
   closeModal: () => void;
-  productId: string;
+  item: ProductItemTypes;
 }
 
 export default QuickViewModal;

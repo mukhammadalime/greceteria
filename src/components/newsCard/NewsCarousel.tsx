@@ -13,6 +13,8 @@ const NewsCarousel = ({
   news: NewsItemTypes[] | null;
   loading: boolean;
 }) => {
+  if ((!news || news.length === 0) && !loading) return <></>;
+
   return (
     <div className="section-sm">
       <div className="container">

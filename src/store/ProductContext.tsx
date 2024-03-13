@@ -4,11 +4,15 @@ import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[] | null;
+  customProducts: ProductItemTypes[] | null;
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
+  customProductsLoading: boolean;
   addUpdateDeleteLoading: boolean;
-  error: string | null;
+  addUpdateDeleteErr: string | null;
+  productsErr: string | null;
+  productErr: string | null;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -16,6 +20,10 @@ export enum ProductActionKind {
   GET_PRODUCTS_START = "GET_PRODUCTS_START",
   GET_PRODUCTS_SUCCESS = "GET_PRODUCTS_SUCCESS",
   GET_PRODUCTS_FAILURE = "GET_PRODUCTS_FAILURE",
+
+  GET_CUSTOM_PRODUCTS_START = "GET_CUSTOM_PRODUCTS_START",
+  GET_CUSTOM_PRODUCTS_SUCCESS = "GET_CUSTOM_PRODUCTS_SUCCESS",
+  GET_CUSTOM_PRODUCTS_FAILURE = "GET_CUSTOM_PRODUCTS_FAILURE",
 
   GET_PRODUCT_START = "GET_PRODUCT_START",
   GET_PRODUCT_SUCCESS = "GET_PRODUCT_SUCCESS",
@@ -43,11 +51,15 @@ export interface ProductAction {
 
 const INITIAL_STATE: ProductsInitialStateTypes = {
   products: null,
+  customProducts: null,
   product: null,
   productsLoading: false,
   productLoading: false,
+  customProductsLoading: false,
   addUpdateDeleteLoading: false,
-  error: null,
+  addUpdateDeleteErr: null,
+  productsErr: null,
+  productErr: null,
 };
 
 export interface ProductContextTypes {
@@ -66,58 +78,81 @@ const ProductReducer = (
 ): typeof INITIAL_STATE => {
   switch (action.type) {
     case ProductActionKind.GET_PRODUCTS_START:
-      return { ...state, productsLoading: true, error: null };
+      return { ...state, productsLoading: true, productsErr: null };
     case ProductActionKind.GET_PRODUCTS_SUCCESS:
       return {
         ...state,
         products: action.payload as ProductItemTypes[],
         productsLoading: false,
-        error: null,
+        productsErr: null,
       };
     case ProductActionKind.GET_PRODUCTS_FAILURE:
       return {
         ...state,
         products: null,
         productsLoading: false,
-        error: action.error!,
+        productsErr: action.error!,
+      };
+
+    case ProductActionKind.GET_CUSTOM_PRODUCTS_START:
+      return { ...state, customProductsLoading: true, customProducts: null };
+    case ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        customProducts: action.payload as ProductItemTypes[],
+        customProductsLoading: false,
+      };
+    case ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE:
+      return {
+        ...state,
+        customProducts: null,
+        customProductsLoading: false,
       };
 
     case ProductActionKind.GET_PRODUCT_START:
-      return { ...state, productLoading: true, error: null };
+      return { ...state, productLoading: true, productErr: null };
     case ProductActionKind.GET_PRODUCT_SUCCESS:
       return {
         ...state,
         product: action.payload as ProductItemTypes,
         productLoading: false,
-        error: null,
+        productErr: null,
       };
     case ProductActionKind.GET_PRODUCT_FAILURE:
       return {
         ...state,
         product: null,
         productLoading: false,
-        error: action.error!,
+        productErr: action.error!,
       };
 
     case ProductActionKind.ADD_PRODUCT_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteErr: null,
+      };
     case ProductActionKind.ADD_PRODUCT_SUCCESS:
       const allProducts = state.products ? state.products : [];
       return {
         ...state,
         products: [...allProducts, action.payload as ProductItemTypes],
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteErr: null,
       };
     case ProductActionKind.ADD_PRODUCT_FAILURE:
       return {
         ...state,
         addUpdateDeleteLoading: false,
-        error: action.error!,
+        addUpdateDeleteErr: action.error!,
       };
 
     case ProductActionKind.UPDATE_PRODUCT_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteErr: null,
+      };
     case ProductActionKind.UPDATE_PRODUCT_SUCCESS:
       const product = action.payload as ProductItemTypes;
       const updatedProducts = returnUpdatedState(
@@ -130,17 +165,21 @@ const ProductReducer = (
         products: updatedProducts,
         product: { ...product, reviewsCount: state.product?.reviewsCount! },
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteErr: null,
       };
     case ProductActionKind.UPDATE_PRODUCT_FAILURE:
       return {
         ...state,
         addUpdateDeleteLoading: false,
-        error: action.error!,
+        addUpdateDeleteErr: action.error!,
       };
 
     case ProductActionKind.DELETE_PRODUCT_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteErr: null,
+      };
     case ProductActionKind.DELETE_PRODUCT_SUCCESS:
       const updatedProduts = state.products
         ? state.products.filter((i) => i._id !== state.product?._id)
@@ -149,13 +188,13 @@ const ProductReducer = (
         ...state,
         products: updatedProduts,
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteErr: null,
       };
     case ProductActionKind.DELETE_PRODUCT_FAILURE:
       return {
         ...state,
         addUpdateDeleteLoading: false,
-        error: action.error!,
+        addUpdateDeleteErr: action.error!,
       };
 
     default:

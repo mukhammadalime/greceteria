@@ -2,18 +2,19 @@ import Banner from "../layout/banner/Banner";
 import CategoriesCarousel from "../components/category/CategoriesCarousel";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import NewsCarousel from "../components/newsCard/NewsCarousel";
-import { useContext } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { ProductContext } from "../store/ProductContext";
 import { CategoryContext } from "../store/CategoryContext";
 import { NewsContext } from "../store/NewsContext";
 import { UserContext } from "../store/UserContext";
+import { getCustomProducts } from "../api/products";
 
 const HomePage = () => {
   const { state } = useContext(UserContext);
-  console.log("state:", state);
 
   const {
-    state: { products, productsLoading },
+    state: { customProducts, customProductsLoading },
+    dispatch,
   } = useContext(ProductContext);
 
   const {
@@ -24,21 +25,23 @@ const HomePage = () => {
     state: { news, newsLoading },
   } = useContext(NewsContext);
 
+  useLayoutEffect(() => {
+    (async () => {
+      await getCustomProducts(dispatch, "?sort=-ratingsAverage&limit=9");
+    })();
+  }, [dispatch]);
+
   return (
     <>
       <Banner />
 
-      {categories && (
-        <CategoriesCarousel
-          categories={categories}
-          loading={categoriesLoading}
-        />
-      )}
+      <CategoriesCarousel categories={categories} loading={categoriesLoading} />
 
       <CustomProductsCarousel
         text="Top Rated Products"
-        products={products}
-        loading={productsLoading}
+        products={customProducts}
+        loading={customProductsLoading}
+        // error={customProductsErr}
       />
       {state.user !== null && (
         <NewsCarousel news={news} loading={newsLoading} />

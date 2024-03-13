@@ -31,7 +31,16 @@ const ProductsByCategory = () => {
         {category?.products?.length! > 0 && (
           <div className="all-products">
             {category?.products?.map((item: ProductItemTypes) => (
-              <ProductCard item={item} key={item._id} />
+              <ProductCard
+                item={{
+                  ...item,
+                  category: {
+                    _id: category._id,
+                    name: category.name,
+                  },
+                }}
+                key={item._id}
+              />
             ))}
           </div>
         )}

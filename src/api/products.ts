@@ -4,13 +4,15 @@ import { ImageItemTypes, ProductItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
 import axios from "./axios";
 import { AxiosInstance } from "axios";
+import { NavigateFunction } from "react-router-dom";
 
-export const getProductsApi = async (
-  dispatch: React.Dispatch<ProductAction>
+export const getProducts = async (
+  dispatch: React.Dispatch<ProductAction>,
+  query?: string
 ): Promise<void> => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCTS_START });
-    const { data } = await axios("/products?limit=20");
+    const { data } = await axios(`/products${query}`);
 
     dispatch({
       type: ProductActionKind.GET_PRODUCTS_SUCCESS,
@@ -19,18 +21,32 @@ export const getProductsApi = async (
   } catch (err: any) {
     dispatch({
       type: ProductActionKind.GET_PRODUCTS_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
-export const getProductApi = async (
+export const getCustomProducts = async (
   dispatch: React.Dispatch<ProductAction>,
-  id: string | undefined
+  query?: string
+): Promise<void> => {
+  try {
+    dispatch({ type: ProductActionKind.GET_CUSTOM_PRODUCTS_START });
+    const { data } = await axios(`/products${query}`);
+
+    dispatch({
+      type: ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS,
+      payload: data.data,
+    });
+  } catch (err: any) {
+    dispatch({ type: ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE });
+  }
+};
+
+export const getProduct = async (
+  dispatch: React.Dispatch<ProductAction>,
+  id: string,
+  navigate: NavigateFunction
 ): Promise<void> => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCT_START });
@@ -41,14 +57,15 @@ export const getProductApi = async (
       payload: data.data,
     });
   } catch (err: any) {
+    if (err.response?.status === 404) {
+      navigate("/shop");
+      toast.error("No product found with that id.");
+      return;
+    }
     dispatch({
       type: ProductActionKind.GET_PRODUCT_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -81,12 +98,8 @@ export const addProduct = async (
   } catch (err: any) {
     dispatch({
       type: ProductActionKind.ADD_PRODUCT_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -132,12 +145,8 @@ export const updateProduct = async (
   } catch (err: any) {
     dispatch({
       type: ProductActionKind.UPDATE_PRODUCT_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 
@@ -154,16 +163,12 @@ export const deleteProduct = async (
 
     dispatch({ type: ProductActionKind.DELETE_PRODUCT_SUCCESS });
     closeModal();
-    toast.success("Product has been successfully deleted.");
+    toast.success("Product has been deleted");
     navigate("/shop");
   } catch (err: any) {
     dispatch({
       type: ProductActionKind.DELETE_PRODUCT_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
