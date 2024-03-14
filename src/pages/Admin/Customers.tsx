@@ -64,6 +64,7 @@ const Customers = () => {
                 onSelect={(arg: string) => sortCustomers(arg)}
                 open={sortOpen}
                 query={sortQuery}
+                clearOption
               />
             </div>
 

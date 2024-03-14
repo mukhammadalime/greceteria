@@ -13,7 +13,7 @@ import { UserContext } from "../../store/UserContext";
 const Cart = () => {
   const { state } = useContext(UserContext);
   const {
-    state: { cart, cartLoading },
+    state: { cart, cartLoading, error },
   } = useContext(CartContext);
 
   if (state.user === null) return <LoginFirst />;
@@ -40,9 +40,15 @@ const Cart = () => {
               )}
             </div>
 
-            {!cart && (
+            {!cart && !error && (
               <div className="cart__content--empty">
                 <h2>No products yet</h2>
+              </div>
+            )}
+
+            {error && (
+              <div className="cart__content--error">
+                <h2>{error}</h2>
               </div>
             )}
 

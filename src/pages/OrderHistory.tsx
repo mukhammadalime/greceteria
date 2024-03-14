@@ -57,6 +57,7 @@ const OrderHistory = () => {
                 onSelect={(id: string) => filterOrders(id)}
                 open={filtersOpen[0]}
                 query={filterQuery}
+                clearOption
               />
               <FilterOptions
                 options={orderSortOptions}
@@ -65,6 +66,7 @@ const OrderHistory = () => {
                 onSelect={(id: string) => sortOrders(id)}
                 open={filtersOpen[1]}
                 query={sortQuery}
+                clearOption
               />
             </div>
 

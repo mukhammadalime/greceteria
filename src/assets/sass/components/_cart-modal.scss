@@ -47,9 +47,18 @@
     align-items: center;
 
     h2 {
+      text-align: center;
       text-transform: capitalize;
       font-weight: 500;
       font-size: 2rem;
+    }
+  }
+
+  &__error {
+    @extend .cart-modal__empty;
+    h2 {
+      text-transform: unset;
+      color: red;
     }
   }
 

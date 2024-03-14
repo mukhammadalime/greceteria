@@ -19,7 +19,6 @@ export enum CartActionKind {
 
   UPDATE_CART_START = "UPDATE_CART_START",
   UPDATE_CART_SUCCESS = "UPDATE_CART_SUCCESS",
-  UPDATE_CART_FAILURE = "UPDATE_CART_FAILURE",
 }
 
 // An interface for our actions
@@ -52,7 +51,7 @@ const CartReducer = (
 ): typeof INITIAL_STATE => {
   switch (action.type) {
     case CartActionKind.GET_CART_START:
-      return { ...state, cartLoading: true, error: null };
+      return { ...state, cartLoading: true, error: null, cart: null };
     case CartActionKind.GET_CART_SUCCESS:
       return {
         ...state,
@@ -69,16 +68,13 @@ const CartReducer = (
       };
 
     case CartActionKind.UPDATE_CART_START:
-      return { ...state, updateLoading: true, error: null };
+      return { ...state, updateLoading: true };
     case CartActionKind.UPDATE_CART_SUCCESS:
       return {
         ...state,
         cart: action.payload as CartProps,
         updateLoading: false,
-        error: null,
       };
-    case CartActionKind.UPDATE_CART_FAILURE:
-      return { ...state, updateLoading: false, error: action.error! };
 
     default:
       return state;

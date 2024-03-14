@@ -17,10 +17,8 @@ export const getCartApi = async (
   } catch (err: any) {
     dispatch({
       type: CartActionKind.GET_CART_FAILURE,
-      error: err.response?.data.message,
+      error: err.response?.data.message || "Something went wrong.",
     });
-    const error = err.response?.data.message || "Something went wrong.";
-    toast.error(error);
   }
 };
 

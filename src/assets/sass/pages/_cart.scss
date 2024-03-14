@@ -76,7 +76,10 @@
       minmax(27rem, 1fr) minmax(8rem, 1fr) minmax(13rem, 1fr)
       minmax(8rem, 1fr) 2.4rem;
     align-items: center;
-    border-bottom: 1px solid #e5e5e5;
+
+    &:not(:first-child) {
+      border-top: 1px solid #e5e5e5;
+    }
 
     &--product {
       display: flex;
@@ -160,6 +163,7 @@
     justify-content: flex-end;
     align-items: center;
     padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e5e5;
 
     a {
       text-decoration: none;
@@ -175,6 +179,13 @@
     h2 {
       font-weight: 500;
       font-size: 1.6rem;
+    }
+  }
+
+  &__content--error {
+    @extend .cart__content--empty;
+    h2 {
+      color: red;
     }
   }
 }

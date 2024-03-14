@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AddressList from "../../components/addresses/AddressList";
 import AdditionalInfo from "../../components/checkout/AdditionalInfo";
 import AddAddressModal from "../../components/modals/AddAddressModal";
@@ -9,8 +9,10 @@ import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { loadStripe } from "@stripe/stripe-js";
 import PaypalModal from "../../components/modals/PaypalModal";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const [addressModalShown, setAddressModalShown] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
@@ -27,6 +29,10 @@ const Checkout = () => {
   const {
     state: { cart, cartLoading },
   } = useContext(CartContext);
+
+  useEffect(() => {
+    if (!cart) navigate("/my-cart");
+  }, [cart, navigate]);
 
   const placeOrder = async () => {
     if (!cart) return;

@@ -17,4 +17,4 @@ Tasks To Complete
 - fix product cards, news, categories responsive 
 - add no items text in pages
 - add error text in pages
--  
+- make and unmake me manager in both frontend and backend

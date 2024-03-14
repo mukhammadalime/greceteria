@@ -115,8 +115,10 @@ const Filter = () => {
               </div>
               <div className="filter__result">
                 <p>
-                  {products?.length}
-                  <span>Products found.</span>
+                  {products?.length || 0}
+                  <span>
+                    Product{products && products.length > 1 ? "s" : ""} found.
+                  </span>
                 </p>
               </div>
             </div>

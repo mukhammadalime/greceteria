@@ -13,8 +13,9 @@ const Backdrop = (props: { closeModal: () => void }) => {
 const CartOverLay = (props: { closeModal: () => void }) => {
   const navigate = useNavigate();
   const {
-    state: { cart },
+    state: { cart, error },
   } = useContext(CartContext);
+  console.log("error:", error);
 
   const onNavigate = (link: string): void => {
     props.closeModal();
@@ -41,9 +42,15 @@ const CartOverLay = (props: { closeModal: () => void }) => {
             />
           ))}
 
-        {!cart && (
+        {!cart && !error && (
           <div className="cart-modal__empty">
             <h2>Cart Is Empty</h2>
+          </div>
+        )}
+
+        {error && (
+          <div className="cart-modal__error">
+            <h2>{error}</h2>
           </div>
         )}
       </div>

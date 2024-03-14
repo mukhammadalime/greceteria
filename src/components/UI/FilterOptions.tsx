@@ -8,7 +8,7 @@ const FilterOptions = ({
   open,
   defaultValue,
   query,
-  forOrderDetails,
+  clearOption,
 }: FilterOptionsProps) => {
   // If there is query in state, we remember it and show the before set query option when the user comes back to it again.
   defaultValue = query
@@ -25,8 +25,8 @@ const FilterOptions = ({
     [onSelect, onToggle]
   );
 
-  // If there is query, we show the 'Clear' option. (not in OrderDetails page)
-  if (!forOrderDetails)
+  // If there is query, we show the 'Clear' option (in OrderHistory and Customers pages).
+  if (clearOption)
     options = options.slice(0, query ? options.length : options.length - 1);
 
   return (
@@ -58,7 +58,7 @@ interface FilterOptionsProps {
   open: boolean;
   defaultValue?: string;
   query?: string;
-  forOrderDetails?: boolean;
+  clearOption?: boolean;
 }
 
 export default FilterOptions;
