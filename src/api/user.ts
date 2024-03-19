@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 import { UserAction, UserActionKind } from "../store/UserContext";
 import { toast } from "react-toastify";
 import PhoneNumber, { CountryCode } from "libphonenumber-js";
-import { AddressItemTypes, ProductItemTypes, User } from "../utils/user-types";
+import { AddressItemTypes, User } from "../utils/user-types";
 import { ActionTypeProps } from "../utils/types";
 
 export const getCountryCode = async (
@@ -170,18 +170,29 @@ export const addDeleteUpdateAddress = async (
   }
 };
 
-export const getCompareWishlistProducts = async (
-  products: ProductItemTypes[],
-  items: string[],
-  setProducts: (items: ProductItemTypes[]) => void
+export const getCompareOrWishlist = async (
+  dispatch: React.Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
+  type: "compare" | "wishlisted"
 ): Promise<void> => {
-  let itemsList: ProductItemTypes[] = [];
-  for (let i = 0; i < items.length!; i++) {
-    itemsList.push(
-      products?.find((item) => item._id === items[i]) as ProductItemTypes
-    );
+  try {
+    dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
+    const { data } = await axiosPrivate.get(`/users/me/${type}`);
+
+    dispatch({
+      type: UserActionKind.GET_COMPARE_OR_WISHLIST_SUCCESS,
+      payload: {
+        data: data.data,
+        type,
+      },
+    });
+  } catch (err: any) {
+    console.log("err:", err);
+    dispatch({
+      type: UserActionKind.GET_COMPARE_OR_WISHLIST_FAILURE,
+      error: err.response?.data.message || "Something went wrong.",
+    });
   }
-  setProducts(itemsList);
 };
 
 export const addToWishlist = async (
@@ -191,7 +202,7 @@ export const addToWishlist = async (
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: id });
-    await axiosPrivate.patch("/users/wishlist/add", {
+    await axiosPrivate.patch("/users/me/wishlisted/add", {
       productId: id,
     });
   } catch (err: any) {
@@ -208,7 +219,7 @@ export const removeFromWishlist = async (
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: id });
-    await axiosPrivate.patch("/users/wishlist/remove", {
+    await axiosPrivate.patch("/users/me/wishlisted/remove", {
       productId: id,
     });
   } catch (err: any) {
@@ -225,7 +236,7 @@ export const addToCompare = async (
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_COMPARE, payload: id });
-    await axiosPrivate.patch("/users/compare/add", {
+    await axiosPrivate.patch("/users/me/compare/add", {
       productId: id,
     });
   } catch (err: any) {
@@ -242,7 +253,7 @@ export const removeFromCompare = async (
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE, payload: id });
-    await axiosPrivate.patch("/users/compare/remove", {
+    await axiosPrivate.patch("/users/me/compare/remove", {
       productId: id,
     });
   } catch (err: any) {

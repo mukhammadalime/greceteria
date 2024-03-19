@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { CustomersStatsTypes, User } from "../utils/user-types";
+import {
+  CustomersStatsTypes,
+  ProductItemTypes,
+  User,
+} from "../utils/user-types";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "./AuthContext";
 import { makeUniqueArray } from "../utils/helperFunctions";
@@ -21,6 +25,10 @@ interface UserInitialStateTypes {
   customersStats: CustomersStatsTypes;
   sortedCustomers: User[] | null;
   sortQuery: string;
+  compare: ProductItemTypes[] | null;
+  wishlisted: ProductItemTypes[] | null;
+  compareWishlistLoading: boolean;
+  compareWishlistError: string | null;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -46,6 +54,10 @@ export enum UserActionKind {
   RESET_PASSWORD_FAILURE = "RESET_PASSWORD_FAILURE",
 
   /////////////////////////////////////////
+  GET_COMPARE_OR_WISHLIST_START = "GET_COMPARE_OR_WISHLIST_START",
+  GET_COMPARE_OR_WISHLIST_SUCCESS = "GET_COMPARE_OR_WISHLIST_SUCCESS",
+  GET_COMPARE_OR_WISHLIST_FAILURE = "GET_COMPARE_OR_WISHLIST_FAILURE",
+
   ADD_TO_COMPARE = "ADD_TO_COMPARE",
   ADD_TO_COMPARE_FAIL = "ADD_TO_COMPARE_FAIL",
 
@@ -75,8 +87,18 @@ export enum UserActionKind {
 // An interface for our actions
 export interface UserAction {
   type: UserActionKind;
-  payload?: User | User[] | CustomersStatsTypes | string;
+  payload?:
+    | User
+    | User[]
+    | CustomersStatsTypes
+    | CompareOrWishlistPayloadProps
+    | string;
   error?: string;
+}
+
+interface CompareOrWishlistPayloadProps {
+  data: ProductItemTypes[];
+  type: "compare" | "wishlisted";
 }
 
 const INITIAL_STATE: UserInitialStateTypes = {
@@ -100,6 +122,10 @@ const INITIAL_STATE: UserInitialStateTypes = {
   },
   sortedCustomers: null,
   sortQuery: "",
+  compare: null,
+  wishlisted: null,
+  compareWishlistLoading: false,
+  compareWishlistError: null,
 };
 
 interface UserContextTypes {
@@ -153,6 +179,28 @@ const UserReducer = (
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    //// GET WISHLIST OR COMPARE
+    case UserActionKind.GET_COMPARE_OR_WISHLIST_START:
+      return {
+        ...state,
+        compareWishlistLoading: true,
+        compareWishlistError: null,
+      };
+    case UserActionKind.GET_COMPARE_OR_WISHLIST_SUCCESS:
+      const payload = action.payload as CompareOrWishlistPayloadProps;
+      return {
+        ...state,
+        compareWishlistLoading: false,
+        compareWishlistError: null,
+        [`${payload.type}`]: payload.data,
+      };
+    case UserActionKind.GET_COMPARE_OR_WISHLIST_FAILURE:
+      return {
+        ...state,
+        compareWishlistLoading: false,
+        compareWishlistError: action.error!,
+      };
+
     //// ADD TO WISHLIST
     case UserActionKind.ADD_TO_WISHLIST:
       state.user?.wishlisted.push(action.payload as string);
@@ -165,12 +213,16 @@ const UserReducer = (
 
     //// REMOVE FROM WISHLIST
     case UserActionKind.REMOVE_FROM_WISHLIST:
-      const wishlisted = state.user?.wishlisted.filter(
+      const wishlistedIds = state.user?.wishlisted.filter(
         (i) => i !== action.payload
+      ) as string[];
+      const wishlisted = state.wishlisted?.filter(
+        (i) => i._id !== action.payload
       );
       return {
         ...state,
-        user: { ...state.user, wishlisted: wishlisted as string[] } as User,
+        user: { ...state.user, wishlisted: wishlistedIds } as User,
+        wishlisted: wishlisted || null,
       };
     //// REMOVE FROM WISHLIST FAIL
     case UserActionKind.REMOVE_FROM_WISHLIST_FAIL:
@@ -185,17 +237,20 @@ const UserReducer = (
       state.user?.compare.push(action.payload as string);
       return { ...state, user: state.user };
 
-    //// ADD TO COMPARE FAIL
     case UserActionKind.ADD_TO_COMPARE_FAIL:
       state.user?.compare.pop();
       return { ...state, user: state.user };
 
     //// REMOVE FROM COMPARE
     case UserActionKind.REMOVE_FROM_COMPARE:
-      const compare = state.user?.compare.filter((i) => i !== action.payload);
+      const compareIds = state.user?.compare.filter(
+        (i) => i !== action.payload
+      ) as string[];
+      const compare = state.compare?.filter((i) => i._id !== action.payload);
       return {
         ...state,
-        user: { ...state.user, compare: compare as string[] } as User,
+        user: { ...state.user, compare: compareIds } as User,
+        compare: compare || null,
       };
     //// REMOVE FROM COMPARE FAIL
     case UserActionKind.REMOVE_FROM_COMPARE_FAIL:

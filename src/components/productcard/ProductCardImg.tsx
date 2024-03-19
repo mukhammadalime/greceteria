@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   addToCompare,
   addToWishlist,
@@ -16,7 +16,6 @@ import CompareIconFull from "../UI/Icons/CompareIconFull";
 import { ProductItemTypes } from "../../utils/user-types";
 
 const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
-  const navigate = useNavigate();
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const [compareUpdated, setCompareUpdated] = useState<boolean>(false);
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
@@ -42,11 +41,6 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
     setCompareUpdated(false);
   };
 
-  const onNavigateHandler = () => {
-    localStorage.setItem("categoryId", item.category._id);
-    navigate(`/products/${item._id}`);
-  };
-
   return (
     <>
       {showQuickView && (
@@ -56,7 +50,7 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
         />
       )}
       <div className="product-item__img-box">
-        <div onClick={onNavigateHandler}>
+        <Link to={`/products/${item._id}`}>
           <img
             className="product-item__img"
             src={item.images[0].imageUrl}
@@ -67,7 +61,7 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
               Out of stock
             </div>
           )}
-        </div>
+        </Link>
         <div className="favs">
           <button
             className="favs-item"

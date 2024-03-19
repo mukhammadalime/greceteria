@@ -28,15 +28,11 @@ const OrderHistory = () => {
 
   useEffect(() => {
     if (!auth.accessToken) return;
-    /// FOR USER
+
     (async () => {
-      user?.role === "user" &&
-        (await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt"));
-    })();
-    /// FOR ADMIN
-    (async () => {
-      user?.role !== "user" &&
-        (await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt"));
+      if (user?.role === "user")
+        await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt");
+      else await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt");
     })();
   }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
 

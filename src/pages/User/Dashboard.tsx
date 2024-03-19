@@ -25,19 +25,13 @@ const Dashboard = () => {
   useEffect(() => {
     if (!auth.accessToken) return;
 
-    if (user?.role !== "user") {
-      (async () => {
+    (async () => {
+      if (user?.role !== "user") {
         await getRecentOrdersForAdmin(dispatch, axiosPrivate);
-      })();
-      (async () => {
         await getOrdersStats(dispatch, axiosPrivate);
-      })();
-    }
-
-    if (user?.role === "user")
-      (async () => {
+      } else
         await getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
-      })();
+    })();
   }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
 
   if (user === null) return <LoginFirst />;

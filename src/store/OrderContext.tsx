@@ -8,13 +8,13 @@ import { makeUniqueArray, returnUpdatedState } from "../utils/helperFunctions";
 
 interface OrderInitialStateTypes {
   orders: OrderProps[] | null;
+  loading: boolean;
   customOrders: OrderProps[] | null;
   recentOrders: OrderProps[] | null;
+  recentLoading: boolean;
   userOrders: OrderProps[] | null;
   order: OrderProps | null;
-  loading: boolean;
   updateLoading: boolean;
-  recentLoading: boolean;
   error: string | null;
   filterQuery: string;
   sortQuery: string;

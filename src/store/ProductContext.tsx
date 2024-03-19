@@ -4,7 +4,9 @@ import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[] | null;
-  customProducts: ProductItemTypes[] | null;
+  relatedProducts: ProductItemTypes[] | null;
+  topProducts: ProductItemTypes[] | null;
+  saleProducts: ProductItemTypes[] | null;
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
@@ -45,21 +47,31 @@ export enum ProductActionKind {
 // An interface for our actions
 export interface ProductAction {
   type: ProductActionKind;
-  payload?: ProductItemTypes[] | ProductItemTypes;
+  payload?: ProductItemTypes[] | ProductItemTypes | CustomProductsPayloadProps;
   error?: string;
+}
+
+interface CustomProductsPayloadProps {
+  products?: ProductItemTypes[];
+  type: "relatedProducts" | "topProducts" | "saleProducts";
 }
 
 const INITIAL_STATE: ProductsInitialStateTypes = {
   products: null,
-  customProducts: null,
-  product: null,
   productsLoading: false,
-  productLoading: false,
+  productsErr: null,
+  ////////////////////////////////
+  relatedProducts: null,
+  topProducts: null,
+  saleProducts: null,
   customProductsLoading: false,
+  ////////////////////////////////
+  product: null,
+  productLoading: false,
+  productErr: null,
+  ////////////////////////////////
   addUpdateDeleteLoading: false,
   addUpdateDeleteErr: null,
-  productsErr: null,
-  productErr: null,
 };
 
 export interface ProductContextTypes {
@@ -95,17 +107,24 @@ const ProductReducer = (
       };
 
     case ProductActionKind.GET_CUSTOM_PRODUCTS_START:
-      return { ...state, customProductsLoading: true, customProducts: null };
-    case ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS:
+      const payload1 = action.payload as CustomProductsPayloadProps;
       return {
         ...state,
-        customProducts: action.payload as ProductItemTypes[],
+        customProductsLoading: true,
+        [`${payload1.type}`]: null,
+      };
+    case ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS:
+      const payload2 = action.payload as CustomProductsPayloadProps;
+      return {
+        ...state,
+        [`${payload2.type}`]: payload2.products,
         customProductsLoading: false,
       };
     case ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE:
+      const payload3 = action.payload as CustomProductsPayloadProps;
       return {
         ...state,
-        customProducts: null,
+        [`${payload3.type}`]: null,
         customProductsLoading: false,
       };
 

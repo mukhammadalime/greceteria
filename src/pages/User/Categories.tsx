@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddCategoryModal from "../../components/modals/AddCategoryModal";
 import { CategoryContext } from "../../store/CategoryContext";
 import { CategoryItemTypes } from "../../utils/user-types";
@@ -6,14 +6,22 @@ import CategoryItem from "../../components/category/CategoryItem";
 import { UserContext } from "../../store/UserContext";
 import CategorySkeleton from "../../skeletons/CategorySkeleton";
 import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
+import { getCategoriesApi } from "../../api/categories";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(() => false);
 
   const {
     state: { categories, categoriesLoading, error },
+    dispatch,
   } = useContext(CategoryContext);
   const { state: userState } = useContext(UserContext);
+
+  useEffect(() => {
+    (async () => {
+      await getCategoriesApi(dispatch);
+    })();
+  }, [dispatch]);
 
   return (
     <>

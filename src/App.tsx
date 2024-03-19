@@ -30,10 +30,11 @@ import useRefreshToken from "./hooks/auth/useRefresh";
 import { UserActionKind, UserContext } from "./store/UserContext";
 import { AuthContext } from "./store/AuthContext";
 import AuthPages from "./pages/Auth/AuthPages";
+import LoadingSpinner from "./components/UI/LoadingSpinner";
 
 function App() {
   const {
-    state: { user },
+    state: { user, loading },
     dispatch: userDispatch,
   } = useContext(UserContext);
   const { auth } = useContext(AuthContext);
@@ -52,9 +53,10 @@ function App() {
   useLayoutEffect(() => {
     const persist = JSON.parse(localStorage.getItem("persist")!);
     if (!auth?.accessToken && persist) verifyRefreshToken();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.accessToken]);
+
+  if (!auth.accessToken && loading) return <LoadingSpinner />;
 
   return (
     <>

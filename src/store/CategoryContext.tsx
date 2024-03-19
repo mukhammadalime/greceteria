@@ -1,6 +1,5 @@
-import { createContext, useLayoutEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { CategoryItemTypes } from "../utils/user-types";
-import { getCategoriesApi } from "../api/categories";
 
 interface CategoryInitialStateTypes {
   categories: CategoryItemTypes[] | null;
@@ -138,21 +137,11 @@ export const CategoryContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(CategoryReducer, INITIAL_STATE);
 
-  const getCategories = async () => await getCategoriesApi(dispatch);
-
-  const clearError = () => {
-    state.addUpdateDeleteError = null;
-  };
-
-  // Fetch categories on every refresh to keep the data up to date with the database.
-  useLayoutEffect(() => {
-    getCategories();
-  }, []);
+  const clearError = () => (state.addUpdateDeleteError = null);
 
   const values = {
     state,
     dispatch,
-    getCategories,
     clearError,
   };
 

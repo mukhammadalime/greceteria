@@ -1,43 +1,47 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import CompareItem from "../../components/compare/CompareItem";
 import LoginFirst from "../../components/LoginFirst";
 import { UserContext } from "../../store/UserContext";
-import { getCompareWishlistProducts } from "../../api/user";
-import { ProductItemTypes } from "../../utils/user-types";
-import { ProductContext } from "../../store/ProductContext";
+import { getCompareOrWishlist } from "../../api/user";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const Compare = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [compare, setCompare] = useState<ProductItemTypes[] | []>([]);
+  const axiosPrivate = useAxiosPrivate();
   const {
-    state: { user },
+    state: { user, compareWishlistLoading, compare, compareWishlistError },
+    dispatch,
   } = useContext(UserContext);
-  const {
-    state: { products },
-  } = useContext(ProductContext);
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!products || !user) return;
-    getCompareWishlistProducts(products, user.compare, setCompare);
-    setTimeout(() => setLoading(false), 200);
-  }, [products, user]);
+    if (!auth.accessToken) return;
+    (async () => {
+      await getCompareOrWishlist(dispatch, axiosPrivate, "compare");
+    })();
+  }, [auth.accessToken, axiosPrivate, dispatch]);
 
   if (user === null) return <LoginFirst />;
-  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="section-lg">
       <div className="container">
         <ul className="compare-list">
-          {compare.length > 0 &&
-            compare.map(
-              (item): ReactNode => <CompareItem key={item._id} product={item} />
-            )}
+          {((compareWishlistLoading && !compare) || !compare) &&
+            !compareWishlistError && <LoadingSpinner />}
 
-          {/* TODO: */}
-          {compare.length === 0 && (
-            <h1>Add products to compare to be visible here.</h1>
+          {compare?.map((item) => (
+            <CompareItem key={item._id} product={item} />
+          ))}
+
+          {compareWishlistError && !compareWishlistLoading && (
+            <EmptyOrErrorContainer error={compareWishlistError} />
+          )}
+
+          {!compareWishlistLoading && compare?.length === 0 && (
+            <EmptyOrErrorContainer text="No products found. Add products to your compare list." />
           )}
         </ul>
       </div>

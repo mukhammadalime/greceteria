@@ -30,12 +30,6 @@ const OrdersTable = ({
               <TableItemSkeleton widths={orderItemsWidths} />
             )}
 
-            {error && !loading && (
-              <tr className="table__empty">
-                <td>{error}</td>
-              </tr>
-            )}
-
             {orders?.map((order: OrderProps) => (
               <OrderItem
                 key={order._id}
@@ -55,6 +49,12 @@ const OrdersTable = ({
                     ? "No orders with that filter."
                     : `No${recent ? " recent" : ""} orders yet.`}
                 </td>
+              </tr>
+            )}
+
+            {error && !loading && (
+              <tr className="table__empty">
+                <td>{error}</td>
               </tr>
             )}
           </tbody>

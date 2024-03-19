@@ -1,33 +1,36 @@
 import WishlistedItem from "../../components/WishlistedItem";
 // import CustomProductsCarousel from "../../components/CustomProductsCarousel";
 import SectionHead from "../../components/UI/SectionHeader";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import LoginFirst from "../../components/LoginFirst";
 import { UserContext } from "../../store/UserContext";
-import { getCompareWishlistProducts } from "../../api/user";
-import { ProductItemTypes } from "../../utils/user-types";
-import { ProductContext } from "../../store/ProductContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import { AuthContext } from "../../store/AuthContext";
+import { getCompareOrWishlist } from "../../api/user";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Wishlist = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [wishlist, setWishlist] = useState<ProductItemTypes[] | []>([]);
-
+  const axiosPrivate = useAxiosPrivate();
   const {
-    state: { user },
+    state: { user, compareWishlistLoading, wishlisted, compareWishlistError },
+    dispatch,
   } = useContext(UserContext);
-  const {
-    state: { products },
-  } = useContext(ProductContext);
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!products || !user) return;
-    getCompareWishlistProducts(products, user.wishlisted, setWishlist);
-    setTimeout(() => setLoading(false), 200);
-  }, [products, user]);
+    if (!auth.accessToken) return;
+    (async () => {
+      await getCompareOrWishlist(dispatch, axiosPrivate, "wishlisted");
+    })();
+  }, [auth.accessToken, axiosPrivate, dispatch]);
 
   if (user === null) return <LoginFirst />;
-  if (loading) return <LoadingSpinner />;
+  if (
+    ((compareWishlistLoading && !wishlisted) || !wishlisted) &&
+    !compareWishlistError
+  ) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <>
@@ -37,23 +40,30 @@ const Wishlist = () => {
           <div className="wishlist__table">
             <table>
               <tbody>
-                {wishlist.length > 0 &&
-                  wishlist.map((item) => (
-                    <WishlistedItem
-                      key={item._id}
-                      id={item._id}
-                      name={item.name}
-                      inStock={item.inStock}
-                      image={item.images[0].imageUrl}
-                      price={item.price}
-                      discountedPrice={item.discountedPrice}
-                    />
-                  ))}
+                {wishlisted?.map((item) => (
+                  <WishlistedItem
+                    key={item._id}
+                    id={item._id}
+                    name={item.name}
+                    inStock={item.inStock}
+                    image={item.images[0].imageUrl}
+                    price={item.price}
+                    discountedPrice={item.discountedPrice}
+                  />
+                ))}
 
-                {wishlist.length === 0 && (
+                {wishlisted?.length === 0 && (
                   <tr className="wishlist-cart__empty">
                     <td>
                       <h2>No wishlisted products yet</h2>
+                    </td>
+                  </tr>
+                )}
+
+                {compareWishlistError && (
+                  <tr className="wishlist-cart__error">
+                    <td>
+                      <h2>{compareWishlistError}</h2>
                     </td>
                   </tr>
                 )}

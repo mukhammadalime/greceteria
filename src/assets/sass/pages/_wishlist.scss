@@ -32,6 +32,15 @@
       }
     }
   }
+  .wishlist-cart__error {
+    @extend .wishlist-cart__empty;
+
+    td {
+      h2 {
+        color: red;
+      }
+    }
+  }
 
   &__item {
     display: grid;

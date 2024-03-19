@@ -15,7 +15,6 @@ const CartOverLay = (props: { closeModal: () => void }) => {
   const {
     state: { cart, error },
   } = useContext(CartContext);
-  console.log("error:", error);
 
   const onNavigate = (link: string): void => {
     props.closeModal();

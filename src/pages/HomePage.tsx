@@ -8,17 +8,19 @@ import { CategoryContext } from "../store/CategoryContext";
 import { NewsContext } from "../store/NewsContext";
 import { UserContext } from "../store/UserContext";
 import { getCustomProducts } from "../api/products";
+import { getCategoriesApi } from "../api/categories";
 
 const HomePage = () => {
   const { state } = useContext(UserContext);
 
   const {
-    state: { customProducts, customProductsLoading },
+    state: { topProducts, customProductsLoading, saleProducts },
     dispatch,
   } = useContext(ProductContext);
 
   const {
     state: { categories, categoriesLoading },
+    dispatch: categoryDispatch,
   } = useContext(CategoryContext);
 
   const {
@@ -26,10 +28,15 @@ const HomePage = () => {
   } = useContext(NewsContext);
 
   useLayoutEffect(() => {
+    const topQuery = "?sort=-ratingsAverage&limit=9";
+    const saleQuery = "?discountedPrice[gt]=0";
+
     (async () => {
-      await getCustomProducts(dispatch, "?sort=-ratingsAverage&limit=9");
+      await getCategoriesApi(categoryDispatch);
+      await getCustomProducts(dispatch, "topProducts", topQuery);
+      await getCustomProducts(dispatch, "saleProducts", saleQuery);
     })();
-  }, [dispatch]);
+  }, [dispatch, categoryDispatch]);
 
   return (
     <>
@@ -39,9 +46,14 @@ const HomePage = () => {
 
       <CustomProductsCarousel
         text="Top Rated Products"
-        products={customProducts}
+        products={topProducts}
         loading={customProductsLoading}
-        // error={customProductsErr}
+      />
+
+      <CustomProductsCarousel
+        text="Sale Products"
+        products={saleProducts}
+        loading={customProductsLoading}
       />
       {state.user !== null && (
         <NewsCarousel news={news} loading={newsLoading} />

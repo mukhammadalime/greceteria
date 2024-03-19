@@ -1,7 +1,7 @@
 import ProductInfo from "../components/product-details/ProductInfo";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import { ProductContext } from "../store/ProductContext";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { getCustomProducts, getProduct } from "../api/products";
@@ -16,7 +16,7 @@ const ProductDetails = () => {
     state: {
       productLoading,
       product,
-      customProducts,
+      relatedProducts,
       customProductsLoading,
       productErr,
     },
@@ -24,27 +24,32 @@ const ProductDetails = () => {
   } = useContext(ProductContext);
 
   useLayoutEffect(() => {
-    const categoryId = localStorage.getItem("categoryId")!;
     (async () => {
       await getProduct(dispatch, productId!, navigate);
     })();
-    if (categoryId) {
+  }, [dispatch, productId, navigate]);
+
+  useEffect(() => {
+    if (product && product._id === productId) {
+      const query = `?category=${product.category._id}`;
       (async () => {
-        await getCustomProducts(dispatch, `?category=${categoryId}`);
+        await getCustomProducts(dispatch, "relatedProducts", query);
       })();
     }
-  }, [dispatch, productId, navigate]);
+  }, [dispatch, product, productId]);
 
   return (
     <>
       {productLoading && <LoadingSpinner />}
       {!productLoading && product && (
         <>
-          <ProductInfo product={product!} />
+          <ProductInfo product={product} />
           <ProductReviewsAndShipping />
           <CustomProductsCarousel
             text="Related Products"
-            products={customProducts?.filter((i) => i._id !== productId) || []}
+            products={
+              relatedProducts?.filter((i) => i._id !== productId) || null
+            }
             loading={customProductsLoading}
           />
         </>

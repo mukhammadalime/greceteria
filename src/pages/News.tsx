@@ -19,10 +19,8 @@ const NewsPage = () => {
       <div className="container">
         <NewsFilter />
 
-        {newsLoading && <div className="all-news"></div>}
-
         <div className="all-news">
-          {(newsLoading || !news) && (
+          {newsLoading && !news && (
             <>
               {Array.from({ length: 20 }).map((_, i) => (
                 <NewsItemSkeleton key={i} />

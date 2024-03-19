@@ -31,9 +31,9 @@ const WishlistedItem = ({
     setWishlistUpdated(true);
     setTimeout(
       async () => await removeFromWishlist(dispatch, id, axiosPrivate),
-      500
+      300
     );
-    setTimeout(() => setWishlistUpdated(false), 500);
+    setTimeout(() => setWishlistUpdated(false), 350);
   };
 
   return (

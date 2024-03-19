@@ -13,11 +13,10 @@ const Shop = () => {
   } = useContext(ProductContext);
 
   useLayoutEffect(() => {
-    if (!products) {
-      (async () => {
-        await getProducts(dispatch, "?limit=20");
-      })();
-    }
+    if (products) return;
+    (async () => {
+      await getProducts(dispatch, "?limit=20");
+    })();
   }, [dispatch, products]);
 
   return (

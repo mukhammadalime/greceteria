@@ -28,18 +28,26 @@ export const getProducts = async (
 
 export const getCustomProducts = async (
   dispatch: React.Dispatch<ProductAction>,
+  type: "relatedProducts" | "topProducts" | "saleProducts",
   query?: string
 ): Promise<void> => {
   try {
-    dispatch({ type: ProductActionKind.GET_CUSTOM_PRODUCTS_START });
+    dispatch({
+      type: ProductActionKind.GET_CUSTOM_PRODUCTS_START,
+      payload: { type },
+    });
+
     const { data } = await axios(`/products${query}`);
 
     dispatch({
       type: ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS,
-      payload: data.data,
+      payload: { products: data.data, type },
     });
   } catch (err: any) {
-    dispatch({ type: ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE });
+    dispatch({
+      type: ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE,
+      payload: { type },
+    });
   }
 };
 
