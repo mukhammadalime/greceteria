@@ -79,7 +79,11 @@ const navAdminItems = [
 const Sidebar = ({ onCloseSidebar, open }: SidebarTypes) => {
   const { state } = useContext(UserContext);
 
-  const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
+  const navItems = !state.user
+    ? navUserItems
+    : state.user.role !== "user"
+    ? navAdminItems
+    : navUserItems;
 
   return (
     <div className={`sidebar${open ? " open" : ""}`}>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getJwtFromCookie } from "../utils/helperFunctions";
-const BASE_URL = "https://groceteria-server.onrender.com/api/v1/";
-// const BASE_URL = "http://localhost:8000/api/v1/";
+// const BASE_URL = "https://groceteria-server.onrender.com/api/v1/";
+const BASE_URL = "http://localhost:8000/api/v1/";
 
 const axiosConfig = {
   baseURL: BASE_URL,

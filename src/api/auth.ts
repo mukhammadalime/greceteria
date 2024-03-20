@@ -27,7 +27,7 @@ export const login = async (
     if (location.search.startsWith("?next-page"))
       navigate(`/${location.search.split("=")[1]}`);
     else navigate("/home");
-    window.location.reload();
+    // window.location.reload();
   } catch (err: any) {
     const error = err.response?.data.message || "Something went wrong.";
     dispatch({ type: UserActionKind.GETME_FAILURE, error });
