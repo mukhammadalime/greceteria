@@ -3,7 +3,6 @@ import { CartProductProps } from "../../utils/user-types";
 import { CartContext } from "../../store/CartContext";
 import { deleteProductCart } from "../../api/cart";
 import LoadingCounterSpinner from "../UI/Icons/LoadingCounterSpinner";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 const CartItem = ({
@@ -16,7 +15,6 @@ const CartItem = ({
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { dispatch } = useContext(CartContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const onGoToProduct = () => {
     navigate(`/products/${cartItem.productId}`);
@@ -24,12 +22,7 @@ const CartItem = ({
   };
 
   const onDeleteProductFromCart = async () => {
-    await deleteProductCart(
-      dispatch,
-      cartItem.productId,
-      axiosPrivate,
-      setLoading
-    );
+    await deleteProductCart(dispatch, cartItem.productId, setLoading);
   };
 
   return (

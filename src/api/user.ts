@@ -1,9 +1,9 @@
-import { AxiosInstance } from "axios";
 import { UserAction, UserActionKind } from "../store/UserContext";
 import { toast } from "react-toastify";
 import PhoneNumber, { CountryCode } from "libphonenumber-js";
 import { AddressItemTypes, User } from "../utils/user-types";
 import { ActionTypeProps } from "../utils/types";
+import { axiosPrivate } from "./axios";
 
 export const getCountryCode = async (
   setCountryCode: (code: CountryCode | undefined) => void
@@ -18,6 +18,20 @@ export const getCountryCode = async (
   }
 };
 
+export const getMe = async (
+  dispatch: React.Dispatch<UserAction>
+): Promise<void> => {
+  try {
+    dispatch({ type: UserActionKind.GETME_START });
+    const { data } = await axiosPrivate.get("/users/me");
+    dispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
+  } catch (err: any) {
+    const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.GETME_FAILURE, error });
+    toast.error(error);
+  }
+};
+
 export const updateMe = async (
   dispatch: React.Dispatch<UserAction>,
   userData: {
@@ -27,8 +41,7 @@ export const updateMe = async (
     email: string | undefined;
     photoRef: React.RefObject<HTMLInputElement>;
     countryCode: CountryCode | undefined;
-  },
-  axiosPrivate: AxiosInstance
+  }
 ) => {
   const validatePhoneNumber = (number: string, code: CountryCode) => {
     return PhoneNumber(number, code)!.isValid() ? true : false;
@@ -74,7 +87,6 @@ export const updateMe = async (
 
 export const addDeleteUpdateAddress = async (
   dispatch: React.Dispatch<UserAction>,
-  axiosPrivate: AxiosInstance,
   actionType: ActionTypeProps,
   user: User,
   addressRefs: {
@@ -172,11 +184,9 @@ export const addDeleteUpdateAddress = async (
 
 export const getCompareOrWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  axiosPrivate: AxiosInstance,
   type: "compare" | "wishlisted"
 ): Promise<void> => {
   try {
-    dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
     const { data } = await axiosPrivate.get(`/users/me/${type}`);
 
     dispatch({
@@ -197,8 +207,7 @@ export const getCompareOrWishlist = async (
 
 export const addToWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  id: string,
-  axiosPrivate: AxiosInstance
+  id: string
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: id });
@@ -214,8 +223,7 @@ export const addToWishlist = async (
 
 export const removeFromWishlist = async (
   dispatch: React.Dispatch<UserAction>,
-  id: string,
-  axiosPrivate: AxiosInstance
+  id: string
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: id });
@@ -231,8 +239,7 @@ export const removeFromWishlist = async (
 
 export const addToCompare = async (
   dispatch: React.Dispatch<UserAction>,
-  id: string,
-  axiosPrivate: AxiosInstance
+  id: string
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_COMPARE, payload: id });
@@ -248,8 +255,7 @@ export const addToCompare = async (
 
 export const removeFromCompare = async (
   dispatch: React.Dispatch<UserAction>,
-  id: string,
-  axiosPrivate: AxiosInstance
+  id: string
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE, payload: id });

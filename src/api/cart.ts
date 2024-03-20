@@ -1,15 +1,12 @@
-import { AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 import { CartAction, CartActionKind } from "../store/CartContext";
+import { axiosPrivate } from "./axios";
 
 export const getCartApi = async (
-  dispatch: React.Dispatch<CartAction>,
-  axiosPrivate: AxiosInstance
+  dispatch: React.Dispatch<CartAction>
 ): Promise<void> => {
   try {
-    dispatch({ type: CartActionKind.GET_CART_START });
     const { data } = await axiosPrivate.get("/cart");
-
     dispatch({
       type: CartActionKind.GET_CART_SUCCESS,
       payload: data.data,
@@ -26,7 +23,6 @@ export const addToCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
   quantity: number,
-  axiosPrivate: AxiosInstance,
   setLoading?: (arg: boolean) => void
 ): Promise<void> => {
   try {
@@ -49,8 +45,8 @@ export const updateCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
   quantity: number,
-  setLoading: (arg: boolean) => void,
-  axiosPrivate: AxiosInstance
+  setLoading: (arg: boolean) => void
+  // axios: AxiosInstance
 ): Promise<void> => {
   try {
     setLoading(true);
@@ -71,7 +67,6 @@ export const updateCart = async (
 export const deleteProductCart = async (
   dispatch: React.Dispatch<CartAction>,
   productId: string,
-  axiosPrivate: AxiosInstance,
   setLoading: (arg: boolean) => void
 ): Promise<void> => {
   try {

@@ -1,14 +1,11 @@
 import { toast } from "react-toastify";
-import axios from "./axios";
-import { AuthInitialStateTypes } from "../store/AuthContext";
+import axios, { axiosPrivate } from "./axios";
 import { UserAction, UserActionKind } from "../store/UserContext";
-import { AxiosInstance } from "axios";
 
 export const login = async (
-  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
   location: { search: string },
   navigate: (arg: string) => void,
-  userDispatch: React.Dispatch<UserAction>,
+  dispatch: React.Dispatch<UserAction>,
   userData: {
     username?: string;
     password?: string;
@@ -25,36 +22,27 @@ export const login = async (
         password: userData?.password,
       }
     );
-    setAuth({ accessToken: data.accessToken });
-    userDispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
+    dispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
 
     if (location.search.startsWith("?next-page"))
       navigate(`/${location.search.split("=")[1]}`);
     else navigate("/home");
-    // window.location.reload();
+    window.location.reload();
   } catch (err: any) {
-    userDispatch({
-      type: UserActionKind.GETME_FAILURE,
-      error: err.response?.data.message,
-    });
+    const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.GETME_FAILURE, error });
     if (
       err.response?.data.message.startsWith("Your account") &&
       !userData.token
-    ) {
+    )
       navigate(`/auth/verify?username=${userData?.username}`);
-    }
 
-    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
 
-export const logout = async (
-  dispatch: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
-  axiosPrivate: AxiosInstance
-) => {
+export const logout = async () => {
   try {
-    dispatch({ accessToken: null });
     await axiosPrivate.get("/users/logout");
 
     localStorage.removeItem("persist");
@@ -113,8 +101,7 @@ export const verify = async (
   dispatch: React.Dispatch<UserAction>,
   verificationCode: string,
   location: { search: string },
-  navigate: (arg0: string) => void,
-  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>
+  navigate: (arg0: string) => void
 ) => {
   if (!/^\d*$/.test(verificationCode)) {
     toast.warning("Please enter only numbers");
@@ -127,9 +114,6 @@ export const verify = async (
     const { data } = await axios.post("/users/verify", {
       verificationCode,
     });
-    console.log("data:", data);
-
-    setAuth({ accessToken: data.accessToken });
 
     dispatch({ type: UserActionKind.VERIFY_SUCCESS, payload: data.user });
 
@@ -196,8 +180,7 @@ export const resetPassword = async (
   },
   resetToken: string | undefined,
   location: { search: string },
-  navigate: (arg0: string) => void,
-  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>
+  navigate: (arg0: string) => void
 ) => {
   const { password, passwordConfirm } = passwords;
   if (!passwordConfirm || !password)
@@ -209,8 +192,6 @@ export const resetPassword = async (
       password,
       passwordConfirm,
     });
-
-    setAuth({ accessToken: data.accessToken });
 
     dispatch({
       type: UserActionKind.RESET_PASSWORD_SUCCESS,
@@ -257,9 +238,7 @@ export const changeMyPassword = async (
   dispatch: React.Dispatch<UserAction>,
   currentPasswordRef: React.RefObject<HTMLInputElement>,
   newPasswordRef: React.RefObject<HTMLInputElement>,
-  newPasswordConfirmRef: React.RefObject<HTMLInputElement>,
-  setAuth: React.Dispatch<React.SetStateAction<AuthInitialStateTypes>>,
-  axiosPrivate: AxiosInstance
+  newPasswordConfirmRef: React.RefObject<HTMLInputElement>
 ) => {
   const currentPassword = currentPasswordRef.current?.value;
   const password = newPasswordRef.current?.value;
@@ -271,13 +250,12 @@ export const changeMyPassword = async (
   try {
     dispatch({ type: UserActionKind.CHANGE_PASSWORD_START });
 
-    const { data } = await axios.patch("/users/updateMyPassword", {
+    const { data } = await axiosPrivate.patch("/users/updateMyPassword", {
       currentPassword,
       password,
       passwordConfirm,
     });
 
-    setAuth({ accessToken: data.accessToken });
     dispatch({
       type: UserActionKind.CHANGE_PASSWORD_SUCCESS,
       payload: data.user,

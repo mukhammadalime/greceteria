@@ -6,10 +6,10 @@ import { CartContext } from "../../store/CartContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import BillCard from "../../components/cart/BillCard";
 import { UserContext } from "../../store/UserContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { loadStripe } from "@stripe/stripe-js";
 import PaypalModal from "../../components/modals/PaypalModal";
 import { useNavigate } from "react-router-dom";
+import axios, { axiosPrivate } from "../../api/axios";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -22,7 +22,6 @@ const Checkout = () => {
   const [orderData, setOrderData] = useState<any>();
 
   ///////////////////////
-  const axiosPrivate = useAxiosPrivate();
   const {
     state: { user },
   } = useContext(UserContext);
@@ -30,6 +29,7 @@ const Checkout = () => {
     state: { cart, cartLoading },
   } = useContext(CartContext);
 
+  // TODO:
   useEffect(() => {
     if (!cart) navigate("/my-cart");
   }, [cart, navigate]);
@@ -55,7 +55,7 @@ const Checkout = () => {
     if (paymentMethod === "Stripe") {
       setLoading(true);
       try {
-        const { data } = await axiosPrivate(`orders/stripe-publishable-key`);
+        const { data } = await axios(`orders/stripe-publishable-key`);
 
         // 1) Get checkout session from API
         const session = await axiosPrivate.post(

@@ -1,15 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 // import WarningModal from "../../components/modals/WarningModal";
 import OrdersTable from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
-import { UserContext } from "../../store/UserContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { UserActionKind, UserContext } from "../../store/UserContext";
 import { getCustomerApi } from "../../api/customers";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import { getUserOrders } from "../../api/orders";
-import { OrderContext } from "../../store/OrderContext";
-import { AuthContext } from "../../store/AuthContext";
+import { OrderActionKind, OrderContext } from "../../store/OrderContext";
 import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
 
 const CustomerDetails = () => {
@@ -23,18 +21,20 @@ const CustomerDetails = () => {
     state: { userOrders, loading, error },
     dispatch: orderDisatch,
   } = useContext(OrderContext);
-  const { auth } = useContext(AuthContext);
-  const axiosPrivate = useAxiosPrivate();
+
+  useLayoutEffect(() => {
+    dispatch({ type: UserActionKind.GET_CUSTOMER_START });
+    orderDisatch({ type: OrderActionKind.GET_USER_ORDERS_START });
+  }, [dispatch, orderDisatch]);
 
   useEffect(() => {
-    if (!auth.accessToken) return;
     (async () => {
-      await getCustomerApi(dispatch, axiosPrivate, customerId as string);
+      await Promise.all([
+        getCustomerApi(dispatch, customerId!),
+        getUserOrders(orderDisatch, customerId!),
+      ]);
     })();
-    (async () => {
-      await getUserOrders(orderDisatch, axiosPrivate, customerId as string);
-    })();
-  }, [auth.accessToken, axiosPrivate, customerId, dispatch, orderDisatch]);
+  }, [customerId, dispatch, orderDisatch]);
 
   return (
     <>
@@ -50,8 +50,7 @@ const CustomerDetails = () => {
           <div className="dashboard">
             <DashboardNav activeNavItem="Customers" />
 
-            {((customerLoading && !customer) || !customer) &&
-              !customerError && <LoadingSpinner />}
+            {customerLoading && <LoadingSpinner />}
 
             {customer && (
               <div className="customer-details dashboard__main">

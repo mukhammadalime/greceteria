@@ -1,8 +1,7 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { NewsItemTypes } from "../utils/user-types";
-import { getNewsApi } from "../api/news";
+
 import { returnUpdatedState } from "../utils/helperFunctions";
-import { AuthContext } from "./AuthContext";
 
 interface NewsInitialStateTypes {
   news: NewsItemTypes[] | null;
@@ -159,18 +158,10 @@ export const NewsContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(NewsReducer, INITIAL_STATE);
-  const { auth } = useContext(AuthContext);
-  const getNews = async () => await getNewsApi(dispatch);
-
-  // Fetch news on every refresh to keep the data up to date with the database.
-  useEffect(() => {
-    auth?.accessToken && getNews();
-  }, [auth?.accessToken]);
 
   const values = {
     state,
     dispatch,
-    getNews,
   };
 
   return <NewsContext.Provider value={values}>{children}</NewsContext.Provider>;

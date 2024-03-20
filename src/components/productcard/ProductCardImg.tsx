@@ -11,7 +11,6 @@ import {
 import { UserContext } from "../../store/UserContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import CompareIconFull from "../UI/Icons/CompareIconFull";
 import { ProductItemTypes } from "../../utils/user-types";
 
@@ -23,21 +22,20 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
     state: { user },
     dispatch,
   } = useContext(UserContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
     const added = user?.wishlisted.includes(item._id);
     setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, item._id, axiosPrivate);
-    else await addToWishlist(dispatch, item._id, axiosPrivate);
+    if (added) await removeFromWishlist(dispatch, item._id);
+    else await addToWishlist(dispatch, item._id);
     setWishlistUpdated(false);
   };
 
   const onToggleCompare = async () => {
     const added = user?.compare.includes(item._id);
     setCompareUpdated(true);
-    if (added) await removeFromCompare(dispatch, item._id, axiosPrivate);
-    else await addToCompare(dispatch, item._id, axiosPrivate);
+    if (added) await removeFromCompare(dispatch, item._id);
+    else await addToCompare(dispatch, item._id);
     setCompareUpdated(false);
   };
 

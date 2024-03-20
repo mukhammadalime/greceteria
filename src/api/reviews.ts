@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
-import { AxiosInstance } from "axios";
-import axios from "./axios";
+import axios, { axiosPrivate } from "./axios";
 import { ReviewAction, ReviewActionKind } from "../store/ReviewsContext";
 import { ProductAction, ProductActionKind } from "../store/ProductContext";
 
@@ -38,7 +37,6 @@ export const getProductReviews = async (
 export const addReview = async (
   dispatch: React.Dispatch<ReviewAction>,
   productDispatch: React.Dispatch<ProductAction>,
-  axiosPrivate: AxiosInstance,
   reviewData: { review: string; rating: number; product: string },
   reviewsCount: number
 ): Promise<void> => {
@@ -66,7 +64,6 @@ export const addReview = async (
 export const editReview = async (
   dispatch: React.Dispatch<ReviewAction>,
   productDispatch: React.Dispatch<ProductAction>,
-  axiosPrivate: AxiosInstance,
   reviewData: { review: string; rating: number; product: string },
   id: string,
   reviewsCount: number
@@ -95,7 +92,6 @@ export const editReview = async (
 export const deleteReview = async (
   dispatch: React.Dispatch<ReviewAction>,
   productDispatch: React.Dispatch<ProductAction>,
-  axiosPrivate: AxiosInstance,
   id: string,
   reviewsCount: number
 ): Promise<void> => {
@@ -122,7 +118,6 @@ export const deleteReview = async (
 
 export const addReviewReply = async (
   dispatch: React.Dispatch<ReviewAction>,
-  axiosPrivate: AxiosInstance,
   replyData: { text: string; user: string },
   reviewId: string
 ): Promise<void> => {
@@ -147,7 +142,6 @@ export const addReviewReply = async (
 
 export const editReviewReply = async (
   dispatch: React.Dispatch<ReviewAction>,
-  axiosPrivate: AxiosInstance,
   text: string,
   reviewId: string,
   replyId: string
@@ -172,7 +166,6 @@ export const editReviewReply = async (
 
 export const deleteReviewReply = async (
   dispatch: React.Dispatch<ReviewAction>,
-  axiosPrivate: AxiosInstance,
   reviewId: string,
   replyId: string
 ): Promise<void> => {

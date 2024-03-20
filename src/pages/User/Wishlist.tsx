@@ -1,36 +1,29 @@
 import WishlistedItem from "../../components/WishlistedItem";
 // import CustomProductsCarousel from "../../components/CustomProductsCarousel";
 import SectionHead from "../../components/UI/SectionHeader";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import LoginFirst from "../../components/LoginFirst";
-import { UserContext } from "../../store/UserContext";
+import { UserActionKind, UserContext } from "../../store/UserContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
-import { AuthContext } from "../../store/AuthContext";
 import { getCompareOrWishlist } from "../../api/user";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Wishlist = () => {
-  const axiosPrivate = useAxiosPrivate();
   const {
     state: { user, compareWishlistLoading, wishlisted, compareWishlistError },
     dispatch,
   } = useContext(UserContext);
-  const { auth } = useContext(AuthContext);
+
+  useLayoutEffect(() => {
+    if (user) dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
+  }, [dispatch, user]);
 
   useEffect(() => {
-    if (!auth.accessToken) return;
-    (async () => {
-      await getCompareOrWishlist(dispatch, axiosPrivate, "wishlisted");
-    })();
-  }, [auth.accessToken, axiosPrivate, dispatch]);
+    if (user)
+      (async () => await getCompareOrWishlist(dispatch, "wishlisted"))();
+  }, [dispatch, user]);
 
   if (user === null) return <LoginFirst />;
-  if (
-    ((compareWishlistLoading && !wishlisted) || !wishlisted) &&
-    !compareWishlistError
-  ) {
-    return <LoadingSpinner />;
-  }
+  if (compareWishlistLoading) return <LoadingSpinner />;
 
   return (
     <>

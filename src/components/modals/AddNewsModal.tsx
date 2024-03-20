@@ -16,7 +16,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { toolbarOptions } from "../../data/helperData";
 import { useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -36,7 +35,6 @@ const AddNewsOverlay = ({
   );
   const [imagesForServer, setImagesForServer] = useState<FileList | []>([]);
   const { state, dispatch } = useContext(NewsContext);
-  const axiosPrivate = useAxiosPrivate();
 
   /// This function remove the image from states which are for client and server
   const onRemoveImages = (img: ImageItemTypes): void => {
@@ -54,13 +52,7 @@ const AddNewsOverlay = ({
 
     switch (actionType) {
       case "add":
-        await addNews(
-          dispatch,
-          formData,
-          imagesForServer,
-          closeModal,
-          axiosPrivate
-        );
+        await addNews(dispatch, formData, imagesForServer, closeModal);
         break;
       case "update":
         await updateNews(
@@ -69,18 +61,11 @@ const AddNewsOverlay = ({
           imagesForServer,
           imagesForClient,
           closeModal,
-          news,
-          axiosPrivate
+          news
         );
         break;
       case "delete":
-        await deleteNews(
-          dispatch,
-          news?._id,
-          closeModal,
-          navigate,
-          axiosPrivate
-        );
+        await deleteNews(dispatch, news?._id!, closeModal, navigate);
         break;
       default:
         break;

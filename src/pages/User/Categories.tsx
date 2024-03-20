@@ -1,6 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import AddCategoryModal from "../../components/modals/AddCategoryModal";
-import { CategoryContext } from "../../store/CategoryContext";
+import {
+  CategoryActionKind,
+  CategoryContext,
+} from "../../store/CategoryContext";
 import { CategoryItemTypes } from "../../utils/user-types";
 import CategoryItem from "../../components/category/CategoryItem";
 import { UserContext } from "../../store/UserContext";
@@ -10,17 +13,18 @@ import { getCategoriesApi } from "../../api/categories";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(() => false);
-
   const {
     state: { categories, categoriesLoading, error },
     dispatch,
   } = useContext(CategoryContext);
   const { state: userState } = useContext(UserContext);
 
+  useLayoutEffect(() => {
+    dispatch({ type: CategoryActionKind.GET_CATEGORIES_START });
+  }, [dispatch]);
+
   useEffect(() => {
-    (async () => {
-      await getCategoriesApi(dispatch);
-    })();
+    (async () => await getCategoriesApi(dispatch))();
   }, [dispatch]);
 
   return (

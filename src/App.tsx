@@ -21,42 +21,39 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useCallback, useContext, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import { ToastContainer, Flip } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
 import ProductsByCategory from "./pages/User/ProductsByCategory";
-import useRefreshToken from "./hooks/auth/useRefresh";
-import { UserActionKind, UserContext } from "./store/UserContext";
-import { AuthContext } from "./store/AuthContext";
+import { UserContext } from "./store/UserContext";
 import AuthPages from "./pages/Auth/AuthPages";
-import LoadingSpinner from "./components/UI/LoadingSpinner";
+import { getCartApi } from "./api/cart";
+import { CartActionKind, CartContext } from "./store/CartContext";
+import { getNewsApi } from "./api/news";
+import { NewsActionKind, NewsContext } from "./store/NewsContext";
 
 function App() {
   const {
-    state: { user, loading },
-    dispatch: userDispatch,
+    state: { user },
   } = useContext(UserContext);
-  const { auth } = useContext(AuthContext);
 
-  const refresh = useRefreshToken();
-
-  const verifyRefreshToken = useCallback(async () => {
-    userDispatch({ type: UserActionKind.GETME_START });
-    try {
-      await refresh();
-    } catch (err) {
-      console.error(err);
-    }
-  }, [refresh, userDispatch]);
+  const { dispatch } = useContext(CartContext);
+  const { dispatch: newsDispatch } = useContext(NewsContext);
 
   useLayoutEffect(() => {
-    const persist = JSON.parse(localStorage.getItem("persist")!);
-    if (!auth?.accessToken && persist) verifyRefreshToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth?.accessToken]);
+    if (!user) return;
+    newsDispatch({ type: NewsActionKind.GET_NEWS_START });
+    dispatch({ type: CartActionKind.GET_CART_START });
+  }, [newsDispatch, dispatch, user]);
 
-  if (!auth.accessToken && loading) return <LoadingSpinner />;
+  // Fetch cart and news on every refresh to keep the data up to date with the database.
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      await Promise.all([getNewsApi(newsDispatch), getCartApi(dispatch)]);
+    })();
+  }, [user, dispatch, newsDispatch]);
 
   return (
     <>

@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import Counter from "../UI/Counter";
 import { UserContext } from "../../store/UserContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { addToWishlist, removeFromWishlist } from "../../api/user";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -15,17 +14,16 @@ const ProductActions = ({
   const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
   const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
     if (!state.user?.wishlisted.includes(id)) {
       setWishlistAdded(true);
-      await addToWishlist(dispatch, id, axiosPrivate);
+      await addToWishlist(dispatch, id);
       setWishlistAdded(false);
       return;
     }
     setWishlistRemoved(true);
-    await removeFromWishlist(dispatch, id, axiosPrivate);
+    await removeFromWishlist(dispatch, id);
     setWishlistRemoved(false);
   };
   return (

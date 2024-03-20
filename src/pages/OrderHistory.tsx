@@ -1,40 +1,40 @@
 import OrdersTable from "../components/orders/OrdersTable";
 import DashboardNav from "../components/dashboard/DashboardNav";
 import FilterOptions from "../components/UI/FilterOptions";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import LoginFirst from "../components/LoginFirst";
 import { UserContext } from "../store/UserContext";
-import { OrderContext } from "../store/OrderContext";
+import { OrderActionKind, OrderContext } from "../store/OrderContext";
 import { getAllOrders, getMyOrders } from "../api/orders";
-import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { orderPriceOptions, orderSortOptions } from "../data/helperData";
 import useToggleOptions from "../hooks/useToggleOptions";
-import { AuthContext } from "../store/AuthContext";
 
 const OrderHistory = () => {
   const {
     state: { user },
   } = useContext(UserContext);
-  const { auth } = useContext(AuthContext);
   const {
     state: { orders, loading, customOrders, filterQuery, sortQuery, error },
     dispatch,
     filterOrders,
     sortOrders,
   } = useContext(OrderContext);
-  const axiosPrivate = useAxiosPrivate();
   // This function opens the requested filter and closed other remaining open filters.
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
 
-  useEffect(() => {
-    if (!auth.accessToken) return;
+  useLayoutEffect(() => {
+    if (user) dispatch({ type: OrderActionKind.GET_ORDERS_START });
+  }, [dispatch, user]);
 
+  useEffect(() => {
+    if (!user) return;
     (async () => {
-      if (user?.role === "user")
-        await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt");
-      else await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt");
+      // For user
+      if (user.role === "user") await getMyOrders(dispatch, "sort=-createdAt");
+      // For admin
+      else await getAllOrders(dispatch, "sort=-createdAt");
     })();
-  }, [auth.accessToken, axiosPrivate, dispatch, user?.role]);
+  }, [dispatch, user]);
 
   if (user === null) return <LoginFirst />;
 

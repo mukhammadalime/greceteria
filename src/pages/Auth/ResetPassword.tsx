@@ -1,4 +1,3 @@
-import { AuthContext } from "../../store/AuthContext";
 import { UserContext } from "../../store/UserContext";
 import { FormEvent, useContext, useEffect, useRef } from "react";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
@@ -14,12 +13,12 @@ const ResetPassword = () => {
 
   const { resetToken } = useParams();
   const { state, dispatch } = useContext(UserContext);
-  const { setAuth } = useContext(AuthContext);
 
   // Check if token is valid or has not yet expired. If either of them happens, the user will be redirected to the "forgot-password" page.
   useEffect(() => {
-    (async () =>
-      await checkResetTokenExistApi(resetToken, location, navigate))();
+    (async () => {
+      await checkResetTokenExistApi(resetToken, location, navigate);
+    })();
   }, [resetToken, navigate, location]);
 
   const onResetPasswordHandler = async (e: FormEvent<HTMLFormElement>) => {
@@ -27,14 +26,7 @@ const ResetPassword = () => {
     const password = passwordRef.current?.value;
     const passwordConfirm = passwordConfirmRef.current?.value;
     const passwords = { password, passwordConfirm };
-    await resetPassword(
-      dispatch,
-      passwords,
-      resetToken,
-      location,
-      navigate,
-      setAuth
-    );
+    await resetPassword(dispatch, passwords, resetToken, location, navigate);
   };
 
   return (

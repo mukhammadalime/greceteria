@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
 import { loadScript } from "@paypal/paypal-js";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import axios, { axiosPrivate } from "../../api/axios";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -14,13 +14,12 @@ const PaypalOverlay = ({
   closeModal: () => void;
   orderData: any;
 }) => {
-  const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
     let paypal: any;
 
     const getPaypalButtons = async () => {
       try {
-        const { data } = await axiosPrivate(`orders/paypal-client-id`);
+        const { data } = await axios(`orders/paypal-client-id`);
 
         paypal = await loadScript({ clientId: data.clientId });
       } catch (error) {
@@ -135,7 +134,7 @@ const PaypalOverlay = ({
     };
 
     getPaypalButtons();
-  }, [axiosPrivate, orderData]);
+  }, [orderData]);
   return (
     <div className="paypal-modal">
       <h1>Pay with Paypal safely and easily</h1>

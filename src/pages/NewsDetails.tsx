@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import AddNewsModal from "../components/modals/AddNewsModal";
 import NewsImagesSlider from "../components/UI/Slider/NewsImagesSlider";
 import SocialShareModal from "../components/modals/SocialShareModal";
 import { getNewsItemApi } from "../api/news";
-import { NewsContext } from "../store/NewsContext";
+import { NewsActionKind, NewsContext } from "../store/NewsContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { UserContext } from "../store/UserContext";
@@ -13,17 +13,23 @@ const NewsDetails = () => {
   const { newsId } = useParams();
   const [shareModal, setShareModal] = useState(() => false);
   const [addNewsModal, setAddNewsModal] = useState(() => false);
-  const { state } = useContext(UserContext);
-  const { state: newsState, dispatch } = useContext(NewsContext);
+  const {
+    state: { user },
+  } = useContext(UserContext);
+  const {
+    state: { newsItem, newsItemLoading },
+    dispatch,
+  } = useContext(NewsContext);
+
+  useLayoutEffect(() => {
+    dispatch({ type: NewsActionKind.GET_NEWSITEM_START });
+  }, [dispatch]);
 
   useEffect(() => {
-    const getNewsItem = async () => await getNewsItemApi(dispatch, newsId);
-
-    getNewsItem();
+    (async () => await getNewsItemApi(dispatch, newsId!))();
   }, [dispatch, newsId]);
 
-  if (newsState.newsItemLoading || !newsState.newsItem)
-    return <LoadingSpinner />;
+  if (newsItemLoading) return <LoadingSpinner />;
 
   return (
     <>
@@ -34,50 +40,50 @@ const NewsDetails = () => {
           url={""}
         />
       )}
-      {addNewsModal && (
+      {addNewsModal && newsItem && (
         <AddNewsModal
           text="Edit News"
           closeModal={() => setAddNewsModal(false)}
-          images={newsState.newsItem.images}
-          news={newsState.newsItem}
+          images={newsItem.images}
+          news={newsItem}
         />
       )}
       <div className="section-sm">
         <div className="container">
-          <div className="news">
-            <div className="news__header">
-              <h4>
-                <svg>
-                  <use href="/assets/icons/icons.svg#icon-bell"></use>
-                </svg>
-                News
-              </h4>
-              <span>{formatDate(newsState.newsItem.createdAt)}</span>
-            </div>
-            <NewsImagesSlider images={newsState.newsItem?.images!} />
-            <div className="news__title">
-              <h5>{newsState.newsItem?.title}</h5>
-              <img
-                onClick={() => setShareModal(!shareModal)}
-                className="news__share"
-                src="/assets/icons/share-icon.svg"
-                alt=""
-              />
-            </div>
-            <div className="news__text">
-              <div
-                dangerouslySetInnerHTML={{ __html: newsState.newsItem?.text }}
-              />
-
-              {state.user && state.user.role !== "user" && (
-                <button
-                  className="button edit-news"
-                  onClick={() => setAddNewsModal(true)}
-                  children="Edit News"
+          {newsItem && (
+            <div className="news">
+              <div className="news__header">
+                <h4>
+                  <svg>
+                    <use href="/assets/icons/icons.svg#icon-bell"></use>
+                  </svg>
+                  News
+                </h4>
+                <span>{formatDate(newsItem.createdAt)}</span>
+              </div>
+              <NewsImagesSlider images={newsItem?.images!} />
+              <div className="news__title">
+                <h5>{newsItem?.title}</h5>
+                <img
+                  onClick={() => setShareModal(!shareModal)}
+                  className="news__share"
+                  src="/assets/icons/share-icon.svg"
+                  alt=""
                 />
-              )}
+              </div>
+              <div className="news__text">
+                <div dangerouslySetInnerHTML={{ __html: newsItem?.text }} />
+
+                {user && user.role !== "user" && (
+                  <button
+                    className="button edit-news"
+                    onClick={() => setAddNewsModal(true)}
+                    children="Edit News"
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

@@ -17,7 +17,6 @@ import { inStockOptions, weightOptions } from "../../data/helperData";
 import useToggleOptions from "../../hooks/useToggleOptions";
 import { ActionTypeProps } from "../../utils/types";
 import { createFormDataHandler } from "../../api/helper";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -31,7 +30,6 @@ const AddProductOverlay = ({
   product,
 }: AddProductModalTypes) => {
   const navigate = useNavigate();
-  const axiosPrivate = useAxiosPrivate();
   const { state: productsState, dispatch } = useContext(ProductContext);
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(3);
 
@@ -88,13 +86,7 @@ const AddProductOverlay = ({
 
     switch (actionType) {
       case "add":
-        await addProduct(
-          dispatch,
-          formData,
-          imagesForServer,
-          closeModal,
-          axiosPrivate
-        );
+        await addProduct(dispatch, formData, imagesForServer, closeModal);
         break;
       case "update":
         await updateProduct(
@@ -103,8 +95,7 @@ const AddProductOverlay = ({
           imagesForServer,
           imagesForClient,
           closeModal,
-          product as ProductItemTypes,
-          axiosPrivate
+          product as ProductItemTypes
         );
         break;
       case "delete":
@@ -112,8 +103,7 @@ const AddProductOverlay = ({
           dispatch,
           closeModal,
           product?._id as string,
-          navigate,
-          axiosPrivate
+          navigate
         );
         break;
       default:

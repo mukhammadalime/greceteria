@@ -1,27 +1,24 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import CompareItem from "../../components/compare/CompareItem";
 import LoginFirst from "../../components/LoginFirst";
-import { UserContext } from "../../store/UserContext";
+import { UserActionKind, UserContext } from "../../store/UserContext";
 import { getCompareOrWishlist } from "../../api/user";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
-import { AuthContext } from "../../store/AuthContext";
 
 const Compare = () => {
-  const axiosPrivate = useAxiosPrivate();
   const {
     state: { user, compareWishlistLoading, compare, compareWishlistError },
     dispatch,
   } = useContext(UserContext);
-  const { auth } = useContext(AuthContext);
+
+  useLayoutEffect(() => {
+    if (user) dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
+  }, [dispatch, user]);
 
   useEffect(() => {
-    if (!auth.accessToken) return;
-    (async () => {
-      await getCompareOrWishlist(dispatch, axiosPrivate, "compare");
-    })();
-  }, [auth.accessToken, axiosPrivate, dispatch]);
+    if (user) (async () => await getCompareOrWishlist(dispatch, "compare"))();
+  }, [dispatch, user]);
 
   if (user === null) return <LoginFirst />;
 
@@ -29,12 +26,15 @@ const Compare = () => {
     <div className="section-lg">
       <div className="container">
         <ul className="compare-list">
-          {((compareWishlistLoading && !compare) || !compare) &&
-            !compareWishlistError && <LoadingSpinner />}
-
-          {compare?.map((item) => (
-            <CompareItem key={item._id} product={item} />
-          ))}
+          {compareWishlistLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              {compare?.map((item) => (
+                <CompareItem key={item._id} product={item} />
+              ))}
+            </>
+          )}
 
           {compareWishlistError && !compareWishlistLoading && (
             <EmptyOrErrorContainer error={compareWishlistError} />

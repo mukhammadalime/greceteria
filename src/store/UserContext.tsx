@@ -1,12 +1,11 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import {
   CustomersStatsTypes,
   ProductItemTypes,
   User,
 } from "../utils/user-types";
-import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
-import { AuthContext } from "./AuthContext";
-import { makeUniqueArray } from "../utils/helperFunctions";
+import { getJwtFromCookie, makeUniqueArray } from "../utils/helperFunctions";
+import { getMe } from "../api/user";
 
 interface UserInitialStateTypes {
   user: User | null;
@@ -366,34 +365,11 @@ export const UserContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(UserReducer, INITIAL_STATE);
-  const { auth } = useContext(AuthContext);
-  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    let isMounted = true;
-    // const controller = new AbortController();
-
-    const getUser = async () => {
-      try {
-        const { data } = await axiosPrivate.get("/users/me");
-        isMounted &&
-          dispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
-      } catch (err) {
-        console.error(err);
-        dispatch({
-          type: UserActionKind.GETME_FAILURE,
-          payload: err.name,
-        });
-      }
-    };
-
-    auth.accessToken && getUser();
-
-    return () => {
-      isMounted = false;
-      // controller.abort();
-    };
-  }, [auth.accessToken, axiosPrivate]);
+    if (getJwtFromCookie("jwt") === null) return;
+    (async () => await getMe(dispatch))();
+  }, []);
 
   const sortCustomers = (status: string) => {
     if (!state.customers) return;

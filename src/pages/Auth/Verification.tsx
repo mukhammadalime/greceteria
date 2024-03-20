@@ -3,7 +3,6 @@ import OtpInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendCodeAgain, verify } from "../../api/auth";
 import { UserContext } from "../../store/UserContext";
-import { AuthContext } from "../../store/AuthContext";
 
 const Verification = () => {
   const [code, setCode] = useState<string>("");
@@ -12,10 +11,9 @@ const Verification = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, dispatch } = useContext(UserContext);
-  const { setAuth } = useContext(AuthContext);
 
   const onVerifyHandler = async () => {
-    await verify(dispatch, code, location, navigate, setAuth);
+    await verify(dispatch, code, location, navigate);
   };
 
   const onSendCodeAgainHandler = async () => {

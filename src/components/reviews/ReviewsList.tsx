@@ -3,7 +3,6 @@ import ReviewItem from "./ReviewItem";
 import HoverRating from "../product-details/HoverRating";
 import { addReview, getProductReviews } from "../../api/reviews";
 import { ProductContext } from "../../store/ProductContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../../store/UserContext";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
@@ -25,7 +24,6 @@ const ReviewsList = ({ show }: { show: boolean }) => {
     dispatch,
   } = useContext(ReviewContext);
   const { state: userState } = useContext(UserContext);
-  const axiosPrivate = useAxiosPrivate();
 
   useLayoutEffect(() => {
     (async () => {
@@ -50,7 +48,6 @@ const ReviewsList = ({ show }: { show: boolean }) => {
     await addReview(
       dispatch,
       productDispatch,
-      axiosPrivate,
       reviewData,
       product?.reviewsCount as number
     );

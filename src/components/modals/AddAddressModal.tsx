@@ -8,7 +8,6 @@ import PhoneInput from "react-phone-number-input";
 import { CountryCode } from "libphonenumber-js";
 import { UserContext } from "../../store/UserContext";
 import { addDeleteUpdateAddress, getCountryCode } from "../../api/user";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { ActionTypeProps } from "../../utils/types";
 
 const Backdrop = (props: { closeModal: () => void }) => {
@@ -29,8 +28,6 @@ const AddAddressOverlay = ({
   const address1Ref = useRef<HTMLInputElement>(null);
   const address2Ref = useRef<HTMLInputElement>(null);
   const postalCodeRef = useRef<HTMLInputElement>(null);
-
-  const axiosPrivate = useAxiosPrivate();
   const { state, dispatch } = useContext(UserContext);
 
   useEffect(() => {
@@ -51,7 +48,6 @@ const AddAddressOverlay = ({
 
     await addDeleteUpdateAddress(
       dispatch,
-      axiosPrivate,
       actionType,
       state.user as User,
       addressRefs,

@@ -2,14 +2,12 @@ import { toast } from "react-toastify";
 import { NewsAction, NewsActionKind } from "../store/NewsContext";
 import { ImageItemTypes, NewsItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
-import axios from "./axios";
-import { AxiosInstance } from "axios";
+import axios, { axiosPrivate } from "./axios";
 
 export const getNewsApi = async (
   dispatch: React.Dispatch<NewsAction>
 ): Promise<void> => {
   try {
-    dispatch({ type: NewsActionKind.GET_NEWS_START });
     const { data } = await axios("news?sort=createdAt&limit=20");
 
     dispatch({
@@ -29,10 +27,9 @@ export const getNewsApi = async (
 
 export const getNewsItemApi = async (
   dispatch: React.Dispatch<NewsAction>,
-  id: string | undefined
+  id: string
 ): Promise<void> => {
   try {
-    dispatch({ type: NewsActionKind.GET_NEWSITEM_START });
     const { data } = await axios(`/news/${id}`);
 
     dispatch({
@@ -55,8 +52,7 @@ export const addNews = async (
   dispatch: React.Dispatch<NewsAction>,
   formData: FormData,
   imagesForServer: FileList | [],
-  closeModal: () => void,
-  axiosPrivate: AxiosInstance
+  closeModal: () => void
 ): Promise<void> => {
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
@@ -93,8 +89,7 @@ export const updateNews = async (
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  news: NewsItemTypes | undefined,
-  axiosPrivate: AxiosInstance
+  news: NewsItemTypes | undefined
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
@@ -115,7 +110,9 @@ export const updateNews = async (
     const { data } = await axiosPrivate.patch(
       `/news/${news?._id}`,
       updatedFormData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
     );
 
     dispatch({
@@ -138,10 +135,9 @@ export const updateNews = async (
 
 export const deleteNews = async (
   dispatch: React.Dispatch<NewsAction>,
-  id: string | undefined,
+  id: string,
   closeModal: () => void,
-  navigate: (arg: string) => void,
-  axiosPrivate: AxiosInstance
+  navigate: (arg: string) => void
 ): Promise<void> => {
   try {
     dispatch({ type: NewsActionKind.DELETE_NEWSITEM_START });

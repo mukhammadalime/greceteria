@@ -6,7 +6,6 @@ import PhoneInput from "react-phone-number-input";
 import { CountryCode } from "libphonenumber-js";
 import { getCountryCode, updateMe } from "../../api/user";
 import { UserContext } from "../../store/UserContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const AccountSettings = ({ user }: { user: User | null }) => {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>(
@@ -25,8 +24,6 @@ const AccountSettings = ({ user }: { user: User | null }) => {
   };
 
   const { state, dispatch } = useContext(UserContext);
-
-  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     const fetchCountry = async () => await getCountryCode(setCountryCode);
@@ -47,7 +44,7 @@ const AccountSettings = ({ user }: { user: User | null }) => {
       photoRef,
       countryCode,
     };
-    await updateMe(dispatch, userData, axiosPrivate);
+    await updateMe(dispatch, userData);
   };
 
   return (

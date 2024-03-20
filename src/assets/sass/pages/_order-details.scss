@@ -10,7 +10,9 @@
   &__error {
     display: grid;
     place-items: center;
+
     h1 {
+      color: red;
       font-size: 2rem;
       font-weight: 400;
     }

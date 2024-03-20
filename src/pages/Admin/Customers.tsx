@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import FilterOptions from "../../components/UI/FilterOptions";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../store/UserContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { UserActionKind, UserContext } from "../../store/UserContext";
 import { getCustomersApi } from "../../api/customers";
 import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
-import { AuthContext } from "../../store/AuthContext";
 import CustomersSkeleton from "../../skeletons/TableItemsSkeleton";
 import TableHeader from "../../components/TableHeader";
 
@@ -33,18 +31,20 @@ const Customers = () => {
     sortCustomers,
     dispatch,
   } = useContext(UserContext);
-  const { auth } = useContext(AuthContext);
-  const axiosPrivate = useAxiosPrivate();
+
+  useLayoutEffect(() => {
+    if (customers && !reload) return;
+    dispatch({ type: UserActionKind.GET_CUSTOMERS_START });
+  }, [customers, dispatch, reload]);
 
   useEffect(() => {
     // We do no fetch customers if there is already data until the 'reload' button is clicked.
-    if ((customers && !reload) || !auth.accessToken) return;
-
+    if (customers && !reload) return;
     (async () => {
-      await getCustomersApi(dispatch, axiosPrivate);
-      if (reload) setReload(false);
+      await getCustomersApi(dispatch);
+      setReload(false);
     })();
-  }, [auth.accessToken, axiosPrivate, customers, dispatch, reload]);
+  }, [customers, dispatch, reload]);
 
   // If there is sort query, we show sorted customers.
   const customersArr = sortQuery ? sortedCustomers : customers;
@@ -83,15 +83,8 @@ const Customers = () => {
                 <table className="table">
                   <TableHeader items={customersTableHeaderItems} />
                   <tbody>
-                    {((customersLoading && !customers) || !customers) &&
-                      !customersError && (
-                        <CustomersSkeleton widths={customerItemsWidths} />
-                      )}
-
-                    {customersError && !customersLoading && (
-                      <tr className="table__empty">
-                        <td>{customersError}</td>
-                      </tr>
+                    {customersLoading && (
+                      <CustomersSkeleton widths={customerItemsWidths} />
                     )}
 
                     {customersArr?.map((customer) => (
@@ -122,6 +115,12 @@ const Customers = () => {
                     {customers?.length === 0 && (
                       <tr className="order-history__empty">
                         <td>No Customers found</td>
+                      </tr>
+                    )}
+
+                    {customersError && !customersLoading && (
+                      <tr className="table__empty">
+                        <td>{customersError}</td>
                       </tr>
                     )}
                   </tbody>

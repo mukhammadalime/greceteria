@@ -7,7 +7,6 @@ import LoadingButtonSpinner from "./Icons/LoadingButtonSpinner";
 import React from "react";
 import LoadingCounterSpinner from "./Icons/LoadingCounterSpinner";
 import WarningModal from "../modals/WarningModal";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Counter = ({
   defaultValue,
@@ -23,7 +22,6 @@ const Counter = ({
   const counterRef = useRef<HTMLInputElement>(null);
   const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const { state, dispatch } = useContext(CartContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const changeInputvalue = (num: number): void => {
     const currentValue = Number(counterRef.current?.value);
@@ -40,17 +38,17 @@ const Counter = ({
     const quantity = Number(counterRef.current?.value);
 
     if (forCart && !warningModal)
-      await updateCart(dispatch, id, quantity, setCounterLoading, axiosPrivate);
+      await updateCart(dispatch, id, quantity, setCounterLoading);
   };
 
   // This function is called when the user wants to add one or multiple quantities of one product to the cart. This is used in ProductCard, QuickViewModal and ProductDetails.
   const onAddToCart = async () => {
     const quantity = Number(counterRef.current?.value);
-    await addToCart(dispatch, id, quantity, axiosPrivate, setBtnLoading);
+    await addToCart(dispatch, id, quantity, setBtnLoading);
   };
 
   const onDeleteProduct = async (setLoading: (arg: boolean) => void) => {
-    await deleteProductCart(dispatch, id, axiosPrivate, setLoading);
+    await deleteProductCart(dispatch, id, setLoading);
     setWarningModal(false);
   };
 

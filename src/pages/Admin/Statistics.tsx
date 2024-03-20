@@ -2,17 +2,13 @@ import UserIcon from "../../components/UI/Icons/UserIcon";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import OrderStatistics from "../../components/admin/OrderStatistics";
 import { useContext, useEffect } from "react";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { OrderContext } from "../../store/OrderContext";
 import { UserContext } from "../../store/UserContext";
 import { getOrdersRevenueStats } from "../../api/orders";
 import { getCustomersStats } from "../../api/customers";
-import { AuthContext } from "../../store/AuthContext";
 
 const Statistics = () => {
-  const axiosPrivate = useAxiosPrivate();
   const { state, dispatch } = useContext(OrderContext);
-  const { auth } = useContext(AuthContext);
   const { state: userState, dispatch: userDispatch } = useContext(UserContext);
 
   /// Current month
@@ -21,15 +17,13 @@ const Statistics = () => {
   }).format(new Date(Date.now()));
 
   useEffect(() => {
-    if (!auth.accessToken) return;
-
     (async () => {
-      await getOrdersRevenueStats(dispatch, axiosPrivate);
+      await Promise.all([
+        getOrdersRevenueStats(dispatch),
+        getCustomersStats(userDispatch),
+      ]);
     })();
-    (async () => {
-      await getCustomersStats(userDispatch, axiosPrivate);
-    })();
-  }, [auth.accessToken, axiosPrivate, dispatch, userDispatch]);
+  }, [dispatch, userDispatch]);
 
   return (
     <div className="section-sm">

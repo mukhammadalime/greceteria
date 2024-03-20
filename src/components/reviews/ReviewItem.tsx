@@ -4,7 +4,6 @@ import { ReviewItemTypes } from "../../utils/user-types";
 import RatingsStars from "../UI/RatingsStars";
 import HoverRating from "../product-details/HoverRating";
 import { useParams } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
 import { addReviewReply, deleteReview, editReview } from "../../api/reviews";
 import WarningModal from "../modals/WarningModal";
@@ -29,7 +28,6 @@ const ReviewItem = ({
   const { productId } = useParams();
   const { dispatch } = useContext(ReviewContext);
   const { state, dispatch: productDispatch } = useContext(ProductContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const onEditReview = async () => {
     const reviewData = {
@@ -41,7 +39,6 @@ const ReviewItem = ({
     await editReview(
       dispatch,
       productDispatch,
-      axiosPrivate,
       reviewData,
       review._id,
       state.product?.reviewsCount as number
@@ -54,7 +51,6 @@ const ReviewItem = ({
     await deleteReview(
       dispatch,
       productDispatch,
-      axiosPrivate,
       review._id,
       state.product?.reviewsCount as number
     );
@@ -68,7 +64,7 @@ const ReviewItem = ({
       user: user.id as string,
     };
 
-    await addReviewReply(dispatch, axiosPrivate, reviewData, review._id);
+    await addReviewReply(dispatch, reviewData, review._id);
     setReplyOpen(false);
     setShowReplies(true);
   };

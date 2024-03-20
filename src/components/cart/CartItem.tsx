@@ -5,21 +5,14 @@ import { CartProductProps } from "../../utils/user-types";
 import { Link } from "react-router-dom";
 import { deleteProductCart } from "../../api/cart";
 import { CartContext } from "../../store/CartContext";
-import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const CartItem = ({ cartItem }: { cartItem: CartProductProps }) => {
   const [warningModal, setWarningModal] = useState(() => false);
 
   const { dispatch } = useContext(CartContext);
-  const axiosPrivate = useAxiosPrivate();
 
   const onDeleteProduct = async (setLoading: (arg: boolean) => void) => {
-    await deleteProductCart(
-      dispatch,
-      cartItem.productId,
-      axiosPrivate,
-      setLoading
-    );
+    await deleteProductCart(dispatch, cartItem.productId, setLoading);
   };
 
   return (

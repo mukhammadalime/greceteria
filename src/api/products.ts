@@ -2,8 +2,7 @@ import { ProductAction, ProductActionKind } from "../store/ProductContext";
 import { toast } from "react-toastify";
 import { ImageItemTypes, ProductItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
-import axios from "./axios";
-import { AxiosInstance } from "axios";
+import axios, { axiosPrivate } from "./axios";
 import { NavigateFunction } from "react-router-dom";
 
 export const getProducts = async (
@@ -81,8 +80,7 @@ export const addProduct = async (
   dispatch: React.Dispatch<ProductAction>,
   formData: FormData,
   imagesForServer: FileList | [],
-  closeModal: () => void,
-  axiosPrivate: AxiosInstance
+  closeModal: () => void
 ): Promise<void> => {
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
@@ -117,8 +115,7 @@ export const updateProduct = async (
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  product: ProductItemTypes,
-  axiosPrivate: AxiosInstance
+  product: ProductItemTypes
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
@@ -162,8 +159,7 @@ export const deleteProduct = async (
   dispatch: React.Dispatch<ProductAction>,
   closeModal: () => void,
   id: string,
-  navigate: (arg: string) => void,
-  axiosPrivate: AxiosInstance
+  navigate: (arg: string) => void
 ): Promise<void> => {
   try {
     dispatch({ type: ProductActionKind.DELETE_PRODUCT_START });
