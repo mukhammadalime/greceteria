@@ -1,9 +1,10 @@
 import { CategoryAction, CategoryActionKind } from "../store/CategoryContext";
 import { toast } from "react-toastify";
 import { CategoryItemTypes } from "../utils/user-types";
-import axios, { axiosPrivate } from "./axios";
+import axios from "./axios";
+import { AxiosInstance } from "axios";
 
-export const getCategoriesApi = async (
+export const getCategories = async (
   dispatch: React.Dispatch<CategoryAction>
 ): Promise<void> => {
   try {
@@ -47,6 +48,7 @@ export const addOrUpdateCategory = async (
   formData: FormData,
   closeModal: () => void,
   type: string,
+  axiosPrivate: AxiosInstance,
   id?: string
 ): Promise<void> => {
   try {
@@ -90,7 +92,8 @@ export const addOrUpdateCategory = async (
 export const deleteCategory = async (
   categories: CategoryItemTypes[],
   dispatch: React.Dispatch<CategoryAction>,
-  id: string
+  id: string,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: CategoryActionKind.DELETE_CATEGORY_START });

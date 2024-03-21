@@ -6,10 +6,14 @@ import { OrderContext } from "../../store/OrderContext";
 import { UserContext } from "../../store/UserContext";
 import { getOrdersRevenueStats } from "../../api/orders";
 import { getCustomersStats } from "../../api/customers";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const Statistics = () => {
   const { state, dispatch } = useContext(OrderContext);
   const { state: userState, dispatch: userDispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   /// Current month
   const month = new Intl.DateTimeFormat("en-US", {
@@ -17,13 +21,14 @@ const Statistics = () => {
   }).format(new Date(Date.now()));
 
   useEffect(() => {
+    if (!auth.accessToken) return;
     (async () => {
       await Promise.all([
-        getOrdersRevenueStats(dispatch),
-        getCustomersStats(userDispatch),
+        getOrdersRevenueStats(dispatch, axiosPrivate),
+        getCustomersStats(userDispatch, axiosPrivate),
       ]);
     })();
-  }, [dispatch, userDispatch]);
+  }, [dispatch, userDispatch, axiosPrivate, auth.accessToken]);
 
   return (
     <div className="section-sm">

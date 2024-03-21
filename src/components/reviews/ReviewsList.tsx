@@ -8,6 +8,7 @@ import { UserContext } from "../../store/UserContext";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import { ReviewContext } from "../../store/ReviewsContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const ReviewsList = ({ show }: { show: boolean }) => {
   const [page, setPage] = useState<number>(1);
@@ -23,6 +24,7 @@ const ReviewsList = ({ show }: { show: boolean }) => {
     state: { reviews, loading },
     dispatch,
   } = useContext(ReviewContext);
+  const axiosPrivate = useAxiosPrivate();
   const { state: userState } = useContext(UserContext);
 
   useLayoutEffect(() => {
@@ -47,6 +49,7 @@ const ReviewsList = ({ show }: { show: boolean }) => {
 
     await addReview(
       dispatch,
+      axiosPrivate,
       productDispatch,
       reviewData,
       product?.reviewsCount as number

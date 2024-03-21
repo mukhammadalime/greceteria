@@ -17,7 +17,7 @@ const ProductDetails = () => {
       productLoading,
       product,
       relatedProducts,
-      customProductsLoading,
+      relatedProductsLoading,
       productErr,
     },
     dispatch,
@@ -50,7 +50,7 @@ const ProductDetails = () => {
             products={
               relatedProducts?.filter((i) => i._id !== productId) || null
             }
-            loading={customProductsLoading}
+            loading={relatedProductsLoading}
           />
         </>
       )}

@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { UserContext } from "../store/UserContext";
 import { removeFromWishlist } from "../api/user";
 import LoadingCounterSpinner from "./UI/Icons/LoadingCounterSpinner";
@@ -19,16 +20,20 @@ const WishlistedItem = ({
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { dispatch } = useContext(UserContext);
   const { state, dispatch: cartDispatch } = useContext(CartContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const onAddToCart = async () => {
     if (state.updateLoading) return;
-    await addToCart(cartDispatch, id, 1, setAddToCartLoading);
+    await addToCart(cartDispatch, id, 1, axiosPrivate, setAddToCartLoading);
   };
 
   const onRemoveFromWishlist = async () => {
     setWishlistUpdated(true);
-    setTimeout(async () => await removeFromWishlist(dispatch, id), 300);
-    setTimeout(() => setWishlistUpdated(false), 350);
+    setTimeout(
+      async () => await removeFromWishlist(dispatch, axiosPrivate, id),
+      300
+    );
+    setTimeout(() => setWishlistUpdated(false), 301);
   };
 
   return (

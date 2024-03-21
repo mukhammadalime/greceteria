@@ -8,6 +8,8 @@ import { OrderActionKind, OrderContext } from "../store/OrderContext";
 import { getAllOrders, getMyOrders } from "../api/orders";
 import { orderPriceOptions, orderSortOptions } from "../data/helperData";
 import useToggleOptions from "../hooks/useToggleOptions";
+import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../store/AuthContext";
 
 const OrderHistory = () => {
   const {
@@ -21,20 +23,23 @@ const OrderHistory = () => {
   } = useContext(OrderContext);
   // This function opens the requested filter and closed other remaining open filters.
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (user) dispatch({ type: OrderActionKind.GET_ORDERS_START });
-  }, [dispatch, user]);
+    if (auth.accessToken) dispatch({ type: OrderActionKind.GET_ORDERS_START });
+  }, [auth.accessToken, dispatch]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!auth.accessToken) return;
     (async () => {
       // For user
-      if (user.role === "user") await getMyOrders(dispatch, "sort=-createdAt");
+      if (user?.role === "user")
+        await getMyOrders(dispatch, axiosPrivate, "sort=-createdAt");
       // For admin
-      else await getAllOrders(dispatch, "sort=-createdAt");
+      else await getAllOrders(dispatch, axiosPrivate, "sort=-createdAt");
     })();
-  }, [dispatch, user]);
+  }, [dispatch, user, axiosPrivate, auth.accessToken]);
 
   if (user === null) return <LoginFirst />;
 

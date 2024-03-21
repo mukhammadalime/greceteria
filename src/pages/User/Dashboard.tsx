@@ -11,29 +11,34 @@ import {
   getOrdersStats,
   getRecentOrdersForAdmin,
 } from "../../api/orders";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const Dashboard = () => {
   const {
     state: { user },
   } = useContext(UserContext);
   const { state: ordersState, dispatch } = useContext(OrderContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (user) dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
-  }, [dispatch, user]);
+    if (auth.accessToken)
+      dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
+  }, [auth.accessToken, dispatch, user]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!auth.accessToken) return;
 
     (async () => {
-      if (user.role !== "user")
+      if (user?.role !== "user")
         await Promise.all([
-          getRecentOrdersForAdmin(dispatch),
-          getOrdersStats(dispatch),
+          getRecentOrdersForAdmin(dispatch, axiosPrivate),
+          getOrdersStats(dispatch, axiosPrivate),
         ]);
-      else getMyOrders(dispatch, "limit=10&sort=-createdAt");
+      else getMyOrders(dispatch, axiosPrivate, "limit=10&sort=-createdAt");
     })();
-  }, [dispatch, user]);
+  }, [dispatch, user, axiosPrivate, auth.accessToken]);
 
   if (user === null) return <LoginFirst />;
 

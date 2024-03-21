@@ -5,12 +5,14 @@ import { returnUpdatedState } from "../utils/helperFunctions";
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[] | null;
   relatedProducts: ProductItemTypes[] | null;
+  relatedProductsLoading: boolean;
   topProducts: ProductItemTypes[] | null;
+  topProductsLoading: boolean;
   saleProducts: ProductItemTypes[] | null;
+  saleProductsLoading: boolean;
   product: ProductItemTypes | null;
   productsLoading: boolean;
   productLoading: boolean;
-  customProductsLoading: boolean;
   addUpdateDeleteLoading: boolean;
   addUpdateDeleteErr: string | null;
   productsErr: string | null;
@@ -64,7 +66,9 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   relatedProducts: null,
   topProducts: null,
   saleProducts: null,
-  customProductsLoading: false,
+  relatedProductsLoading: false,
+  topProductsLoading: false,
+  saleProductsLoading: false,
   ////////////////////////////////
   product: null,
   productLoading: false,
@@ -110,7 +114,7 @@ const ProductReducer = (
       const payload1 = action.payload as CustomProductsPayloadProps;
       return {
         ...state,
-        customProductsLoading: true,
+        [`${payload1.type}Loading`]: true,
         [`${payload1.type}`]: null,
       };
     case ProductActionKind.GET_CUSTOM_PRODUCTS_SUCCESS:
@@ -118,14 +122,14 @@ const ProductReducer = (
       return {
         ...state,
         [`${payload2.type}`]: payload2.products,
-        customProductsLoading: false,
+        [`${payload2.type}Loading`]: false,
       };
     case ProductActionKind.GET_CUSTOM_PRODUCTS_FAILURE:
       const payload3 = action.payload as CustomProductsPayloadProps;
       return {
         ...state,
         [`${payload3.type}`]: null,
-        customProductsLoading: false,
+        [`${payload3.type}Loading`]: false,
       };
 
     case ProductActionKind.GET_PRODUCT_START:

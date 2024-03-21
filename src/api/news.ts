@@ -2,7 +2,8 @@ import { toast } from "react-toastify";
 import { NewsAction, NewsActionKind } from "../store/NewsContext";
 import { ImageItemTypes, NewsItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
-import axios, { axiosPrivate } from "./axios";
+import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 export const getNewsApi = async (
   dispatch: React.Dispatch<NewsAction>
@@ -52,7 +53,8 @@ export const addNews = async (
   dispatch: React.Dispatch<NewsAction>,
   formData: FormData,
   imagesForServer: FileList | [],
-  closeModal: () => void
+  closeModal: () => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
@@ -89,7 +91,8 @@ export const updateNews = async (
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
-  news: NewsItemTypes | undefined
+  news: NewsItemTypes | undefined,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
@@ -110,9 +113,7 @@ export const updateNews = async (
     const { data } = await axiosPrivate.patch(
       `/news/${news?._id}`,
       updatedFormData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
 
     dispatch({
@@ -122,22 +123,21 @@ export const updateNews = async (
     closeModal();
     toast.success("News has been successfully updated.");
   } catch (err: any) {
+    const error = err.response?.data.message || "Something went wrong.";
     dispatch({
       type: NewsActionKind.UPDATE_NEWSITEM_FAILURE,
-      error: err.response?.data.message,
+      error,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
     toast.error(error);
   }
 };
 
 export const deleteNews = async (
   dispatch: React.Dispatch<NewsAction>,
-  id: string,
+  id: string | undefined,
   closeModal: () => void,
-  navigate: (arg: string) => void
+  navigate: (arg: string) => void,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: NewsActionKind.DELETE_NEWSITEM_START });
@@ -149,13 +149,12 @@ export const deleteNews = async (
     closeModal();
     navigate("/news");
   } catch (err: any) {
+    const error = err.response?.data.message || "Something went wrong";
+
     dispatch({
       type: NewsActionKind.DELETE_NEWSITEM_FAILURE,
-      error: err.response?.data.message,
+      error,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
     toast.error(error);
   }
 };

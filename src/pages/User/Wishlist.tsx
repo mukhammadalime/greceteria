@@ -6,21 +6,28 @@ import LoginFirst from "../../components/LoginFirst";
 import { UserActionKind, UserContext } from "../../store/UserContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import { getCompareOrWishlist } from "../../api/user";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const Wishlist = () => {
   const {
     state: { user, compareWishlistLoading, wishlisted, compareWishlistError },
     dispatch,
   } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (user) dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
-  }, [dispatch, user]);
+    if (!auth.accessToken) return;
+    dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
+  }, [auth.accessToken, dispatch]);
 
   useEffect(() => {
-    if (user)
-      (async () => await getCompareOrWishlist(dispatch, "wishlisted"))();
-  }, [dispatch, user]);
+    if (!auth.accessToken) return;
+    (async () => {
+      await getCompareOrWishlist(dispatch, axiosPrivate, "wishlisted");
+    })();
+  }, [dispatch, axiosPrivate, auth.accessToken]);
 
   if (user === null) return <LoginFirst />;
   if (compareWishlistLoading) return <LoadingSpinner />;

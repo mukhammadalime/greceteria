@@ -9,6 +9,7 @@ import { CountryCode } from "libphonenumber-js";
 import { UserContext } from "../../store/UserContext";
 import { addDeleteUpdateAddress, getCountryCode } from "../../api/user";
 import { ActionTypeProps } from "../../utils/types";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -30,6 +31,8 @@ const AddAddressOverlay = ({
   const postalCodeRef = useRef<HTMLInputElement>(null);
   const { state, dispatch } = useContext(UserContext);
 
+  const axiosPrivate = useAxiosPrivate();
+
   useEffect(() => {
     const fetchCountry = async () => await getCountryCode(setCountryCode);
     state.user?.phoneNumber === undefined && fetchCountry();
@@ -48,6 +51,7 @@ const AddAddressOverlay = ({
 
     await addDeleteUpdateAddress(
       dispatch,
+      axiosPrivate,
       actionType,
       state.user as User,
       addressRefs,

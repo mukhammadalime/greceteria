@@ -1,20 +1,20 @@
 import Banner from "../layout/banner/Banner";
 import CategoriesCarousel from "../components/category/CategoriesCarousel";
 import CustomProductsCarousel from "../components/CustomProductsCarousel";
-import NewsCarousel from "../components/newsCard/NewsCarousel";
 import { useContext, useLayoutEffect } from "react";
 import { ProductContext } from "../store/ProductContext";
-import { CategoryContext } from "../store/CategoryContext";
-import { NewsContext } from "../store/NewsContext";
-import { UserContext } from "../store/UserContext";
+import { CategoryActionKind, CategoryContext } from "../store/CategoryContext";
 import { getCustomProducts } from "../api/products";
-import { getCategoriesApi } from "../api/categories";
+import { getCategories } from "../api/categories";
 
 const HomePage = () => {
-  const { state } = useContext(UserContext);
-
   const {
-    state: { topProducts, customProductsLoading, saleProducts },
+    state: {
+      topProducts,
+      topProductsLoading,
+      saleProductsLoading,
+      saleProducts,
+    },
     dispatch,
   } = useContext(ProductContext);
 
@@ -23,18 +23,19 @@ const HomePage = () => {
     dispatch: categoryDispatch,
   } = useContext(CategoryContext);
 
-  const {
-    state: { news, newsLoading },
-  } = useContext(NewsContext);
+  useLayoutEffect(() => {}, [categoryDispatch, dispatch]);
 
   useLayoutEffect(() => {
     const topQuery = "?sort=-ratingsAverage&limit=9";
     const saleQuery = "?discountedPrice[gt]=0";
+    categoryDispatch({ type: CategoryActionKind.GET_CATEGORIES_START });
 
     (async () => {
-      await getCategoriesApi(categoryDispatch);
-      await getCustomProducts(dispatch, "topProducts", topQuery);
-      await getCustomProducts(dispatch, "saleProducts", saleQuery);
+      await Promise.all([
+        getCategories(categoryDispatch),
+        getCustomProducts(dispatch, "saleProducts", saleQuery),
+        getCustomProducts(dispatch, "topProducts", topQuery),
+      ]);
     })();
   }, [dispatch, categoryDispatch]);
 
@@ -47,17 +48,14 @@ const HomePage = () => {
       <CustomProductsCarousel
         text="Top Rated Products"
         products={topProducts}
-        loading={customProductsLoading}
+        loading={topProductsLoading}
       />
 
       <CustomProductsCarousel
         text="Sale Products"
         products={saleProducts}
-        loading={customProductsLoading}
+        loading={saleProductsLoading}
       />
-      {state.user !== null && (
-        <NewsCarousel news={news} loading={newsLoading} />
-      )}
     </>
   );
 };

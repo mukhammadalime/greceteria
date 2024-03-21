@@ -1,9 +1,11 @@
 import { toast } from "react-toastify";
 import { UserAction, UserActionKind } from "../store/UserContext";
-import { axiosPrivate } from "./axios";
+import { AxiosInstance } from "axios";
+import { Dispatch } from "react";
 
-export const getCustomersApi = async (
-  dispatch: React.Dispatch<UserAction>
+export const getCustomers = async (
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     const { data } = await axiosPrivate("users");
@@ -20,9 +22,10 @@ export const getCustomersApi = async (
   }
 };
 
-export const getCustomerApi = async (
-  dispatch: React.Dispatch<UserAction>,
-  id: string
+export const getCustomer = async (
+  dispatch: Dispatch<UserAction>,
+  id: string,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.GET_CUSTOMER_START });
@@ -41,7 +44,8 @@ export const getCustomerApi = async (
 };
 
 export const getCustomersStats = async (
-  dispatch: React.Dispatch<UserAction>
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.GET_CUSTOMERS_STATS_START });

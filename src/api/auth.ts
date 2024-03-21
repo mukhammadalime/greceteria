@@ -1,11 +1,15 @@
 import { toast } from "react-toastify";
-import axios, { axiosPrivate } from "./axios";
+import axios from "./axios";
 import { UserAction, UserActionKind } from "../store/UserContext";
+import { AuthInitialStateTypes } from "../store/AuthContext";
+import { AxiosInstance } from "axios";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 export const login = async (
+  setAuth: Dispatch<SetStateAction<AuthInitialStateTypes>>,
   location: { search: string },
   navigate: (arg: string) => void,
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
   userData: {
     username?: string;
     password?: string;
@@ -22,6 +26,7 @@ export const login = async (
         password: userData?.password,
       }
     );
+    setAuth({ accessToken: data.accessToken });
     dispatch({ type: UserActionKind.GETME_SUCCESS, payload: data.user });
 
     if (location.search.startsWith("?next-page"))
@@ -41,8 +46,13 @@ export const login = async (
   }
 };
 
-export const logout = async () => {
+export const logout = async (
+  dispatch: Dispatch<SetStateAction<AuthInitialStateTypes>>,
+  axiosPrivate: AxiosInstance
+) => {
   try {
+    dispatch({ accessToken: null });
+
     await axiosPrivate.get("/users/logout");
 
     localStorage.removeItem("persist");
@@ -98,7 +108,7 @@ export const signup = async (
 };
 
 export const verify = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
   verificationCode: string,
   location: { search: string },
   navigate: (arg0: string) => void
@@ -173,7 +183,7 @@ export const forgotPassword = async (
 };
 
 export const resetPassword = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
   passwords: {
     password: string | undefined;
     passwordConfirm: string | undefined;
@@ -235,10 +245,12 @@ export const checkResetTokenExistApi = async (
 };
 
 export const changeMyPassword = async (
-  dispatch: React.Dispatch<UserAction>,
-  currentPasswordRef: React.RefObject<HTMLInputElement>,
-  newPasswordRef: React.RefObject<HTMLInputElement>,
-  newPasswordConfirmRef: React.RefObject<HTMLInputElement>
+  dispatch: Dispatch<UserAction>,
+  currentPasswordRef: RefObject<HTMLInputElement>,
+  newPasswordRef: RefObject<HTMLInputElement>,
+  newPasswordConfirmRef: RefObject<HTMLInputElement>,
+  setAuth: Dispatch<SetStateAction<AuthInitialStateTypes>>,
+  axiosPrivate: AxiosInstance
 ) => {
   const currentPassword = currentPasswordRef.current?.value;
   const password = newPasswordRef.current?.value;
@@ -256,6 +268,7 @@ export const changeMyPassword = async (
       passwordConfirm,
     });
 
+    setAuth({ accessToken: data.accessToken });
     dispatch({
       type: UserActionKind.CHANGE_PASSWORD_SUCCESS,
       payload: data.user,
@@ -266,13 +279,8 @@ export const changeMyPassword = async (
     newPasswordRef.current.value = "";
     newPasswordConfirmRef.current.value = "";
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.CHANGE_PASSWORD_FAILURE,
-      error: err.response?.data.message,
-    });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.CHANGE_PASSWORD_FAILURE, error });
     toast.error(error);
   }
 };

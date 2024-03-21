@@ -6,6 +6,7 @@ import { addOrUpdateCategory, deleteCategory } from "../../api/categories";
 import { CategoryContext } from "../../store/CategoryContext";
 import { CategoryItemTypes } from "../../utils/user-types";
 import { ActionTypeProps } from "../../utils/types";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -21,6 +22,7 @@ const AddCategoryOverlay = ({
   );
   const nameRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
+  const axiosPrivate = useAxiosPrivate();
 
   const {
     state: { categories, addUpdateDeleteError, categoryLoading },
@@ -60,7 +62,8 @@ const AddCategoryOverlay = ({
           dispatch,
           formData,
           closeModal,
-          "POST"
+          "POST",
+          axiosPrivate
         );
         break;
       case "update":
@@ -76,11 +79,17 @@ const AddCategoryOverlay = ({
           formData,
           closeModal,
           "PATCH",
+          axiosPrivate,
           category?._id
         );
         break;
       case "delete":
-        await deleteCategory(categories, dispatch, category?._id!);
+        await deleteCategory(
+          categories,
+          dispatch,
+          category?._id!,
+          axiosPrivate
+        );
         break;
 
       default:

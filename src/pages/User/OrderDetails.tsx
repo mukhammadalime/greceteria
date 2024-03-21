@@ -6,6 +6,8 @@ import { useContext, useEffect, useLayoutEffect } from "react";
 import { getOneOrder } from "../../api/orders";
 import { OrderActionKind, OrderContext } from "../../store/OrderContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -13,14 +15,17 @@ const OrderDetails = () => {
     state: { orderLoading, error, order },
     dispatch,
   } = useContext(OrderContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
     dispatch({ type: OrderActionKind.GET_ORDER_START });
   }, [dispatch]);
 
   useEffect(() => {
-    (async () => await getOneOrder(dispatch, orderId!))();
-  }, [dispatch, orderId]);
+    if (!auth.accessToken) return;
+    (async () => await getOneOrder(dispatch, axiosPrivate, orderId!))();
+  }, [dispatch, orderId, axiosPrivate, auth.accessToken]);
 
   return (
     <div className="section-sm">

@@ -1,10 +1,12 @@
 import { toast } from "react-toastify";
 import { OrderAction, OrderActionKind } from "../store/OrderContext";
-import { axiosPrivate } from "./axios";
+import { AxiosInstance } from "axios";
+import { Dispatch } from "react";
 
 //// FOR USERS
 export const getMyOrders = async (
-  dispatch: React.Dispatch<OrderAction>,
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
   query?: string
 ): Promise<void> => {
   const isRecent = query?.includes("limit=10");
@@ -26,7 +28,8 @@ export const getMyOrders = async (
 };
 
 export const getOneOrder = async (
-  dispatch: React.Dispatch<OrderAction>,
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {
@@ -45,7 +48,8 @@ export const getOneOrder = async (
 
 //// FOR ADMINS
 export const getAllOrders = async (
-  dispatch: React.Dispatch<OrderAction>,
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
   quary?: string
 ): Promise<void> => {
   try {
@@ -64,7 +68,8 @@ export const getAllOrders = async (
 };
 
 export const getRecentOrdersForAdmin = async (
-  dispatch: React.Dispatch<OrderAction>
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
@@ -83,7 +88,8 @@ export const getRecentOrdersForAdmin = async (
 };
 
 export const getOrdersStats = async (
-  dispatch: React.Dispatch<OrderAction>
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: OrderActionKind.GET_ORDERS_STATS_START });
@@ -102,7 +108,8 @@ export const getOrdersStats = async (
 };
 
 export const getOrdersRevenueStats = async (
-  dispatch: React.Dispatch<OrderAction>
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   dispatch({ type: OrderActionKind.GET_REVENUE_STATS_START });
   try {
@@ -121,7 +128,8 @@ export const getOrdersRevenueStats = async (
 };
 
 export const updateOrder = async (
-  dispatch: React.Dispatch<OrderAction>,
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
   id: string,
   actionType: "on-the-way" | "delivered"
 ): Promise<void> => {
@@ -140,11 +148,11 @@ export const updateOrder = async (
 
 ////////////////////////////////////////////////////////////////
 export const getUserOrders = async (
-  dispatch: React.Dispatch<OrderAction>,
+  dispatch: Dispatch<OrderAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {
-    // dispatch({ type: OrderActionKind.GET_USER_ORDERS_START });
     const { data } = await axiosPrivate(`orders/user/${id}`);
 
     dispatch({

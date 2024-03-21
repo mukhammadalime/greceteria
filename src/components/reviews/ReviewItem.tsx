@@ -10,6 +10,7 @@ import WarningModal from "../modals/WarningModal";
 import ReplyItem from "./ReplyItem";
 import { ReviewContext } from "../../store/ReviewsContext";
 import { ProductContext } from "../../store/ProductContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const ReviewItem = ({
   review,
@@ -27,6 +28,7 @@ const ReviewItem = ({
   const replyRef = useRef<HTMLTextAreaElement>(null);
   const { productId } = useParams();
   const { dispatch } = useContext(ReviewContext);
+  const axiosPrivate = useAxiosPrivate();
   const { state, dispatch: productDispatch } = useContext(ProductContext);
 
   const onEditReview = async () => {
@@ -38,6 +40,7 @@ const ReviewItem = ({
 
     await editReview(
       dispatch,
+      axiosPrivate,
       productDispatch,
       reviewData,
       review._id,
@@ -50,6 +53,7 @@ const ReviewItem = ({
     setLoading(true);
     await deleteReview(
       dispatch,
+      axiosPrivate,
       productDispatch,
       review._id,
       state.product?.reviewsCount as number
@@ -64,7 +68,7 @@ const ReviewItem = ({
       user: user.id as string,
     };
 
-    await addReviewReply(dispatch, reviewData, review._id);
+    await addReviewReply(dispatch, axiosPrivate, reviewData, review._id);
     setReplyOpen(false);
     setShowReplies(true);
   };

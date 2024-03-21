@@ -8,6 +8,7 @@ import { addToWishlist, removeFromWishlist } from "../../api/user";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { UserContext } from "../../store/UserContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -16,6 +17,7 @@ const Backdrop = (props: { closeModal: () => void }) => {
 const QuickViewOverlay = ({ closeModal, item }: QuickViewModalProps) => {
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
 
   /// Calculate discountPercent
   let discountPercent: number = 0;
@@ -27,8 +29,8 @@ const QuickViewOverlay = ({ closeModal, item }: QuickViewModalProps) => {
   const onToggleWishlist = async () => {
     const added = state.user?.wishlisted.includes(item._id);
     setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, item._id);
-    else await addToWishlist(dispatch, item._id);
+    if (added) await removeFromWishlist(dispatch, axiosPrivate, item._id);
+    else await addToWishlist(dispatch, axiosPrivate, item._id);
     setWishlistUpdated(false);
   };
 

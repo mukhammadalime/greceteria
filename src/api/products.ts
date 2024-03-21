@@ -2,11 +2,13 @@ import { ProductAction, ProductActionKind } from "../store/ProductContext";
 import { toast } from "react-toastify";
 import { ImageItemTypes, ProductItemTypes } from "../utils/user-types";
 import { determineImageUploadConditions } from "./helper";
-import axios, { axiosPrivate } from "./axios";
+import axios from "./axios";
 import { NavigateFunction } from "react-router-dom";
+import { AxiosInstance } from "axios";
+import { Dispatch } from "react";
 
 export const getProducts = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
   query?: string
 ): Promise<void> => {
   try {
@@ -26,7 +28,7 @@ export const getProducts = async (
 };
 
 export const getCustomProducts = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
   type: "relatedProducts" | "topProducts" | "saleProducts",
   query?: string
 ): Promise<void> => {
@@ -51,7 +53,7 @@ export const getCustomProducts = async (
 };
 
 export const getProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
   id: string,
   navigate: NavigateFunction
 ): Promise<void> => {
@@ -77,7 +79,8 @@ export const getProduct = async (
 };
 
 export const addProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
+  axiosPrivate: AxiosInstance,
   formData: FormData,
   imagesForServer: FileList | [],
   closeModal: () => void
@@ -85,7 +88,6 @@ export const addProduct = async (
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
   }
-  formData.forEach((i) => console.log(i));
 
   try {
     dispatch({ type: ProductActionKind.ADD_PRODUCT_START });
@@ -110,7 +112,8 @@ export const addProduct = async (
 };
 
 export const updateProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
+  axiosPrivate: AxiosInstance,
   formData: FormData,
   imagesForServer: FileList | [],
   imagesForClient: ImageItemTypes[],
@@ -156,7 +159,8 @@ export const updateProduct = async (
 };
 
 export const deleteProduct = async (
-  dispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ProductAction>,
+  axiosPrivate: AxiosInstance,
   closeModal: () => void,
   id: string,
   navigate: (arg: string) => void

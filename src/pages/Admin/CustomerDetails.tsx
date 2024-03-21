@@ -3,12 +3,14 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import OrdersTable from "../../components/orders/OrdersTable";
 import DashboardNav from "../../components/dashboard/DashboardNav";
 import { UserActionKind, UserContext } from "../../store/UserContext";
-import { getCustomerApi } from "../../api/customers";
+import { getCustomer } from "../../api/customers";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import { getUserOrders } from "../../api/orders";
 import { OrderActionKind, OrderContext } from "../../store/OrderContext";
 import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
@@ -21,6 +23,8 @@ const CustomerDetails = () => {
     state: { userOrders, loading, error },
     dispatch: orderDisatch,
   } = useContext(OrderContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
     dispatch({ type: UserActionKind.GET_CUSTOMER_START });
@@ -28,13 +32,14 @@ const CustomerDetails = () => {
   }, [dispatch, orderDisatch]);
 
   useEffect(() => {
+    if (!auth.accessToken) return;
     (async () => {
       await Promise.all([
-        getCustomerApi(dispatch, customerId!),
-        getUserOrders(orderDisatch, customerId!),
+        getCustomer(dispatch, customerId!, axiosPrivate),
+        getUserOrders(orderDisatch, axiosPrivate, customerId!),
       ]);
     })();
-  }, [customerId, dispatch, orderDisatch]);
+  }, [customerId, dispatch, orderDisatch, axiosPrivate, auth.accessToken]);
 
   return (
     <>

@@ -3,7 +3,8 @@ import { toast } from "react-toastify";
 import PhoneNumber, { CountryCode } from "libphonenumber-js";
 import { AddressItemTypes, User } from "../utils/user-types";
 import { ActionTypeProps } from "../utils/types";
-import { axiosPrivate } from "./axios";
+import { AxiosInstance } from "axios";
+import { Dispatch, RefObject } from "react";
 
 export const getCountryCode = async (
   setCountryCode: (code: CountryCode | undefined) => void
@@ -19,7 +20,8 @@ export const getCountryCode = async (
 };
 
 export const getMe = async (
-  dispatch: React.Dispatch<UserAction>
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance
 ): Promise<void> => {
   try {
     dispatch({ type: UserActionKind.GETME_START });
@@ -33,13 +35,14 @@ export const getMe = async (
 };
 
 export const updateMe = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   userData: {
     phoneNumber: string | undefined;
     name: string | undefined;
     username: string | undefined;
     email: string | undefined;
-    photoRef: React.RefObject<HTMLInputElement>;
+    photoRef: RefObject<HTMLInputElement>;
     countryCode: CountryCode | undefined;
   }
 ) => {
@@ -86,15 +89,16 @@ export const updateMe = async (
 };
 
 export const addDeleteUpdateAddress = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   actionType: ActionTypeProps,
   user: User,
   addressRefs: {
-    nameRef: React.RefObject<HTMLInputElement>;
-    cityRef: React.RefObject<HTMLInputElement>;
-    address1Ref: React.RefObject<HTMLInputElement>;
-    address2Ref: React.RefObject<HTMLInputElement>;
-    postalCodeRef: React.RefObject<HTMLInputElement>;
+    nameRef: RefObject<HTMLInputElement>;
+    cityRef: RefObject<HTMLInputElement>;
+    address1Ref: RefObject<HTMLInputElement>;
+    address2Ref: RefObject<HTMLInputElement>;
+    postalCodeRef: RefObject<HTMLInputElement>;
     phoneNumber: string;
     countryCode: CountryCode;
   },
@@ -183,7 +187,8 @@ export const addDeleteUpdateAddress = async (
 };
 
 export const getCompareOrWishlist = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   type: "compare" | "wishlisted"
 ): Promise<void> => {
   try {
@@ -197,7 +202,6 @@ export const getCompareOrWishlist = async (
       },
     });
   } catch (err: any) {
-    console.log("err:", err);
     dispatch({
       type: UserActionKind.GET_COMPARE_OR_WISHLIST_FAILURE,
       error: err.response?.data.message || "Something went wrong.",
@@ -206,7 +210,8 @@ export const getCompareOrWishlist = async (
 };
 
 export const addToWishlist = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {
@@ -222,7 +227,8 @@ export const addToWishlist = async (
 };
 
 export const removeFromWishlist = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {
@@ -238,7 +244,8 @@ export const removeFromWishlist = async (
 };
 
 export const addToCompare = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {
@@ -254,7 +261,8 @@ export const addToCompare = async (
 };
 
 export const removeFromCompare = async (
-  dispatch: React.Dispatch<UserAction>,
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
   id: string
 ): Promise<void> => {
   try {

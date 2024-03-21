@@ -3,10 +3,12 @@ import DashboardNav from "../../components/dashboard/DashboardNav";
 import FilterOptions from "../../components/UI/FilterOptions";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { UserActionKind, UserContext } from "../../store/UserContext";
-import { getCustomersApi } from "../../api/customers";
+import { getCustomers } from "../../api/customers";
 import ReloadIcon from "../../components/UI/Icons/ReloadIcon";
 import CustomersSkeleton from "../../skeletons/TableItemsSkeleton";
 import TableHeader from "../../components/TableHeader";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { AuthContext } from "../../store/AuthContext";
 
 export const sortOptions = [
   { name: "Sort by: Active", id: "active" },
@@ -31,20 +33,22 @@ const Customers = () => {
     sortCustomers,
     dispatch,
   } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
     if (customers && !reload) return;
     dispatch({ type: UserActionKind.GET_CUSTOMERS_START });
-  }, [customers, dispatch, reload]);
+  }, [auth.accessToken, customers, dispatch, reload]);
 
   useEffect(() => {
     // We do no fetch customers if there is already data until the 'reload' button is clicked.
-    if (customers && !reload) return;
+    if ((customers && !reload) || !auth.accessToken) return;
     (async () => {
-      await getCustomersApi(dispatch);
+      await getCustomers(dispatch, axiosPrivate);
       setReload(false);
     })();
-  }, [customers, dispatch, reload]);
+  }, [customers, dispatch, reload, axiosPrivate, auth.accessToken]);
 
   // If there is sort query, we show sorted customers.
   const customersArr = sortQuery ? sortedCustomers : customers;

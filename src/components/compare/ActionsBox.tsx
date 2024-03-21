@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import SocialShareModal from "../modals/SocialShareModal";
 import { addToCart } from "../../api/cart";
 import { CartContext } from "../../store/CartContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { toast } from "react-toastify";
 import { addToWishlist, removeFromCompare } from "../../api/user";
 import { UserContext } from "../../store/UserContext";
@@ -11,6 +12,7 @@ const ActionsBox = ({ id }: { id: string }) => {
   const [removeLoading, setRemoveLoading] = useState<boolean>(false);
   const { state: cartState, dispatch } = useContext(CartContext);
   const { state, dispatch: userDispatch } = useContext(UserContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const onToggleOptions = () => {
     const boxes = document.querySelectorAll(".options-box");
@@ -22,19 +24,19 @@ const ActionsBox = ({ id }: { id: string }) => {
   };
 
   const onAddToCart = async () => {
-    await addToCart(dispatch, id, 1);
+    await addToCart(dispatch, id, 1, axiosPrivate);
     toast.success("Added to cart.");
   };
 
   const onAddToWishlist = async () => {
-    await addToWishlist(userDispatch, id);
+    await addToWishlist(userDispatch, axiosPrivate, id);
     toast.success("Added to wishlist.");
   };
 
   const onRemoveFromCompare = async () => {
     if (removeLoading) return;
     setRemoveLoading(true);
-    await removeFromCompare(userDispatch, id);
+    await removeFromCompare(userDispatch, axiosPrivate, id);
     setRemoveLoading(false);
   };
 

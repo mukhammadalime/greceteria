@@ -10,6 +10,8 @@ import ShoppingCartIcon from "../UI/Icons/ShoppingCartIcon";
 import OrderHistoryIcon from "../UI/Icons/OrderHistoryIcon";
 import { memo, useContext, useState } from "react";
 import { logout } from "../../api/auth";
+import { AuthContext } from "../../store/AuthContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { UserContext } from "../../store/UserContext";
 
 const navUserItems = [
@@ -77,12 +79,14 @@ const DashboardNav = ({ activeNavItem }: { activeNavItem: string }) => {
   const [navOpen, setNavOpen] = useState<boolean>(() => false);
   const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
   const { state } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const navItems = state.user?.role === "user" ? navUserItems : navAdminItems;
 
   const onLogoutHandler = async () => {
     setLogoutLoading(true);
-    await logout();
+    await logout(setAuth, axiosPrivate);
     setLogoutLoading(false);
   };
 

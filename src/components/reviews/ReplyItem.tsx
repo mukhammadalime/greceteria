@@ -9,6 +9,7 @@ import {
   editReviewReply,
 } from "../../api/reviews";
 import { ReviewContext } from "../../store/ReviewsContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const ReplyItem = ({
   reply,
@@ -24,6 +25,7 @@ const ReplyItem = ({
   const [replyOpen, setReplyOpen] = useState<boolean>(false);
   const replyRef = useRef<HTMLTextAreaElement>(null);
   const { dispatch } = useContext(ReviewContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const onAddReply = async () => {
     const reviewData = {
@@ -31,13 +33,14 @@ const ReplyItem = ({
       user: user.id as string,
     };
 
-    await addReviewReply(dispatch, reviewData, review.id);
+    await addReviewReply(dispatch, axiosPrivate, reviewData, review.id);
     setReplyOpen(false);
   };
 
   const onEditReply = async () => {
     await editReviewReply(
       dispatch,
+      axiosPrivate,
       replyRef.current?.value as string,
       review.id,
       reply._id
@@ -47,7 +50,7 @@ const ReplyItem = ({
 
   const onDeleteReply = async (setLoading: (arg: boolean) => void) => {
     setLoading(true);
-    await deleteReviewReply(dispatch, review.id, reply._id);
+    await deleteReviewReply(dispatch, axiosPrivate, review.id, reply._id);
     setLoading(false);
     setWarningModal(false);
   };

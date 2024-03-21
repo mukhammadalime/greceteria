@@ -3,6 +3,7 @@ import TextInput from "../../components/UI/Inputs/TextInput";
 import PasswordInput from "../../components/UI/Inputs/PasswordInput";
 import { FormEvent, useContext, useRef, useState } from "react";
 import { login } from "../../api/auth";
+import { AuthContext } from "../../store/AuthContext";
 import { UserContext } from "../../store/UserContext";
 import LoadingButtonSpinner from "../../components/UI/Icons/LoadingButtonSpinner";
 import { GoogleLogin } from "@react-oauth/google";
@@ -15,6 +16,7 @@ const LoginForm = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { dispatch } = useContext(UserContext);
+  const { setAuth } = useContext(AuthContext);
 
   const onLoginHandler = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -28,14 +30,14 @@ const LoginForm = () => {
     const password = passwordRef.current?.value!;
     const userData = { username, email, password };
     setLoading(true);
-    await login(location, navigate, dispatch, userData);
+    await login(setAuth, location, navigate, dispatch, userData);
     setLoading(false);
   };
 
   const onGoogleLoginSuccess = async (token: string) => {
     setLoading(true);
     const data = { token };
-    await login(location, navigate, dispatch, data);
+    await login(setAuth, location, navigate, dispatch, data);
     setLoading(false);
   };
 

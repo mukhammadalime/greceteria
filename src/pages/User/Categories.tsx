@@ -9,7 +9,7 @@ import CategoryItem from "../../components/category/CategoryItem";
 import { UserContext } from "../../store/UserContext";
 import CategorySkeleton from "../../skeletons/CategorySkeleton";
 import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
-import { getCategoriesApi } from "../../api/categories";
+import { getCategories } from "../../api/categories";
 
 const Categories = () => {
   const [openModal, setOpenModal] = useState(() => false);
@@ -24,7 +24,7 @@ const Categories = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    (async () => await getCategoriesApi(dispatch))();
+    (async () => await getCategories(dispatch))();
   }, [dispatch]);
 
   return (

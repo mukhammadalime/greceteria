@@ -6,6 +6,7 @@ import { UserContext } from "../../store/UserContext";
 import { OrderProps } from "../../utils/user-types";
 import { updateOrder } from "../../api/orders";
 import { OrderContext } from "../../store/OrderContext";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import OrderDetailsAddress from "./OrderDetailsAddress";
 
 const statusOptions = [
@@ -24,12 +25,13 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
   const { state } = useContext(UserContext);
   const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
   const { dispatch } = useContext(OrderContext);
+  const axiosPrivate = useAxiosPrivate();
 
   const onUpdateOrder = async (arg: string) => {
     if (loading || order.status === arg) return;
     const actionType = arg === "on the way" ? "on-the-way" : "delivered";
     setLoading(true);
-    await updateOrder(dispatch, order._id, actionType);
+    await updateOrder(dispatch, axiosPrivate, order._id, actionType);
     setLoading(false);
   };
 

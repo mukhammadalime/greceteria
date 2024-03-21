@@ -1,10 +1,12 @@
 import { toast } from "react-toastify";
-import axios, { axiosPrivate } from "./axios";
+import axios from "./axios";
 import { ReviewAction, ReviewActionKind } from "../store/ReviewsContext";
 import { ProductAction, ProductActionKind } from "../store/ProductContext";
+import { AxiosInstance } from "axios";
+import { Dispatch } from "react";
 
 export const getProductReviews = async (
-  dispatch: React.Dispatch<ReviewAction>,
+  dispatch: Dispatch<ReviewAction>,
   productId: string,
   page: number,
   userId: string = ""
@@ -35,8 +37,9 @@ export const getProductReviews = async (
 };
 
 export const addReview = async (
-  dispatch: React.Dispatch<ReviewAction>,
-  productDispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
+  productDispatch: Dispatch<ProductAction>,
   reviewData: { review: string; rating: number; product: string },
   reviewsCount: number
 ): Promise<void> => {
@@ -62,8 +65,9 @@ export const addReview = async (
 };
 
 export const editReview = async (
-  dispatch: React.Dispatch<ReviewAction>,
-  productDispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
+  productDispatch: Dispatch<ProductAction>,
   reviewData: { review: string; rating: number; product: string },
   id: string,
   reviewsCount: number
@@ -90,8 +94,9 @@ export const editReview = async (
 };
 
 export const deleteReview = async (
-  dispatch: React.Dispatch<ReviewAction>,
-  productDispatch: React.Dispatch<ProductAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
+  productDispatch: Dispatch<ProductAction>,
   id: string,
   reviewsCount: number
 ): Promise<void> => {
@@ -117,7 +122,8 @@ export const deleteReview = async (
 };
 
 export const addReviewReply = async (
-  dispatch: React.Dispatch<ReviewAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
   replyData: { text: string; user: string },
   reviewId: string
 ): Promise<void> => {
@@ -141,7 +147,8 @@ export const addReviewReply = async (
 };
 
 export const editReviewReply = async (
-  dispatch: React.Dispatch<ReviewAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
   text: string,
   reviewId: string,
   replyId: string
@@ -165,7 +172,8 @@ export const editReviewReply = async (
 };
 
 export const deleteReviewReply = async (
-  dispatch: React.Dispatch<ReviewAction>,
+  dispatch: Dispatch<ReviewAction>,
+  axiosPrivate: AxiosInstance,
   reviewId: string,
   replyId: string
 ): Promise<void> => {
