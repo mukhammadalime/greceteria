@@ -21,8 +21,6 @@ export const getNewsApi = async (
       type: NewsActionKind.GET_NEWS_FAILURE,
       error,
     });
-
-    toast.error(error);
   }
 };
 
@@ -38,14 +36,12 @@ export const getNewsItemApi = async (
       payload: data.data,
     });
   } catch (err: any) {
+    const error = err.response?.data.message || "Something went wrong.";
+
     dispatch({
       type: NewsActionKind.GET_NEWSITEM_FAILURE,
-      error: err.response?.data.message,
+      error,
     });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
   }
 };
 

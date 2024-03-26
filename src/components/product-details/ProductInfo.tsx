@@ -28,7 +28,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
         <SocialShareModal
           text="product"
           closeModal={() => setShareModal(false)}
-          url={""}
+          url={`${window.location.origin}/products/${product._id}`}
         />
       )}
       {addProductModal && (

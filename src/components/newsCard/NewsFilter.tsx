@@ -8,12 +8,10 @@ export const sortOptions = [
 ];
 
 const NewsFilter = () => {
+  const [addNewsModal, setAddNewsModal] = useState<boolean>(false);
+  const [sortOpen, setSortOpen] = useState<boolean>(false);
+  const [sortOption, setSortOption] = useState<string>("");
   const { state } = useContext(UserContext);
-
-  const [addNewsModal, setAddNewsModal] = useState(() => false);
-  const [sortOpen, setSortOpen] = useState(false);
-  const [sortOption, setSortOption] = useState("");
-  console.log("sortOption:", sortOption);
 
   return (
     <>

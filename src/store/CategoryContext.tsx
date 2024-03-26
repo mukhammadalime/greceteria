@@ -1,5 +1,6 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { CategoryItemTypes } from "../utils/user-types";
+import { getCategories } from "../api/categories";
 
 interface CategoryInitialStateTypes {
   categories: CategoryItemTypes[] | null;
@@ -138,6 +139,10 @@ export const CategoryContextProvider = ({
   const [state, dispatch] = useReducer(CategoryReducer, INITIAL_STATE);
 
   const clearError = () => (state.addUpdateDeleteError = null);
+
+  useEffect(() => {
+    (async () => await getCategories(dispatch))();
+  }, []);
 
   const values = {
     state,

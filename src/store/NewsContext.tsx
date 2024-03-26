@@ -1,6 +1,5 @@
 import { createContext, useReducer } from "react";
 import { NewsItemTypes } from "../utils/user-types";
-
 import { returnUpdatedState } from "../utils/helperFunctions";
 
 interface NewsInitialStateTypes {

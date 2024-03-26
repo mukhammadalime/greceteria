@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
 import { UserContext } from "../store/UserContext";
 import { formatDate } from "../utils/helperFunctions";
+import EmptyOrErrorContainer from "../components/EmptyOrErrorContainer";
 
 const NewsDetails = () => {
   const { newsId } = useParams();
@@ -17,7 +18,7 @@ const NewsDetails = () => {
     state: { user },
   } = useContext(UserContext);
   const {
-    state: { newsItem, newsItemLoading },
+    state: { newsItem, newsItemLoading, error },
     dispatch,
   } = useContext(NewsContext);
 
@@ -37,7 +38,7 @@ const NewsDetails = () => {
         <SocialShareModal
           text="news"
           closeModal={() => setShareModal(false)}
-          url={""}
+          url={`${window.location.origin}/news/${newsItem?._id}`}
         />
       )}
       {addNewsModal && newsItem && (
@@ -84,6 +85,8 @@ const NewsDetails = () => {
               </div>
             </div>
           )}
+
+          {error && <EmptyOrErrorContainer error={error} />}
         </div>
       </div>
     </>

@@ -21,34 +21,23 @@ import Statistics from "./pages/Admin/Statistics";
 import CustomerDetails from "./pages/Admin/CustomerDetails";
 import Categories from "./pages/User/Categories";
 import Customers from "./pages/Admin/Customers";
-import { useCallback, useContext, useEffect, useLayoutEffect } from "react";
+import { useCallback, useContext, useLayoutEffect } from "react";
 import { ToastContainer, Flip } from "react-toastify";
 import CartIcon from "./components/UI/Icons/CartIcon";
 import "react-toastify/dist/ReactToastify.css";
 import ProductsByCategory from "./pages/User/ProductsByCategory";
 import { UserActionKind, UserContext } from "./store/UserContext";
 import AuthPages from "./pages/Auth/AuthPages";
-import { getCartApi } from "./api/cart";
-import { CartActionKind, CartContext } from "./store/CartContext";
-import { getNewsApi } from "./api/news";
-import { NewsActionKind, NewsContext } from "./store/NewsContext";
 import { Analytics } from "@vercel/analytics/react";
 import { AuthContext } from "./store/AuthContext";
 import useRefreshToken from "./hooks/auth/useRefresh";
-import useAxiosPrivate from "./hooks/auth/useAxiosPrivate";
-import { CategoryContext } from "./store/CategoryContext";
-import { getCategories } from "./api/categories";
 
 function App() {
   const {
     state: { user },
     dispatch,
   } = useContext(UserContext);
-  const { dispatch: cartDispatch } = useContext(CartContext);
-  const { dispatch: newsDispatch } = useContext(NewsContext);
-  const { dispatch: categoryDispatch } = useContext(CategoryContext);
   const { auth } = useContext(AuthContext);
-  const axiosPrivate = useAxiosPrivate();
   const refresh = useRefreshToken(dispatch);
 
   const verifyRefreshToken = useCallback(async () => {
@@ -58,33 +47,8 @@ function App() {
 
   useLayoutEffect(() => {
     if (!auth.accessToken && user) verifyRefreshToken();
-
-    if (auth.accessToken) {
-      newsDispatch({ type: NewsActionKind.GET_NEWS_START });
-      cartDispatch({ type: CartActionKind.GET_CART_START });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newsDispatch, cartDispatch, user, auth.accessToken]);
-
-  // Fetch cart and news on every refresh to keep the data up to date with the database.
-  useEffect(() => {
-    if (!auth.accessToken) return;
-
-    (async () => {
-      await Promise.all([
-        getCategories(categoryDispatch),
-        getNewsApi(newsDispatch),
-        getCartApi(cartDispatch, axiosPrivate),
-      ]);
-    })();
-  }, [
-    user,
-    cartDispatch,
-    newsDispatch,
-    axiosPrivate,
-    auth.accessToken,
-    categoryDispatch,
-  ]);
+  }, [user, auth.accessToken]);
 
   return (
     <>
