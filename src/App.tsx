@@ -57,15 +57,14 @@ function App() {
   }, [refresh, dispatch]);
 
   useLayoutEffect(() => {
-    if (!auth.accessToken) verifyRefreshToken();
+    if (!auth.accessToken && user) verifyRefreshToken();
 
     if (auth.accessToken) {
       newsDispatch({ type: NewsActionKind.GET_NEWS_START });
       cartDispatch({ type: CartActionKind.GET_CART_START });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newsDispatch, cartDispatch, user]);
+  }, [newsDispatch, cartDispatch, user, auth.accessToken]);
 
   // Fetch cart and news on every refresh to keep the data up to date with the database.
   useEffect(() => {
