@@ -4,7 +4,7 @@ import {
   ProductItemTypes,
   User,
 } from "../utils/user-types";
-import { makeUniqueArray } from "../utils/helperFunctions";
+import { makeUniqueArray, signoutUser } from "../utils/helperFunctions";
 import { getMe } from "../api/user";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "./AuthContext";
@@ -145,12 +145,12 @@ const UserReducer = (
   state: UserInitialStateTypes,
   action: UserAction
 ): typeof INITIAL_STATE => {
+  if (action.error?.startsWith("TokenError:")) signoutUser();
   switch (action.type) {
     //// GET ME
     case UserActionKind.GETME_START:
       return { ...state, loading: true, error: null };
     case UserActionKind.GETME_SUCCESS:
-      localStorage.setItem("persist", JSON.stringify(true));
       localStorage.setItem("user", JSON.stringify(action.payload));
       return {
         ...state,
@@ -159,9 +159,8 @@ const UserReducer = (
         error: null,
       };
     case UserActionKind.GETME_FAILURE:
-      localStorage.removeItem("persist");
       localStorage.removeItem("user");
-      return { ...state, user: null, loading: false, error: action.error! };
+      return { ...state, user: null, loading: false };
 
     //// UPDATE ME
     case UserActionKind.UPDATE_ME_START:
@@ -389,7 +388,7 @@ export const UserContextProvider = ({
   //       console.error(err);
   //       dispatch({
   //         type: UserActionKind.GETME_FAILURE,
-  //         payload: err.name,
+  //         error: err.name,
   //       });
   //     }
   //   };

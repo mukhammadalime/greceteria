@@ -20,12 +20,12 @@ const ProductActions = ({
   const onToggleWishlist = async () => {
     if (!state.user?.wishlisted.includes(id)) {
       setWishlistAdded(true);
-      await addToWishlist(dispatch,axiosPrivate, id);
+      await addToWishlist(dispatch, axiosPrivate, id);
       setWishlistAdded(false);
       return;
     }
     setWishlistRemoved(true);
-    await removeFromWishlist(dispatch, axiosPrivate,id, );
+    await removeFromWishlist(dispatch, axiosPrivate, id);
     setWishlistRemoved(false);
   };
   return (

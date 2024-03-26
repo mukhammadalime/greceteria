@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 import { CartProps } from "../utils/user-types";
-
+import { signoutUser } from "../utils/helperFunctions";
 
 interface CartInitialStateTypes {
   cart: CartProps | null;
@@ -47,6 +47,7 @@ const CartReducer = (
   state: CartInitialStateTypes,
   action: CartAction
 ): typeof INITIAL_STATE => {
+  if (action.error?.startsWith("TokenError:")) signoutUser();
   switch (action.type) {
     case CartActionKind.GET_CART_START:
       return { ...state, cartLoading: true, error: null, cart: null };
@@ -85,9 +86,6 @@ export const CartContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(CartReducer, INITIAL_STATE);
-
-
-
 
   const values = {
     state,

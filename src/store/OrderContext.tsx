@@ -4,7 +4,7 @@ import {
   RevenueDataTypes,
   RevenueItemTypes,
 } from "../utils/user-types";
-import { makeUniqueArray, returnUpdatedState } from "../utils/helperFunctions";
+import { makeUniqueArray, returnUpdatedState, signoutUser } from "../utils/helperFunctions";
 
 interface OrderInitialStateTypes {
   orders: OrderProps[] | null;
@@ -126,6 +126,8 @@ const OrderReducer = (
   state: OrderInitialStateTypes,
   action: OrderAction
 ): typeof INITIAL_STATE => {
+  if (action.error?.startsWith("TokenError:")) signoutUser()
+
   switch (action.type) {
     case OrderActionKind.GET_ORDERS_START:
       return {

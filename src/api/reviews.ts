@@ -29,7 +29,7 @@ export const getProductReviews = async (
       "Something went wrong. Please come back later.";
     dispatch({
       type: ReviewActionKind.GET_REVIEWS_FAILURE,
-      payload: error,
+      error,
     });
 
     toast.error(error);

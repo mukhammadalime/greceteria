@@ -10,8 +10,8 @@ import { UserContext } from "../../store/UserContext";
 const ActionsBox = ({ id }: { id: string }) => {
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [removeLoading, setRemoveLoading] = useState<boolean>(false);
-  const { state: cartState, dispatch } = useContext(CartContext);
-  const { state, dispatch: userDispatch } = useContext(UserContext);
+  const { state: cartState, dispatch: cartDispatch } = useContext(CartContext);
+  const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
   const onToggleOptions = () => {
@@ -24,19 +24,19 @@ const ActionsBox = ({ id }: { id: string }) => {
   };
 
   const onAddToCart = async () => {
-    await addToCart(dispatch, id, 1, axiosPrivate);
+    await addToCart(cartDispatch, id, 1, axiosPrivate);
     toast.success("Added to cart.");
   };
 
   const onAddToWishlist = async () => {
-    await addToWishlist(userDispatch, axiosPrivate, id);
+    await addToWishlist(dispatch, axiosPrivate, id);
     toast.success("Added to wishlist.");
   };
 
   const onRemoveFromCompare = async () => {
     if (removeLoading) return;
     setRemoveLoading(true);
-    await removeFromCompare(userDispatch, axiosPrivate, id);
+    await removeFromCompare(dispatch, axiosPrivate, id);
     setRemoveLoading(false);
   };
 

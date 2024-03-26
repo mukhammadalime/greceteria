@@ -102,7 +102,7 @@ export const getOrdersStats = async (
   } catch (err: any) {
     dispatch({
       type: OrderActionKind.GET_ORDERS_STATS_FAILURE,
-      payload: err.response?.data.message || "Something went wrong",
+      error: err.response?.data.message || "Something went wrong",
     });
   }
 };

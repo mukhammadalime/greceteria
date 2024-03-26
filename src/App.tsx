@@ -36,6 +36,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { AuthContext } from "./store/AuthContext";
 import useRefreshToken from "./hooks/auth/useRefresh";
 import useAxiosPrivate from "./hooks/auth/useAxiosPrivate";
+import { CategoryContext } from "./store/CategoryContext";
+import { getCategories } from "./api/categories";
 
 function App() {
   const {
@@ -44,22 +46,18 @@ function App() {
   } = useContext(UserContext);
   const { dispatch: cartDispatch } = useContext(CartContext);
   const { dispatch: newsDispatch } = useContext(NewsContext);
+  const { dispatch: categoryDispatch } = useContext(CategoryContext);
   const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
-  const refresh = useRefreshToken();
+  const refresh = useRefreshToken(dispatch);
 
   const verifyRefreshToken = useCallback(async () => {
     dispatch({ type: UserActionKind.GETME_START });
-    try {
-      await refresh();
-    } catch (err) {
-      console.error(err);
-    }
+    await refresh();
   }, [refresh, dispatch]);
 
   useLayoutEffect(() => {
-    const persist = JSON.parse(localStorage.getItem("persist")!);
-    if (!auth.accessToken && persist) verifyRefreshToken();
+    if (!auth.accessToken) verifyRefreshToken();
 
     if (auth.accessToken) {
       newsDispatch({ type: NewsActionKind.GET_NEWS_START });
@@ -75,11 +73,19 @@ function App() {
 
     (async () => {
       await Promise.all([
+        getCategories(categoryDispatch),
         getNewsApi(newsDispatch),
         getCartApi(cartDispatch, axiosPrivate),
       ]);
     })();
-  }, [user, cartDispatch, newsDispatch, axiosPrivate, auth?.accessToken]);
+  }, [
+    user,
+    cartDispatch,
+    newsDispatch,
+    axiosPrivate,
+    auth.accessToken,
+    categoryDispatch,
+  ]);
 
   return (
     <>

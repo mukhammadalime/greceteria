@@ -23,8 +23,6 @@ const HomePage = () => {
     dispatch: categoryDispatch,
   } = useContext(CategoryContext);
 
-  useLayoutEffect(() => {}, [categoryDispatch, dispatch]);
-
   useLayoutEffect(() => {
     const topQuery = "?sort=-ratingsAverage&limit=9";
     const saleQuery = "?discountedPrice[gt]=0";

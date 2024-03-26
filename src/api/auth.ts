@@ -34,12 +34,8 @@ export const login = async (
     else navigate("/home");
     // window.location.reload();
   } catch (err: any) {
-    const error = err.response?.data.message || "Something went wrong.";
-    dispatch({ type: UserActionKind.GETME_FAILURE, error });
-    if (
-      err.response?.data.message.startsWith("Your account") &&
-      !userData.token
-    )
+    const error = err.response?.data.message;
+    if (error.startsWith("Your account") && !userData.token)
       navigate(`/auth/verify?username=${userData?.username}`);
 
     toast.error(error);
@@ -54,8 +50,6 @@ export const logout = async (
     dispatch({ accessToken: null });
 
     await axiosPrivate.get("/users/logout");
-
-    localStorage.removeItem("persist");
     localStorage.removeItem("user");
     window.location.reload();
   } catch (err: any) {

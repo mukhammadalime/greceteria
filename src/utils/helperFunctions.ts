@@ -104,3 +104,8 @@ export const makeUniqueArray = <T>(items: T[]) => {
     JSON.parse(i)
   );
 };
+
+export const signoutUser = () => {
+  localStorage.removeItem("user");
+  window.location.reload();
+};
