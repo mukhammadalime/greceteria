@@ -6,20 +6,16 @@ import { CartContext } from "../../store/CartContext";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import BillCard from "../../components/cart/BillCard";
 import { UserContext } from "../../store/UserContext";
-import { loadStripe } from "@stripe/stripe-js";
-import PaypalModal from "../../components/modals/PaypalModal";
 import { useNavigate } from "react-router-dom";
-import axios, { axiosPrivate } from "../../api/axios";
+import { axiosPrivate } from "../../api/axios";
+import { placeOrder } from "../../api/orders";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const [addressModalShown, setAddressModalShown] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [paypalOpen, setPaypalOpen] = useState(false);
-  const [orderData, setOrderData] = useState<any>();
 
   ///////////////////////
   const {
@@ -31,46 +27,27 @@ const Checkout = () => {
 
   // TODO:
   useEffect(() => {
-    if (!cart) navigate("/my-cart");
-  }, [cart, navigate]);
+    if (!cartLoading && !cart) navigate("/my-cart");
+  }, [cart, cartLoading, navigate]);
 
-  const placeOrder = async () => {
-    if (!cart) return;
+  const placeOrderHandler = async () => {
+    if (!cart || !user || !selectedAddressId) return;
 
     const shippingFee: number = cart?.totalPrice < 50 ? 5.0 : 0;
     const total: number = cart?.totalPrice + shippingFee;
     const order = {
       orderedProducts: cart?.cartProducts,
       totalPrice: total,
-      user: user?._id,
-      paymentMethod,
+      user: user._id,
+      paymentMethod: "Stripe",
       deliveryFee: shippingFee,
-      address: user?.addresses.find((i) => i._id === selectedAddressId),
-      notes: notesRef.current?.value,
+      address: user.addresses.find((i) => i._id === selectedAddressId)!,
+      notes: notesRef.current?.value || "",
     };
-    setOrderData(order);
 
-    if (paymentMethod === "Paypal") setPaypalOpen(true);
-
-    if (paymentMethod === "Stripe") {
-      setLoading(true);
-      try {
-        const { data } = await axios(`orders/stripe-publishable-key`);
-
-        // 1) Get checkout session from API
-        const session = await axiosPrivate.post(
-          `orders/checkout-session`,
-          order
-        );
-
-        // 2) Create checkout form + charge credit card
-        const stripe = await loadStripe(data.publishableKey);
-        stripe?.redirectToCheckout({ sessionId: session.data.session.id });
-      } catch (err) {
-        console.log(err);
-      }
-      setLoading(false);
-    }
+    setLoading(true);
+    await placeOrder(axiosPrivate, order);
+    setLoading(false);
   };
 
   if (cartLoading) return <LoadingSpinner />;
@@ -84,12 +61,6 @@ const Checkout = () => {
         />
       )}
 
-      {paypalOpen && (
-        <PaypalModal
-          closeModal={() => setPaypalOpen(false)}
-          orderData={orderData}
-        />
-      )}
       <div className="section-sm">
         <div className="container">
           <div className="checkout">
@@ -109,8 +80,7 @@ const Checkout = () => {
               <BillCard
                 cart={cart}
                 type="checkout"
-                placeOrder={placeOrder}
-                setPaymentMethod={setPaymentMethod}
+                placeOrder={placeOrderHandler}
                 loading={loading}
               />
             )}

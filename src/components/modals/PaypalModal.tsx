@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { useEffect } from "react";
 import { loadScript } from "@paypal/paypal-js";
-import axios, { axiosPrivate } from "../../api/axios";
+import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
@@ -14,13 +14,13 @@ const PaypalOverlay = ({
   closeModal: () => void;
   orderData: any;
 }) => {
+  const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
     let paypal: any;
 
     const getPaypalButtons = async () => {
       try {
-        const { data } = await axios(`orders/paypal-client-id`);
-
+        const { data } = await axiosPrivate(`orders/paypal-client-id`);
         paypal = await loadScript({ clientId: data.clientId });
       } catch (error) {
         console.error("failed to load the PayPal JS SDK script", error);
@@ -36,7 +36,6 @@ const PaypalOverlay = ({
                     "orders/paypal/create-order",
                     orderData
                   );
-                  console.log("data:", data);
 
                   if (data.id) {
                     return data.id;
@@ -50,7 +49,6 @@ const PaypalOverlay = ({
                   }
                 } catch (error) {
                   console.error(error);
-                  // resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
                 }
               },
               onApprove: async (
@@ -134,7 +132,7 @@ const PaypalOverlay = ({
     };
 
     getPaypalButtons();
-  }, [orderData]);
+  }, [axiosPrivate, orderData]);
   return (
     <div className="paypal-modal">
       <h1>Pay with Paypal safely and easily</h1>

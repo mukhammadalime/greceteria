@@ -3,13 +3,7 @@ import { CartProductProps, CartProps } from "../../utils/user-types";
 import OrderedItem from "../checkout/OrderedItem";
 import LoadingButtonSpinner from "../UI/Icons/LoadingButtonSpinner";
 
-const BillCard = ({
-  cart,
-  type,
-  placeOrder,
-  loading,
-  setPaymentMethod,
-}: BillCardProps) => {
+const BillCard = ({ cart, type, placeOrder, loading }: BillCardProps) => {
   const navigate = useNavigate();
   const shippingFee: number = cart ? (cart.totalPrice < 50 ? 5.0 : 0) : 0;
   const total: number = cart ? cart?.totalPrice + shippingFee : 0;
@@ -51,9 +45,9 @@ const BillCard = ({
         </div>
       </div>
 
-      {type === "checkout" && setPaymentMethod && (
+      {type === "checkout" && (
         <>
-          <div className="payment__method">
+          {/* <div className="payment__method">
             <h2>Payment Method</h2>
             <div className="payment__method--box">
               {["Paypal", "Stripe"].map((val: string) => (
@@ -69,7 +63,7 @@ const BillCard = ({
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
           <button
             className="button button-lg bill-card__action"
             onClick={placeOrder}
@@ -94,7 +88,6 @@ interface BillCardProps {
   cart: CartProps | null;
   type: "checkout" | "cart";
   placeOrder?: () => Promise<void>;
-  setPaymentMethod?: (arg: string) => void;
   loading?: boolean;
 }
 

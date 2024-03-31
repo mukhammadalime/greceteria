@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 import { OrderAction, OrderActionKind } from "../store/OrderContext";
 import { AxiosInstance } from "axios";
 import { Dispatch } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { OrderDataProps } from "../utils/types";
 
 //// FOR USERS
 export const getMyOrders = async (
@@ -164,5 +166,23 @@ export const getUserOrders = async (
       type: OrderActionKind.GET_USER_ORDERS_FAILURE,
       error: err.response?.data.message || "Something went wrong",
     });
+  }
+};
+
+export const placeOrder = async (
+  axiosPrivate: AxiosInstance,
+  order: OrderDataProps
+) => {
+  try {
+    const { data } = await axiosPrivate(`orders/stripe-publishable-key`);
+
+    // 1) Get checkout session from API
+    const session = await axiosPrivate.post(`orders/checkout-session`, order);
+
+    // 2) Create checkout form + charge credit card
+    const stripe = await loadStripe(data.publishableKey);
+    stripe?.redirectToCheckout({ sessionId: session.data.session.id });
+  } catch (err) {
+    console.log(err);
   }
 };

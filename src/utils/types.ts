@@ -1,3 +1,5 @@
+import { AddressItemTypes, CartProductProps } from "./user-types";
+
 export interface ClientReviewItemTypes {
   id: string;
   text: string;
@@ -34,3 +36,13 @@ export interface SocialShareTypes {
 }
 
 export type ActionTypeProps = "add" | "delete" | "update";
+
+export interface OrderDataProps {
+  orderedProducts: CartProductProps[];
+  totalPrice: number;
+  user: string;
+  paymentMethod: string;
+  deliveryFee: number;
+  address: AddressItemTypes;
+  notes: string;
+}
