@@ -5,7 +5,7 @@ import { CartAction, CartActionKind } from "../store/CartContext";
 export const getCartApi = async (
   dispatch: React.Dispatch<CartAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.get("/cart");
 
@@ -25,7 +25,7 @@ export const addToCart = async (
   quantity: number,
   axiosPrivate: AxiosInstance,
   setLoading?: (arg: boolean) => void
-): Promise<void> => {
+) => {
   try {
     setLoading && setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
@@ -48,7 +48,7 @@ export const updateCart = async (
   quantity: number,
   setLoading: (arg: boolean) => void,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });
@@ -70,7 +70,7 @@ export const deleteProductCart = async (
   productId: string,
   axiosPrivate: AxiosInstance,
   setLoading: (arg: boolean) => void
-): Promise<void> => {
+) => {
   try {
     setLoading(true);
     dispatch({ type: CartActionKind.UPDATE_CART_START });

@@ -39,7 +39,7 @@ const Categories = () => {
       <div className="section-sm">
         <div className="categories">
           <div className="container">
-            {userState.user?.role === "admin" && (
+            {userState.user &&["admin", "manager"].includes(userState.user.role) && (
               <div className="section__head">
                 <button
                   className="button add-button"

@@ -22,7 +22,7 @@ export const getCountryCode = async (
 export const getMe = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.GETME_START });
     const { data } = await axiosPrivate.get("/users/me");
@@ -190,7 +190,7 @@ export const getCompareOrWishlist = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
   type: "compare" | "wishlisted"
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.get(`/users/me/${type}`);
 
@@ -213,7 +213,7 @@ export const addToWishlist = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: id });
     await axiosPrivate.patch("/users/me/wishlisted/add", {
@@ -230,7 +230,7 @@ export const removeFromWishlist = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: id });
     await axiosPrivate.patch("/users/me/wishlisted/remove", {
@@ -247,7 +247,7 @@ export const addToCompare = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.ADD_TO_COMPARE, payload: id });
     await axiosPrivate.patch("/users/me/compare/add", {
@@ -264,7 +264,7 @@ export const removeFromCompare = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE, payload: id });
     await axiosPrivate.patch("/users/me/compare/remove", {
@@ -272,6 +272,21 @@ export const removeFromCompare = async (
     });
   } catch (err: any) {
     dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE_FAIL, payload: id });
+    const error = err.response?.data.message || "Something went wrong.";
+    toast.error(error);
+  }
+};
+
+export const makeMeManager = async (
+  dispatch: Dispatch<UserAction>,
+  axiosPrivate: AxiosInstance,
+  id: string,
+  role: "user" | "manager"
+) => {
+  try {
+    await axiosPrivate.patch(`/users/${id}/update-to-manager`, { role });
+    dispatch({ type: UserActionKind.TOGGLE_CUSTOMER_ROLE, payload: role });
+  } catch (err: any) {
     const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }

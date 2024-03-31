@@ -99,7 +99,7 @@ export const CartContextProvider = ({
   const axiosPrivate = useAxiosPrivate();
 
   useLayoutEffect(() => {
-    if (auth.accessToken) dispatch({ type: CartActionKind.GET_CART_START });
+    dispatch({ type: CartActionKind.GET_CART_START });
   }, [dispatch, auth.accessToken]);
 
   // Fetch cart and news on every refresh to keep the data up to date with the database.

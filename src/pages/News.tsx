@@ -6,7 +6,7 @@ import { NewsActionKind, NewsContext } from "../store/NewsContext";
 import { UserContext } from "../store/UserContext";
 import NewsItemSkeleton from "../skeletons/NewsItemSkeleton";
 import EmptyOrErrorContainer from "../components/EmptyOrErrorContainer";
-import { getNewsApi } from "../api/news";
+import { getAllNews } from "../api/news";
 
 const NewsPage = () => {
   const { state } = useContext(UserContext);
@@ -21,7 +21,7 @@ const NewsPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (state.user) (async () => await getNewsApi(dispatch))();
+    if (state.user) (async () => await getAllNews(dispatch))();
   }, [dispatch, state.user]);
 
   if (state.user === null) return <LoginFirst />;

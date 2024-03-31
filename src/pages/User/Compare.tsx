@@ -17,8 +17,7 @@ const Compare = () => {
   const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (auth.accessToken)
-      dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
+    dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
   }, [auth.accessToken, dispatch]);
 
   useEffect(() => {
@@ -43,15 +42,13 @@ const Compare = () => {
               ))}
             </>
           )}
-
-          {compareWishlistError && !compareWishlistLoading && (
-            <EmptyOrErrorContainer error={compareWishlistError} />
-          )}
-
-          {!compareWishlistLoading && compare?.length === 0 && (
-            <EmptyOrErrorContainer text="No products found. Add products to your compare list." />
-          )}
         </ul>
+        {compareWishlistError && !compareWishlistLoading && (
+          <EmptyOrErrorContainer error={compareWishlistError} />
+        )}
+        {!compareWishlistLoading && compare?.length === 0 && (
+          <EmptyOrErrorContainer text="No products found. Add products to your compare list." />
+        )}
       </div>
     </div>
   );

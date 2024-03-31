@@ -36,7 +36,7 @@ const Counter = ({
   };
 
   // This function is executed after 300 milliseconds after click and terminated if another click comes before 300 milliseconds. This prevents the user to send many requests to the backend.
-  const onUpdateCart = async (): Promise<void> => {
+  const onUpdateCart = async () => {
     const quantity = Number(counterRef.current?.value);
 
     if (forCart && !warningModal)

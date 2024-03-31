@@ -7,6 +7,7 @@
   overflow: hidden;
   text-decoration: none;
   display: block;
+  width: 40rem;
 
   &:hover {
     border-color: transparent;
@@ -18,10 +19,6 @@
     width: 100%;
     overflow: hidden;
     position: relative;
-
-    // @media (max-width: 600px) {
-    //   height: 25rem;
-    // }
 
     .date {
       position: absolute;
@@ -77,21 +74,10 @@
   }
 }
 
-.news-card-swiper {
-  width: 41.5rem;
-  margin-right: 2rem;
-
-  @media (max-width: 600px) {
-    margin-right: 1.5rem;
-    width: 35rem;
-  }
-}
-
 .all-news {
-  display: grid;
-  column-gap: 2.4rem;
-  row-gap: 2.4rem;
-  grid-template-columns: repeat(auto-fit, minmax(33rem, 1fr));
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 //// NEWS DETAILS

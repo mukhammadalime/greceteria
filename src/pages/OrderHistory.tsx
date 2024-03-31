@@ -27,7 +27,7 @@ const OrderHistory = () => {
   const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (auth.accessToken) dispatch({ type: OrderActionKind.GET_ORDERS_START });
+    dispatch({ type: OrderActionKind.GET_ORDERS_START });
   }, [auth.accessToken, dispatch]);
 
   useEffect(() => {

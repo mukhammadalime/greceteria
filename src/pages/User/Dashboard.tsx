@@ -23,8 +23,7 @@ const Dashboard = () => {
   const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (auth.accessToken)
-      dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
+    dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
   }, [auth.accessToken, dispatch, user]);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const Dashboard = () => {
           <DashboardNav activeNavItem="Dashboard" />
           <div className="dashboard__main">
             <UserDetails user={user} />
-            {user && user.role === "admin" && (
+            {user && ["admin", "manager"].includes(user.role) && (
               <OrdersByStatus stats={ordersState.stats} />
             )}
 

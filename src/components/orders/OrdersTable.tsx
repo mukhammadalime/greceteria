@@ -26,7 +26,7 @@ const OrdersTable = ({
           <TableHeader items={ordersTableHeaderItems} />
 
           <tbody>
-            {((loading && !orders) || !orders) && !error && (
+            {loading && !orders && (
               <TableItemSkeleton widths={orderItemsWidths} />
             )}
 

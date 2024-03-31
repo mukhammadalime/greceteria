@@ -29,36 +29,34 @@ const CategoriesCarousel = ({
           </Link>
         </div>
 
-        <div className="category__main">
-          <Swiper
-            grabCursor={true}
-            modules={[Autoplay]}
-            slidesPerView="auto"
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-            }}
-            draggable={true}
-          >
-            {loading && !categories ? (
-              <>
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <SwiperSlide key={i}>
-                    <CategorySkeleton />
-                  </SwiperSlide>
-                ))}
-              </>
-            ) : (
-              <>
-                {categories?.map((category: CategoryItemTypes) => (
-                  <SwiperSlide key={category._id}>
-                    <CategoryItem category={category} key={category._id} />
-                  </SwiperSlide>
-                ))}
-              </>
-            )}
-          </Swiper>
-        </div>
+        <Swiper
+          grabCursor={true}
+          modules={[Autoplay]}
+          slidesPerView="auto"
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          draggable={true}
+        >
+          {loading && !categories ? (
+            <>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SwiperSlide key={i}>
+                  <CategorySkeleton />
+                </SwiperSlide>
+              ))}
+            </>
+          ) : (
+            <>
+              {categories?.map((category: CategoryItemTypes) => (
+                <SwiperSlide key={category._id}>
+                  <CategoryItem category={category} key={category._id} />
+                </SwiperSlide>
+              ))}
+            </>
+          )}
+        </Swiper>
       </div>
     </div>
   );

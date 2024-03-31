@@ -9,6 +9,7 @@ interface NewsInitialStateTypes {
   newsItemLoading: boolean;
   addUpdateDeleteLoading: boolean;
   error: string | null;
+  addUpdateDeleteError: string | null;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -48,16 +49,19 @@ const INITIAL_STATE: NewsInitialStateTypes = {
   newsItemLoading: false,
   addUpdateDeleteLoading: false,
   error: null,
+  addUpdateDeleteError: null,
 };
 
 interface NewsContextTypes {
   state: NewsInitialStateTypes;
   dispatch: React.Dispatch<NewsAction>;
+  clearError: () => void;
 }
 
 export const NewsContext = createContext<NewsContextTypes>({
   state: INITIAL_STATE,
   dispatch: () => {},
+  clearError: () => {},
 });
 
 const NewsReducer = (
@@ -100,20 +104,32 @@ const NewsReducer = (
       };
 
     case NewsActionKind.ADD_NEWSITEM_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteError: null,
+      };
     case NewsActionKind.ADD_NEWSITEM_SUCCESS:
       const allNews = state.news ? state.news : [];
       return {
         ...state,
         news: [action.payload as NewsItemTypes, ...allNews],
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteError: null,
       };
     case NewsActionKind.ADD_NEWSITEM_FAILURE:
-      return { ...state, addUpdateDeleteLoading: false, error: action.error! };
+      return {
+        ...state,
+        addUpdateDeleteLoading: false,
+        addUpdateDeleteError: action.error!,
+      };
 
     case NewsActionKind.UPDATE_NEWSITEM_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteError: null,
+      };
     case NewsActionKind.UPDATE_NEWSITEM_SUCCESS:
       const newsItem = action.payload as NewsItemTypes;
       const updatedNews = returnUpdatedState(
@@ -126,13 +142,21 @@ const NewsReducer = (
         news: updatedNews,
         newsItem,
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteError: null,
       };
     case NewsActionKind.UPDATE_NEWSITEM_FAILURE:
-      return { ...state, addUpdateDeleteLoading: false, error: action.error! };
+      return {
+        ...state,
+        addUpdateDeleteLoading: false,
+        addUpdateDeleteError: action.error!,
+      };
 
     case NewsActionKind.DELETE_NEWSITEM_START:
-      return { ...state, addUpdateDeleteLoading: true, error: null };
+      return {
+        ...state,
+        addUpdateDeleteLoading: true,
+        addUpdateDeleteError: null,
+      };
     case NewsActionKind.DELETE_NEWSITEM_SUCCESS:
       const updatedNews2 = state.news
         ? state.news?.filter((i) => i._id !== state.newsItem?._id)
@@ -141,10 +165,14 @@ const NewsReducer = (
         ...state,
         news: updatedNews2,
         addUpdateDeleteLoading: false,
-        error: null,
+        addUpdateDeleteError: null,
       };
     case NewsActionKind.DELETE_NEWSITEM_FAILURE:
-      return { ...state, addUpdateDeleteLoading: false, error: action.error! };
+      return {
+        ...state,
+        addUpdateDeleteLoading: false,
+        addUpdateDeleteError: action.error!,
+      };
 
     default:
       return state;
@@ -157,10 +185,12 @@ export const NewsContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(NewsReducer, INITIAL_STATE);
+  const clearError = () => (state.addUpdateDeleteError = null);
 
   const values = {
     state,
     dispatch,
+    clearError,
   };
 
   return <NewsContext.Provider value={values}>{children}</NewsContext.Provider>;

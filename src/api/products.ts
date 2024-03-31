@@ -10,7 +10,7 @@ import { Dispatch } from "react";
 export const getProducts = async (
   dispatch: Dispatch<ProductAction>,
   query?: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCTS_START });
     const { data } = await axios(`/products${query}`);
@@ -31,7 +31,7 @@ export const getCustomProducts = async (
   dispatch: Dispatch<ProductAction>,
   type: "relatedProducts" | "topProducts" | "saleProducts",
   query?: string
-): Promise<void> => {
+) => {
   try {
     dispatch({
       type: ProductActionKind.GET_CUSTOM_PRODUCTS_START,
@@ -56,7 +56,7 @@ export const getProduct = async (
   dispatch: Dispatch<ProductAction>,
   id: string,
   navigate: NavigateFunction
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: ProductActionKind.GET_PRODUCT_START });
     const { data } = await axios(`/products/${id}`);
@@ -84,7 +84,7 @@ export const addProduct = async (
   formData: FormData,
   imagesForServer: FileList | [],
   closeModal: () => void
-): Promise<void> => {
+) => {
   for (let i = 0; i < imagesForServer.length; i++) {
     formData.append("images", imagesForServer[i] as Blob);
   }
@@ -119,7 +119,7 @@ export const updateProduct = async (
   imagesForClient: ImageItemTypes[],
   closeModal: () => void,
   product: ProductItemTypes
-): Promise<void> => {
+) => {
   if (imagesForServer.length === 0 && imagesForClient.length === 0) {
     toast.error("Please upload at least one image.");
     return;
@@ -164,7 +164,7 @@ export const deleteProduct = async (
   closeModal: () => void,
   id: string,
   navigate: (arg: string) => void
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: ProductActionKind.DELETE_PRODUCT_START });
     await axiosPrivate.delete(`/products/${id}`);

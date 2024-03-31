@@ -83,6 +83,8 @@ export enum UserActionKind {
   GET_CUSTOMERS_STATS_START = "GET_CUSTOMERS_STATS_START",
   GET_CUSTOMERS_STATS_SUCCESS = "GET_CUSTOMERS_STATS_SUCCESS",
   GET_CUSTOMERS_STATS_FAILURE = "GET_CUSTOMERS_STATS_FAILURE",
+
+  TOGGLE_CUSTOMER_ROLE = "TOGGLE_CUSTOMER_ROLE",
 }
 
 // An interface for our actions
@@ -355,6 +357,10 @@ const UserReducer = (
         customer: null,
       };
 
+    case UserActionKind.TOGGLE_CUSTOMER_ROLE:
+      const updatedCustomer = { ...state.customer, role: action.payload };
+      return { ...state, customer: updatedCustomer as User };
+
     default:
       return state;
   }
@@ -371,8 +377,7 @@ export const UserContextProvider = ({
   const { auth } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!auth.accessToken) return;
-    (async () => await getMe(dispatch, axiosPrivate))();
+    if (auth.accessToken) (async () => await getMe(dispatch, axiosPrivate))();
   }, [auth.accessToken, axiosPrivate]);
 
   // useEffect(() => {

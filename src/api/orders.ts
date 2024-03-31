@@ -8,7 +8,7 @@ export const getMyOrders = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance,
   query?: string
-): Promise<void> => {
+) => {
   const isRecent = query?.includes("limit=10");
   const actionKind = isRecent ? "GET_RECENT_ORDERS" : "GET_ORDERS";
   try {
@@ -31,7 +31,7 @@ export const getOneOrder = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate(`orders/${id}`);
     dispatch({
@@ -51,7 +51,7 @@ export const getAllOrders = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance,
   quary?: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate(`orders?${quary || ""}&limit=100`);
 
@@ -70,7 +70,7 @@ export const getAllOrders = async (
 export const getRecentOrdersForAdmin = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: OrderActionKind.GET_RECENT_ORDERS_START });
     const { data } = await axiosPrivate(`orders/recent?sort=-createdAt`);
@@ -90,7 +90,7 @@ export const getRecentOrdersForAdmin = async (
 export const getOrdersStats = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: OrderActionKind.GET_ORDERS_STATS_START });
     const { data } = await axiosPrivate(`orders/stats`);
@@ -110,7 +110,7 @@ export const getOrdersStats = async (
 export const getOrdersRevenueStats = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   dispatch({ type: OrderActionKind.GET_REVENUE_STATS_START });
   try {
     const { data } = await axiosPrivate(`orders/revenue-stats`);
@@ -132,7 +132,7 @@ export const updateOrder = async (
   axiosPrivate: AxiosInstance,
   id: string,
   actionType: "on-the-way" | "delivered"
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: OrderActionKind.UPDATE_ORDER_START });
     const { data } = await axiosPrivate.patch(`orders/${id}/${actionType}`);
@@ -151,7 +151,7 @@ export const getUserOrders = async (
   dispatch: Dispatch<OrderAction>,
   axiosPrivate: AxiosInstance,
   id: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate(`orders/user/${id}`);
 

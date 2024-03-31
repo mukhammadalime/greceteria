@@ -58,7 +58,13 @@ export interface ReviewItemTypes {
 export interface ReviewReplyItemTypes {
   _id: string;
   text: string;
-  user: { _id: string; name: string; photo: string; username: string };
+  user: {
+    _id: string;
+    name: string;
+    photo: string;
+    username: string;
+    role: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }

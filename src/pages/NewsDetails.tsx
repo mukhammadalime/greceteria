@@ -2,7 +2,7 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import AddNewsModal from "../components/modals/AddNewsModal";
 import NewsImagesSlider from "../components/UI/Slider/NewsImagesSlider";
 import SocialShareModal from "../components/modals/SocialShareModal";
-import { getNewsItemApi } from "../api/news";
+import { getNewsItem } from "../api/news";
 import { NewsActionKind, NewsContext } from "../store/NewsContext";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/UI/LoadingSpinner";
@@ -27,7 +27,7 @@ const NewsDetails = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    (async () => await getNewsItemApi(dispatch, newsId!))();
+    (async () => await getNewsItem(dispatch, newsId!))();
   }, [dispatch, newsId]);
 
   if (newsItemLoading) return <LoadingSpinner />;

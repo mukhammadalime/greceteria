@@ -10,7 +10,7 @@ export const getProductReviews = async (
   productId: string,
   page: number,
   userId: string = ""
-): Promise<void> => {
+) => {
   try {
     page === 1 && dispatch({ type: ReviewActionKind.GET_REVIEWS_START });
     const { data } = await axios(
@@ -42,7 +42,7 @@ export const addReview = async (
   productDispatch: Dispatch<ProductAction>,
   reviewData: { review: string; rating: number; product: string },
   reviewsCount: number
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.post(`reviews`, reviewData);
 
@@ -71,7 +71,7 @@ export const editReview = async (
   reviewData: { review: string; rating: number; product: string },
   id: string,
   reviewsCount: number
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.patch(`reviews/${id}`, reviewData);
 
@@ -99,7 +99,7 @@ export const deleteReview = async (
   productDispatch: Dispatch<ProductAction>,
   id: string,
   reviewsCount: number
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.delete(`reviews/${id}`);
 
@@ -126,7 +126,7 @@ export const addReviewReply = async (
   axiosPrivate: AxiosInstance,
   replyData: { text: string; user: string },
   reviewId: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.post(
       `reviews/${reviewId}/replies`,
@@ -152,7 +152,7 @@ export const editReviewReply = async (
   text: string,
   reviewId: string,
   replyId: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.patch(
       `reviews/${reviewId}/replies/${replyId}`,
@@ -176,7 +176,7 @@ export const deleteReviewReply = async (
   axiosPrivate: AxiosInstance,
   reviewId: string,
   replyId: string
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate.delete(
       `reviews/${reviewId}/replies/${replyId}`

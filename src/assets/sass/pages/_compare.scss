@@ -1,13 +1,12 @@
 .compare {
   &-list {
-    list-style: none;
-    display: grid;
+    display: flex;
     gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(33rem, 1fr));
+    flex-wrap: wrap;
   }
 
   &-item {
-    // max-width: 41.5rem;
+    max-width: 40rem;
     display: grid;
     row-gap: 1rem;
     border-radius: 0.8rem;
@@ -111,14 +110,3 @@
     position: unset;
   }
 }
-
-// .actionsBoxModal-container {
-//   background-color: unset !important;
-//   display: none;
-// }
-
-// .actionsBoxItems {
-//   display: unset;
-//   width: 13rem;
-//   z-index: 100;
-// }

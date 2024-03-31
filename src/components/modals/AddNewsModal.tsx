@@ -29,7 +29,7 @@ const AddNewsOverlay = ({
   news,
 }: AddNewsModalTypes) => {
   const navigate = useNavigate();
-  const [value, setValue] = useState<string | undefined>(news?.text);
+  const [newText, setNewText] = useState<string | undefined>(news?.text);
   const titleRef = useRef<HTMLInputElement>(null);
   const [imagesForClient, setImagesForClient] = useState<ImageItemTypes[] | []>(
     images || []
@@ -47,10 +47,12 @@ const AddNewsOverlay = ({
   const onSetImages = (e: ChangeEvent<HTMLInputElement>): void => {
     setImagesHandler(e, setImagesForServer, setImagesForClient);
   };
-  const onAddOrUpdateOrDeleteNews = async (actionType: ActionTypeProps) => {
+
+  ////////////////////////////////////////////////////////////////
+  const onAddUpdateDeleteNews = async (actionType: ActionTypeProps) => {
     const formData = new FormData();
     formData.append("title", titleRef.current?.value as string);
-    formData.append("text", value as string);
+    formData.append("text", newText || "");
 
     switch (actionType) {
       case "add":
@@ -102,8 +104,8 @@ const AddNewsOverlay = ({
         <ReactQuill
           theme="snow"
           placeholder="Write news content..."
-          value={value}
-          onChange={setValue}
+          value={newText}
+          onChange={setNewText}
           modules={{ toolbar: toolbarOptions }}
         />
 
@@ -113,12 +115,18 @@ const AddNewsOverlay = ({
           onRemoveImages={onRemoveImages}
         />
       </div>
+
+      {state.addUpdateDeleteError && !state.addUpdateDeleteLoading && (
+        <div className="error-container">
+          <h1>{state.addUpdateDeleteError}</h1>
+        </div>
+      )}
       <ModalActions
         closeModal={closeModal}
         text={text}
-        onAddHandler={onAddOrUpdateOrDeleteNews.bind(null, "add")}
-        onDeleteHandler={onAddOrUpdateOrDeleteNews.bind(null, "delete")}
-        onUpdateHandler={onAddOrUpdateOrDeleteNews.bind(null, "update")}
+        onAddHandler={onAddUpdateDeleteNews.bind(null, "add")}
+        onDeleteHandler={onAddUpdateDeleteNews.bind(null, "delete")}
+        onUpdateHandler={onAddUpdateDeleteNews.bind(null, "update")}
         loading={state.addUpdateDeleteLoading}
       />
     </div>
@@ -126,15 +134,21 @@ const AddNewsOverlay = ({
 };
 
 const AddNewsModal = (props: AddNewsModalTypes) => {
+  const { clearError } = useContext(NewsContext);
+
+  const closeModalHandler = () => {
+    props.closeModal();
+    clearError();
+  };
   return (
     <>
       {ReactDOM.createPortal(
-        <Backdrop closeModal={props.closeModal} />,
+        <Backdrop closeModal={closeModalHandler} />,
         document.getElementById("backdrop-root")!
       )}
       {ReactDOM.createPortal(
         <AddNewsOverlay
-          closeModal={props.closeModal}
+          closeModal={closeModalHandler}
           images={props.images}
           text={props.text}
           news={props.news}

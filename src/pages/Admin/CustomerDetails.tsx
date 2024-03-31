@@ -11,6 +11,8 @@ import { OrderActionKind, OrderContext } from "../../store/OrderContext";
 import UserDetailsMain from "../../components/dashboard/UserDetailsMain";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "../../store/AuthContext";
+import WarningModal from "../../components/modals/WarningModal";
+import { makeMeManager } from "../../api/user";
 
 const CustomerDetails = () => {
   const [warningModal, setWarningModal] = useState(() => false);
@@ -41,14 +43,23 @@ const CustomerDetails = () => {
     })();
   }, [customerId, dispatch, orderDisatch, axiosPrivate, auth.accessToken]);
 
+  const onMakeMeManager = async (setLoading: (arg: boolean) => void) => {
+    setLoading(true);
+    const role = customer?.role === "user" ? "manager" : "user";
+    await makeMeManager(dispatch, axiosPrivate, customerId!, role);
+    setLoading(false);
+    setWarningModal(false);
+  };
+
   return (
     <>
-      {/* {warningModal && (
+      {warningModal && (
         <WarningModal
-          text="Are you sure that you want to make this user manager?"
+          text="Are you sure that you want to make this user a manager?"
           closeModal={() => setWarningModal(false)}
+          actionHandler={onMakeMeManager}
         />
-      )} */}
+      )}
 
       <div className="section-sm">
         <div className="container">
@@ -91,12 +102,14 @@ const CustomerDetails = () => {
                   </div>
                 </div>
 
-                {user?._id !== customer?._id && (
+                {user?._id !== customer?._id && user?.role === "admin" && (
                   <div className="customer-details__actions">
                     <button
                       className="button add-button"
                       onClick={() => setWarningModal(true)}
-                      children="Make me Manager"
+                      children={`Make me ${
+                        customer.role === "user" ? "manager" : "user"
+                      }`}
                     />
                   </div>
                 )}

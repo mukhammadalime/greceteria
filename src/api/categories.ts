@@ -6,7 +6,7 @@ import { AxiosInstance } from "axios";
 
 export const getCategories = async (
   dispatch: React.Dispatch<CategoryAction>
-): Promise<void> => {
+) => {
   try {
     const { data } = await axios("/categories");
 
@@ -25,7 +25,7 @@ export const getCategories = async (
 export const getCategory = async (
   dispatch: React.Dispatch<CategoryAction>,
   id: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: CategoryActionKind.GET_CATEGORY_START });
     const { data } = await axios(`/categories/${id}`);
@@ -50,7 +50,7 @@ export const addOrUpdateCategory = async (
   type: string,
   axiosPrivate: AxiosInstance,
   id?: string
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: CategoryActionKind.ADD_OR_UPDATE_CATEGORY_START });
 
@@ -94,7 +94,7 @@ export const deleteCategory = async (
   dispatch: React.Dispatch<CategoryAction>,
   id: string,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: CategoryActionKind.DELETE_CATEGORY_START });
     await axiosPrivate.delete(`/categories/${id}`);

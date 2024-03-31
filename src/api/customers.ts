@@ -6,7 +6,7 @@ import { Dispatch } from "react";
 export const getCustomers = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     const { data } = await axiosPrivate("users");
 
@@ -26,7 +26,7 @@ export const getCustomer = async (
   dispatch: Dispatch<UserAction>,
   id: string,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.GET_CUSTOMER_START });
     const { data } = await axiosPrivate(`/users/${id}`);
@@ -46,7 +46,7 @@ export const getCustomer = async (
 export const getCustomersStats = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance
-): Promise<void> => {
+) => {
   try {
     dispatch({ type: UserActionKind.GET_CUSTOMERS_STATS_START });
     const { data } = await axiosPrivate(`users/stats/customers`);

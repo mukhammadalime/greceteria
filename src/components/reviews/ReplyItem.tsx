@@ -83,7 +83,12 @@ const ReplyItem = ({
               <img src={reply.user.photo} alt="User" />
             </div>
             <div className="user-details__info">
-              <h2>{reply.user.name}</h2>
+              <h2>
+                {reply.user.name}{" "}
+                {["admin", "manager"].includes(reply.user.role)
+                  ? `(${reply.user.role})`
+                  : ""}
+              </h2>
               <h2>@{reply.user.username}</h2>
             </div>
           </div>
@@ -113,8 +118,9 @@ const ReplyItem = ({
 
           {/* First: we restrict the user from replying to themselves. */}
           {reply.user._id !== user.id &&
-            // Second: we only allow the review owner and admin to reply.
-            (review.userId === user.id || user.role === "admin") && (
+            // Second: we only allow the review owner, admin and manager to reply.
+            (review.userId === user.id ||
+              ["admin", "manager"].includes(user.role)) && (
               <button
                 onClick={onToggleReply}
                 className="edit"

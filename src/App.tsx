@@ -102,7 +102,7 @@ function App() {
           {user === null && <Route path="/auth/*" element={<AuthPages />} />}
 
           {/* Admin and Manager routes */}
-          {user && user.role === "admin" && (
+          {user && ["admin", "manager"].includes(user.role) && (
             <>
               <Route path="/statistics" element={<Statistics />} />
               <Route path="/customers" element={<Customers />} />

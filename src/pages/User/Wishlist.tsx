@@ -18,9 +18,8 @@ const Wishlist = () => {
   const { auth } = useContext(AuthContext);
 
   useLayoutEffect(() => {
-    if (!auth.accessToken) return;
     dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_START });
-  }, [auth.accessToken, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!auth.accessToken) return;
