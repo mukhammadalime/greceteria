@@ -196,32 +196,25 @@ export const getCompareOrWishlist = async (
 
     dispatch({
       type: UserActionKind.GET_COMPARE_OR_WISHLIST_SUCCESS,
-      payload: {
-        data: data.data,
-        type,
-      },
+      payload: { data: data.data, type },
     });
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.GET_COMPARE_OR_WISHLIST_FAILURE,
-      error: err.response?.data.message || "Something went wrong.",
-    });
+    const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.GET_COMPARE_OR_WISHLIST_FAILURE, error });
   }
 };
 
 export const addToWishlist = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
-  id: string
+  productId: string
 ) => {
   try {
-    dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: id });
-    await axiosPrivate.patch("/users/me/wishlisted/add", {
-      productId: id,
-    });
+    dispatch({ type: UserActionKind.ADD_TO_WISHLIST, payload: productId });
+    await axiosPrivate.patch("/users/me/wishlisted/add", { productId });
   } catch (err: any) {
-    dispatch({ type: UserActionKind.ADD_TO_WISHLIST_FAIL });
     const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.ADD_TO_WISHLIST_FAIL, error });
     toast.error(error);
   }
 };
@@ -229,16 +222,18 @@ export const addToWishlist = async (
 export const removeFromWishlist = async (
   dispatch: Dispatch<UserAction>,
   axiosPrivate: AxiosInstance,
-  id: string
+  productId: string
 ) => {
   try {
-    dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: id });
-    await axiosPrivate.patch("/users/me/wishlisted/remove", {
-      productId: id,
-    });
+    dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST, payload: productId });
+    await axiosPrivate.patch("/users/me/wishlisted/remove", { productId });
   } catch (err: any) {
-    dispatch({ type: UserActionKind.REMOVE_FROM_WISHLIST_FAIL, payload: id });
     const error = err.response?.data.message || "Something went wrong.";
+    dispatch({
+      type: UserActionKind.REMOVE_FROM_WISHLIST_FAIL,
+      payload: productId,
+      error,
+    });
     toast.error(error);
   }
 };
@@ -254,8 +249,8 @@ export const addToCompare = async (
       productId: id,
     });
   } catch (err: any) {
-    dispatch({ type: UserActionKind.ADD_TO_COMPARE_FAIL });
     const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.ADD_TO_COMPARE_FAIL, error });
     toast.error(error);
   }
 };
@@ -271,8 +266,12 @@ export const removeFromCompare = async (
       productId: id,
     });
   } catch (err: any) {
-    dispatch({ type: UserActionKind.REMOVE_FROM_COMPARE_FAIL, payload: id });
     const error = err.response?.data.message || "Something went wrong.";
+    dispatch({
+      type: UserActionKind.REMOVE_FROM_COMPARE_FAIL,
+      payload: id,
+      error,
+    });
     toast.error(error);
   }
 };

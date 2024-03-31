@@ -9,12 +9,14 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { UserContext } from "../../store/UserContext";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 const Backdrop = (props: { closeModal: () => void }) => {
   return <div className="modal-container" onClick={props.closeModal} />;
 };
 
 const QuickViewOverlay = ({ closeModal, item }: QuickViewModalProps) => {
+  const navigate = useNavigate();
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
@@ -27,11 +29,13 @@ const QuickViewOverlay = ({ closeModal, item }: QuickViewModalProps) => {
   }
 
   const onToggleWishlist = async () => {
-    const added = state.user?.wishlisted.includes(item._id);
-    setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, axiosPrivate, item._id);
-    else await addToWishlist(dispatch, axiosPrivate, item._id);
-    setWishlistUpdated(false);
+    if (state.user) {
+      const added = state.user?.wishlisted.includes(item._id);
+      setWishlistUpdated(true);
+      if (added) await removeFromWishlist(dispatch, axiosPrivate, item._id);
+      else await addToWishlist(dispatch, axiosPrivate, item._id);
+      setWishlistUpdated(false);
+    } else navigate("/auth/signin");
   };
 
   return (

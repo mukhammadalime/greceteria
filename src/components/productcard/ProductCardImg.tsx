@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import CompareIcon from "../UI/Icons/CompareIcon";
 import QuickViewModal from "../modals/QuickViewModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   addToCompare,
   addToWishlist,
@@ -16,29 +16,31 @@ import CompareIconFull from "../UI/Icons/CompareIconFull";
 import { ProductItemTypes } from "../../utils/user-types";
 
 const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
+  const navigate = useNavigate();
   const [wishlistUpdated, setWishlistUpdated] = useState<boolean>(false);
   const [compareUpdated, setCompareUpdated] = useState<boolean>(false);
   const [showQuickView, setShowQuickView] = useState<boolean>(() => false);
-  const {
-    state: { user },
-    dispatch,
-  } = useContext(UserContext);
+  const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
-    const added = user?.wishlisted.includes(item._id);
-    setWishlistUpdated(true);
-    if (added) await removeFromWishlist(dispatch, axiosPrivate, item._id);
-    else await addToWishlist(dispatch, axiosPrivate, item._id);
-    setWishlistUpdated(false);
+    if (state.user) {
+      const added = state.user?.wishlisted.includes(item._id);
+      setWishlistUpdated(true);
+      if (added) await removeFromWishlist(dispatch, axiosPrivate, item._id);
+      else await addToWishlist(dispatch, axiosPrivate, item._id);
+      setWishlistUpdated(false);
+    } else navigate("/auth/signin");
   };
 
   const onToggleCompare = async () => {
-    const added = user?.compare.includes(item._id);
-    setCompareUpdated(true);
-    if (added) await removeFromCompare(dispatch, axiosPrivate, item._id);
-    else await addToCompare(dispatch, axiosPrivate, item._id);
-    setCompareUpdated(false);
+    if (state.user) {
+      const added = state.user?.compare.includes(item._id);
+      setCompareUpdated(true);
+      if (added) await removeFromCompare(dispatch, axiosPrivate, item._id);
+      else await addToCompare(dispatch, axiosPrivate, item._id);
+      setCompareUpdated(false);
+    } else navigate("/auth/signin");
   };
 
   return (
@@ -68,7 +70,7 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
             onClick={onToggleWishlist}
             disabled={wishlistUpdated && true}
           >
-            {user?.wishlisted.includes(item._id) ? (
+            {state.user?.wishlisted.includes(item._id) ? (
               <FavoriteIcon className="full-icon" />
             ) : (
               <FavoriteBorderIcon />
@@ -84,7 +86,7 @@ const ProductCardImg = ({ item }: { item: ProductItemTypes }) => {
             onClick={onToggleCompare}
             disabled={compareUpdated && true}
           >
-            {user?.compare.includes(item._id) ? (
+            {state.user?.compare.includes(item._id) ? (
               <CompareIconFull />
             ) : (
               <CompareIcon />

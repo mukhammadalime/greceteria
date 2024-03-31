@@ -5,6 +5,7 @@ import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { addToWishlist, removeFromWishlist } from "../../api/user";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from "react-router-dom";
 
 const ProductActions = ({
   category,
@@ -12,21 +13,27 @@ const ProductActions = ({
   inStock,
   id,
 }: ProductActionsProps) => {
+  const navigate = useNavigate();
   const [wishlistAdded, setWishlistAdded] = useState<boolean>(false);
   const [wishlistRemoved, setWishlistRemoved] = useState<boolean>(false);
   const { state, dispatch } = useContext(UserContext);
   const axiosPrivate = useAxiosPrivate();
 
   const onToggleWishlist = async () => {
-    if (!state.user?.wishlisted.includes(id)) {
+    if (!state.user) {
+      navigate("/auth/signin");
+      return;
+    }
+
+    if (state.user?.wishlisted.includes(id)) {
       setWishlistAdded(true);
       await addToWishlist(dispatch, axiosPrivate, id);
       setWishlistAdded(false);
-      return;
+    } else {
+      setWishlistRemoved(true);
+      await removeFromWishlist(dispatch, axiosPrivate, id);
+      setWishlistRemoved(false);
     }
-    setWishlistRemoved(true);
-    await removeFromWishlist(dispatch, axiosPrivate, id);
-    setWishlistRemoved(false);
   };
   return (
     <>
