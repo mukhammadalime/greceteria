@@ -31,6 +31,7 @@ import AuthPages from "./pages/Auth/AuthPages";
 import { Analytics } from "@vercel/analytics/react";
 import { AuthContext } from "./store/AuthContext";
 import useRefreshToken from "./hooks/auth/useRefresh";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const {
@@ -54,6 +55,7 @@ function App() {
     <>
       <LayoutWrapper>
         <Analytics />
+        <SpeedInsights />
         <ToastContainer
           position="top-center"
           autoClose={2000}

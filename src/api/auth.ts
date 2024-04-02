@@ -34,7 +34,7 @@ export const login = async (
     else navigate("/home");
     // window.location.reload();
   } catch (err: any) {
-    const error = err.response?.data.message;
+    const error = err.response?.data.message || "Something went wrong.";
     if (error.startsWith("Your account") && !userData.token)
       navigate(`/auth/verify?username=${userData?.username}`);
 
@@ -53,7 +53,7 @@ export const logout = async (
     localStorage.removeItem("user");
     window.location.reload();
   } catch (err: any) {
-    toast.error(err.response?.data?.message);
+    toast.error(err.response?.data?.message || "Something went wrong.");
   }
 };
 
@@ -94,9 +94,7 @@ export const signup = async (
       navigate(`/auth/verify?username=${data.username}`);
     }
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
     toast.error(error);
   }
 };
@@ -127,13 +125,8 @@ export const verify = async (
       navigate(`/${String(location.search.match(/(?<==\s*).*?(?=\s*&)/gs))}`);
     } else navigate("/home");
   } catch (err: any) {
-    dispatch({
-      type: UserActionKind.VERIFY_FAILURE,
-      error: err.response?.data.message,
-    });
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
+    const error = err.response?.data.message || "Something went wrong.";
+    dispatch({ type: UserActionKind.VERIFY_FAILURE, error });
     toast.error(error);
   }
 };
@@ -149,12 +142,8 @@ export const sendCodeAgain = async (
 
     toast.success(data.message);
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    toast.error(err.response?.data.message || "Something went wrong.");
   }
-
   setCode("");
 };
 
@@ -169,10 +158,7 @@ export const forgotPassword = async (
     localStorage.setItem("forgotPassSuccess", JSON.stringify(true));
     toast.success(data.message);
   } catch (err: any) {
-    const error =
-      err.response?.data.message ||
-      "Something went wrong. Please come back later.";
-    toast.error(error);
+    toast.error(err.response?.data.message || "Something went wrong.");
   }
 };
 
@@ -234,7 +220,7 @@ export const checkResetTokenExistApi = async (
     );
 
     localStorage.removeItem("forgotPassSuccess");
-    setTimeout(() => navigate(`/auth/forgot-password${location.search}`), 5000);
+    setTimeout(() => navigate(`/auth/forgot-password${location.search}`), 4000);
   }
 };
 
