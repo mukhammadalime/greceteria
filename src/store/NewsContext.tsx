@@ -1,9 +1,10 @@
 import { createContext, useReducer } from "react";
 import { NewsItemTypes } from "../utils/user-types";
-import { returnUpdatedState } from "../utils/helperFunctions";
+import { returnUpdatedState, sortNewsHandler } from "../utils/helperFunctions";
 
 interface NewsInitialStateTypes {
   news: NewsItemTypes[] | null;
+  searchedNews: NewsItemTypes[] | null;
   newsItem: NewsItemTypes | null;
   newsLoading: boolean;
   newsItemLoading: boolean;
@@ -33,6 +34,9 @@ export enum NewsActionKind {
   DELETE_NEWSITEM_START = "DELETE_NEWSITEM_START",
   DELETE_NEWSITEM_SUCCESS = "DELETE_NEWSITEM_SUCCESS",
   DELETE_NEWSITEM_FAILURE = "DELETE_NEWSITEM_FAILURE",
+
+  SORT_NEWS = "SORT_NEWS",
+  SEARCH_NEWS = "SEARCH_NEWS",
 }
 
 // An interface for our actions
@@ -40,10 +44,13 @@ export interface NewsAction {
   type: NewsActionKind;
   payload?: NewsItemTypes | NewsItemTypes[] | Array<HTMLTextAreaElement> | [];
   error?: string;
+  sortedNews?: NewsItemTypes[];
+  searchedNews?: NewsItemTypes[] | null;
 }
 
 const INITIAL_STATE: NewsInitialStateTypes = {
   news: null,
+  searchedNews: null,
   newsItem: null,
   newsLoading: false,
   newsItemLoading: false,
@@ -56,12 +63,16 @@ interface NewsContextTypes {
   state: NewsInitialStateTypes;
   dispatch: React.Dispatch<NewsAction>;
   clearError: () => void;
+  sortNews: (val: string) => void;
+  searchNews: (val: string) => void;
 }
 
 export const NewsContext = createContext<NewsContextTypes>({
   state: INITIAL_STATE,
   dispatch: () => {},
   clearError: () => {},
+  sortNews: () => {},
+  searchNews: () => {},
 });
 
 const NewsReducer = (
@@ -174,6 +185,13 @@ const NewsReducer = (
         addUpdateDeleteError: action.error!,
       };
 
+    case NewsActionKind.SORT_NEWS:
+      return { ...state, news: action.sortedNews! };
+
+    case NewsActionKind.SEARCH_NEWS:
+      console.log("action.searchedNews:", action.searchedNews);
+      return { ...state, searchedNews: action.searchedNews! };
+
     default:
       return state;
   }
@@ -187,10 +205,28 @@ export const NewsContextProvider = ({
   const [state, dispatch] = useReducer(NewsReducer, INITIAL_STATE);
   const clearError = () => (state.addUpdateDeleteError = null);
 
+  const sortNews = (value: string) => {
+    if (!state.news) return;
+    const sortedNews = sortNewsHandler(value, state.news);
+    dispatch({ type: NewsActionKind.SORT_NEWS, sortedNews });
+  };
+
+  const searchNews = (value: string) => {
+    if (!state.news) return;
+    const arr = state.news.filter((i) =>
+      i.title.toLowerCase().includes(value.toLowerCase())
+    );
+    const searchedNews = value ? arr : null;
+
+    dispatch({ type: NewsActionKind.SEARCH_NEWS, searchedNews });
+  };
+
   const values = {
     state,
     dispatch,
     clearError,
+    sortNews,
+    searchNews,
   };
 
   return <NewsContext.Provider value={values}>{children}</NewsContext.Provider>;

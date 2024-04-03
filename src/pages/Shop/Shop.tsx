@@ -48,15 +48,15 @@ const Shop = () => {
               ))}
           </div>
 
-          {filters && filteredProducts?.length === 0 && (
-            <div className="empty-container">
-              <h1>No products found with that filter.</h1>
-            </div>
-          )}
-
           {productsErr && <EmptyOrErrorContainer error={productsErr} />}
-          {products?.length === 0 && (
-            <EmptyOrErrorContainer text="Sorry, there are no products yet." />
+          {(products?.length === 0 || filteredProducts?.length === 0) && (
+            <EmptyOrErrorContainer
+              text={
+                filters
+                  ? "No products found with that filter."
+                  : "Sorry, there are no products yet."
+              }
+            />
           )}
         </div>
       </div>

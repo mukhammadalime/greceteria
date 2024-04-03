@@ -11,18 +11,19 @@ import { getAllNews } from "../api/news";
 const NewsPage = () => {
   const { state } = useContext(UserContext);
   const {
-    state: { news, newsLoading, error },
+    state: { news, newsLoading, error, searchedNews },
     dispatch,
   } = useContext(NewsContext);
 
   useLayoutEffect(() => {
     if (state.user && !news) dispatch({ type: NewsActionKind.GET_NEWS_START });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, news, state.user]);
 
   useEffect(() => {
     if (state.user) (async () => await getAllNews(dispatch))();
   }, [dispatch, state.user]);
+
+  const newsArr = searchedNews ? searchedNews : news;
 
   if (state.user === null) return <LoginFirst />;
 
@@ -40,12 +41,12 @@ const NewsPage = () => {
             </>
           )}
 
-          {news?.map((item) => (
+          {newsArr?.map((item) => (
             <NewsCard newsItem={item} key={item._id} />
           ))}
         </div>
 
-        {news?.length === 0 && !error && (
+        {newsArr?.length === 0 && !error && (
           <EmptyOrErrorContainer text="Sorry, we couldn't find any news." />
         )}
 

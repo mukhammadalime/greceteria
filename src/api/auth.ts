@@ -47,10 +47,9 @@ export const logout = async (
   axiosPrivate: AxiosInstance
 ) => {
   try {
-    dispatch({ accessToken: null });
-
     await axiosPrivate.get("/users/logout");
     localStorage.removeItem("user");
+    dispatch({ accessToken: null });
     window.location.reload();
   } catch (err: any) {
     toast.error(err.response?.data?.message || "Something went wrong.");

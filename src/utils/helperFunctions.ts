@@ -1,5 +1,5 @@
 import { ChangeEvent, SetStateAction } from "react";
-import { ImageItemTypes, ProductItemTypes } from "./user-types";
+import { ImageItemTypes, NewsItemTypes, ProductItemTypes } from "./user-types";
 import { activeFilterProps } from "./types";
 
 /// ADD PRODUCT MODAL HELPER FUNCTIONS
@@ -150,4 +150,14 @@ export const filterProducts = (
   }
 
   return filteredProducts;
+};
+
+export const sortNewsHandler = (value: string, items: NewsItemTypes[]) => {
+  return items.sort((a, b) => {
+    if (value === "latest")
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    else {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+  });
 };

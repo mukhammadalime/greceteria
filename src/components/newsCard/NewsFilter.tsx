@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import FilterOptions from "../UI/FilterOptions";
 import AddNewsModal from "../modals/AddNewsModal";
 import { UserContext } from "../../store/UserContext";
+import { NewsContext } from "../../store/NewsContext";
 
 export const sortOptions = [
   { name: "Sort by: Newest", _id: "newest" },
@@ -11,8 +12,12 @@ export const sortOptions = [
 const NewsFilter = () => {
   const [addNewsModal, setAddNewsModal] = useState<boolean>(false);
   const [sortOpen, setSortOpen] = useState<boolean>(false);
-  const [sortOption, setSortOption] = useState<string>("");
   const { state } = useContext(UserContext);
+  const { sortNews, searchNews } = useContext(NewsContext);
+
+  const onSortHandler = (val: string) => {
+    sortNews(val);
+  };
 
   return (
     <>
@@ -25,7 +30,11 @@ const NewsFilter = () => {
       <div className="section__head">
         <div className="news__filter">
           <div className="header__search">
-            <input type="text" placeholder="Search for news" />
+            <input
+              type="text"
+              placeholder="Search for news"
+              onChange={(e) => searchNews(e.target.value)}
+            />
             <img
               className="search-icon"
               src="/assets/icons/search-icon.svg"
@@ -36,7 +45,7 @@ const NewsFilter = () => {
             options={sortOptions}
             title="Sort By: Newest"
             onToggle={() => setSortOpen((prev) => !prev)}
-            onSelect={(id: string) => setSortOption(id)}
+            onSelect={(id: string) => onSortHandler(id)}
             open={sortOpen}
           />
 
