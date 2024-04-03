@@ -5,27 +5,32 @@ import AddProductModal from "../../components/modals/AddProductModal";
 import { CategoryContext } from "../../store/CategoryContext";
 import { ProductContext } from "../../store/ProductContext";
 import useToggleOptions from "../../hooks/useToggleOptions";
-import {
-  productPriceOptions,
-  ratingOptions,
-  sortOptions,
-} from "../../data/helperData";
+import { productPriceOptions, ratingOptions } from "../../data/helperData";
 import { UserContext } from "../../store/UserContext";
+import { activeFilterTypeProps } from "../../utils/types";
 
-const Filter = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedPrice, setSelectedPrice] = useState<string>("");
-  const [selectedSort, setSelectedSort] = useState<string>("");
-  const [selectedRating, setSelectedRating] = useState<string>("");
+const Filter = ({ productsLength }: { productsLength: number | undefined }) => {
   const { state } = useContext(UserContext);
   const [addProductModal, setAddProductModal] = useState(() => false);
-
   const {
     state: { categories },
   } = useContext(CategoryContext);
   const {
-    state: { products },
+    state: { filters },
+    addFilter,
+    removeFilter,
   } = useContext(ProductContext);
+
+  const onSetActiveFilters = (id: string, type: activeFilterTypeProps) => {
+    // If the item is already in active filters, we just return.
+    if (filters && filters.find((i) => i.id === id)) return;
+    let customArr;
+    if (type === "category") customArr = categories;
+    else if (type === "price") customArr = productPriceOptions;
+    else if (type === "rating") customArr = ratingOptions;
+    const value = customArr?.find((i) => i._id === id)?.name!;
+    addFilter({ id, value, type });
+  };
 
   // This function opens the requested filter and closed other remaining open filters
   const { filtersOpen, toggleOptionsHandler } = useToggleOptions(4);
@@ -37,7 +42,7 @@ const Filter = () => {
           text="Add Product"
           closeModal={() => setAddProductModal(false)}
           categoryOptions={categories!.map((i) => {
-            return { name: i.name, id: i._id };
+            return { name: i.name, _id: i._id };
           })}
         />
       )}
@@ -48,12 +53,13 @@ const Filter = () => {
             {categories && (
               <FilterOptions
                 options={categories.map((i) => {
-                  return { name: i.name, id: i._id };
+                  return { name: i.name, _id: i._id };
                 })}
                 title="Select Category"
                 onToggle={toggleOptionsHandler.bind(null, 0)}
-                onSelect={(id: string) => setSelectedCategory(id)}
+                onSelect={(id: string) => onSetActiveFilters(id, "category")}
                 open={filtersOpen[0]}
+                addSelectedNotAllowed
               />
             )}
 
@@ -62,22 +68,18 @@ const Filter = () => {
               title="Select Price"
               onToggle={toggleOptionsHandler.bind(null, 1)}
               open={filtersOpen[1]}
-              onSelect={(id: string) => setSelectedPrice(id)}
+              onSelect={(id: string) => onSetActiveFilters(id, "price")}
+              addSelectedNotAllowed
             />
             <FilterOptions
               options={ratingOptions}
               title="Select Rating"
               onToggle={toggleOptionsHandler.bind(null, 2)}
               open={filtersOpen[2]}
-              onSelect={(id: string) => setSelectedRating(id)}
+              onSelect={(id: string) => onSetActiveFilters(id, "rating")}
+              addSelectedNotAllowed
             />
-            <FilterOptions
-              options={sortOptions}
-              title="Sort By: ~~~~~"
-              onToggle={toggleOptionsHandler.bind(null, 3)}
-              open={filtersOpen[3]}
-              onSelect={(id: string) => setSelectedSort(id)}
-            />
+
             {state.user && state.user.role !== "user" && (
               <button
                 className="button add-button"
@@ -90,34 +92,24 @@ const Filter = () => {
         <div className="filter__bottom">
           <div className="container">
             <div className="filter__bottom--main">
+              <h5>Active Filters:</h5>
               <div className="active__filters">
-                <h5>Active Filters:</h5>
-                <div className="active__filter">
-                  Vegetables
-                  <CloseIcon />
-                </div>
-                <div className="active__filter">
-                  Min $10 - Max $20
-                  <CloseIcon />
-                </div>
-                <div className="active__filter">
-                  Min $10 - Max $20
-                  <CloseIcon />
-                </div>
-                <div className="active__filter">
-                  Min $10 - Max $20
-                  <CloseIcon />
-                </div>
-                <div className="active__filter">
-                  Min $10 - Max $20
-                  <CloseIcon />
-                </div>
+                {filters &&
+                  filters.map((filter) => (
+                    <div className="active__filter" key={filter.value}>
+                      {filter.value}
+                      <div onClick={removeFilter.bind(null, filter.id)}>
+                        <CloseIcon />
+                      </div>
+                    </div>
+                  ))}
               </div>
               <div className="filter__result">
                 <p>
-                  {products?.length || 0}
+                  {productsLength || 0}
                   <span>
-                    Product{products && products.length > 1 ? "s" : ""} found.
+                    Product{productsLength && productsLength > 1 ? "s" : ""}{" "}
+                    found.
                   </span>
                 </p>
               </div>

@@ -12,11 +12,11 @@ import OrderDetailsAddress from "./OrderDetailsAddress";
 const statusOptions = [
   {
     name: "On The Way",
-    id: "on the way",
+    _id: "on the way",
   },
   {
     name: "Delivered",
-    id: "delivered",
+    _id: "delivered",
   },
 ];
 

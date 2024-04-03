@@ -2,9 +2,10 @@ import { useContext, useState } from "react";
 import FilterOptions from "../UI/FilterOptions";
 import AddNewsModal from "../modals/AddNewsModal";
 import { UserContext } from "../../store/UserContext";
+
 export const sortOptions = [
-  { name: "Sort by: Newest", id: "newest" },
-  { name: "Sort by: Latest", id: "latest" },
+  { name: "Sort by: Newest", _id: "newest" },
+  { name: "Sort by: Latest", _id: "latest" },
 ];
 
 const NewsFilter = () => {

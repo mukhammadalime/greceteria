@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "https://groceteria-server.onrender.com/api/v1/";
+const BASE_URL = "https://api.groceteria.dev/api/v1/";
 // const BASE_URL = "http://localhost:8000/api/v1/";
 
 export default axios.create({

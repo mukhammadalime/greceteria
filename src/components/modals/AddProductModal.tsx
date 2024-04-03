@@ -259,7 +259,7 @@ interface AddProductModalTypes {
   closeModal: () => void;
   images?: ImageItemTypes[];
   text: string;
-  categoryOptions: { name: string; id: string }[];
+  categoryOptions: { name: string; _id: string }[];
   product?: ProductItemTypes;
 }
 

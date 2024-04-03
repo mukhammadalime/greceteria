@@ -5,23 +5,26 @@ import { ProductContext } from "../../store/ProductContext";
 import ProductCardSkeleton from "../../skeletons/ProductCardSkeleton";
 import EmptyOrErrorContainer from "../../components/EmptyOrErrorContainer";
 import { getProducts } from "../../api/products";
+import { filterProducts } from "../../utils/helperFunctions";
 
 const Shop = () => {
   const {
-    state: { products, productsLoading, productsErr },
+    state: { products, productsLoading, productsErr, filters },
     dispatch,
   } = useContext(ProductContext);
 
   useLayoutEffect(() => {
     if (products) return;
-    (async () => {
-      await getProducts(dispatch, "?limit=20");
-    })();
+    (async () => await getProducts(dispatch, "?limit=20"))();
   }, [dispatch, products]);
+
+  const filteredProducts = filterProducts(filters, products);
 
   return (
     <>
-      <Filter />
+      <Filter
+        productsLength={filters ? filteredProducts?.length : products?.length}
+      />
 
       <div className="section-md shop">
         <div className="container">
@@ -34,10 +37,22 @@ const Shop = () => {
               </>
             )}
 
-            {products?.map((item) => (
-              <ProductCard key={item._id} item={item} />
-            ))}
+            {!filters &&
+              products?.map((item) => (
+                <ProductCard key={item._id} item={item} />
+              ))}
+
+            {filters &&
+              filteredProducts?.map((item) => (
+                <ProductCard key={item._id} item={item} />
+              ))}
           </div>
+
+          {filters && filteredProducts?.length === 0 && (
+            <div className="empty-container">
+              <h1>No products found with that filter.</h1>
+            </div>
+          )}
 
           {productsErr && <EmptyOrErrorContainer error={productsErr} />}
           {products?.length === 0 && (

@@ -46,3 +46,11 @@ export interface OrderDataProps {
   address: AddressItemTypes;
   notes: string;
 }
+
+export type activeFilterTypeProps = "category" | "price" | "rating";
+
+export interface activeFilterProps {
+  id: string;
+  value: string;
+  type: activeFilterTypeProps;
+}

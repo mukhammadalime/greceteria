@@ -9,20 +9,21 @@ const FilterOptions = ({
   defaultValue,
   query,
   clearOption,
+  addSelectedNotAllowed,
 }: FilterOptionsProps) => {
   // If there is query in state, we remember it and show the before set query option when the user comes back to it again.
   defaultValue = query
-    ? options.find((i) => i.id === query)?.name
+    ? options.find((i) => i._id === query)?.name
     : defaultValue;
   const [option, setOption] = useState<string | null>(defaultValue || title);
 
   const setOptionHandler = useCallback(
     (name: string, id: string) => {
-      setOption(name);
+      if (!addSelectedNotAllowed) setOption(name);
       onSelect(id);
       onToggle();
     },
-    [onSelect, onToggle]
+    [onSelect, onToggle, addSelectedNotAllowed]
   );
 
   // If there is query, we show the 'Clear' option (in OrderHistory and Customers pages).
@@ -38,12 +39,11 @@ const FilterOptions = ({
       <ul className="options">
         {options.map((item) => (
           <li
-            key={item.id}
+            key={item._id}
             className="options__item"
-            onClick={setOptionHandler.bind(null, item.name, item.id)}
-          >
-            {item.name}
-          </li>
+            onClick={setOptionHandler.bind(null, item.name, item._id)}
+            children={item.name}
+          />
         ))}
       </ul>
     </div>
@@ -51,7 +51,7 @@ const FilterOptions = ({
 };
 
 interface FilterOptionsProps {
-  options: { name: string; id: string }[];
+  options: { name: string; _id: string }[];
   title: string;
   onSelect: (id: string) => void;
   onToggle: () => void;
@@ -59,6 +59,7 @@ interface FilterOptionsProps {
   defaultValue?: string;
   query?: string;
   clearOption?: boolean;
+  addSelectedNotAllowed?: boolean;
 }
 
 export default FilterOptions;

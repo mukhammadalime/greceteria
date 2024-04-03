@@ -38,7 +38,7 @@ const ProductInfo = ({ product }: { product: ProductItemTypes }) => {
           closeModal={() => setAddProductModal(false)}
           product={product}
           categoryOptions={categories!.map((i) => {
-            return { name: i.name, id: i._id };
+            return { name: i.name, _id: i._id };
           })}
         />
       )}

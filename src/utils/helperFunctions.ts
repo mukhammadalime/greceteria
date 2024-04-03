@@ -1,5 +1,6 @@
 import { ChangeEvent, SetStateAction } from "react";
-import { ImageItemTypes } from "./user-types";
+import { ImageItemTypes, ProductItemTypes } from "./user-types";
+import { activeFilterProps } from "./types";
 
 /// ADD PRODUCT MODAL HELPER FUNCTIONS
 export const setImagesHandler = (
@@ -108,4 +109,45 @@ export const makeUniqueArray = <T>(items: T[]) => {
 export const signoutUser = () => {
   localStorage.removeItem("user");
   window.location.reload();
+};
+
+export const filterProducts = (
+  filters: activeFilterProps[] | null,
+  products: ProductItemTypes[] | null
+): ProductItemTypes[] | null => {
+  if (!filters || !products) return null;
+  let filteredProducts: ProductItemTypes[] = [];
+  const categoryFilters = filters.filter((i) => i.type === "category");
+  const priceFilter = filters.filter((i) => i.type === "price")[0];
+  const ratingFilter = filters.filter((i) => i.type === "rating")[0];
+
+  /// First we filter products by category
+  categoryFilters.forEach((filter) => {
+    const arr = products.filter(
+      (product) => product.category._id === filter.id
+    );
+    filteredProducts = [...filteredProducts, ...arr];
+  });
+
+  if (categoryFilters.length === 0) filteredProducts = products;
+
+  if (priceFilter) {
+    const min = Number(priceFilter.id.split("-")[0]);
+    const max = Number(priceFilter.id.split("-")[1]);
+    filteredProducts = filteredProducts.filter((i) => {
+      if (i.discountedPrice)
+        return i.discountedPrice >= min && i.discountedPrice <= max;
+      else return i.price >= min && i.price <= max;
+    });
+  }
+
+  if (ratingFilter) {
+    filteredProducts = filteredProducts.filter(
+      (item) =>
+        item.ratingsAverage >= Number(ratingFilter.id) &&
+        item.ratingsAverage < Number(ratingFilter.id) + 1
+    );
+  }
+
+  return filteredProducts;
 };

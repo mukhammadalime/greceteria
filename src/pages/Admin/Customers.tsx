@@ -11,10 +11,10 @@ import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "../../store/AuthContext";
 
 export const sortOptions = [
-  { name: "Sort by: Active", id: "active" },
-  { name: "Sort by: Inactive", id: "inactive" },
-  { name: "Sort by: Pending", id: "pending" },
-  { name: "Clear sorting", id: "" },
+  { name: "Sort by: Active", _id: "active" },
+  { name: "Sort by: Inactive", _id: "inactive" },
+  { name: "Sort by: Pending", _id: "pending" },
+  { name: "Clear sorting", _id: "" },
 ];
 const customerItemsWidths = ["100%", "100%", "100%", "100%", "100%"];
 const customersTableHeaderItems = ["NAME", "EMAIL", "TELEPHONE", "STATUS", ""];

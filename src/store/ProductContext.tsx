@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 import { ProductItemTypes } from "../utils/user-types";
 import { returnUpdatedState } from "../utils/helperFunctions";
+import { activeFilterProps } from "../utils/types";
 
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[] | null;
@@ -17,6 +18,7 @@ interface ProductsInitialStateTypes {
   addUpdateDeleteErr: string | null;
   productsErr: string | null;
   productErr: string | null;
+  filters: activeFilterProps[] | null;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -44,6 +46,9 @@ export enum ProductActionKind {
   DELETE_PRODUCT_START = "DELETE_PRODUCT_START",
   DELETE_PRODUCT_SUCCESS = "DELETE_PRODUCT_SUCCESS",
   DELETE_PRODUCT_FAILURE = "DELETE_PRODUCT_FAILURE",
+
+  ADD_FILTER = "ADD_FILTER",
+  REMOVE_FILTER = "REMOVE_FILTER",
 }
 
 // An interface for our actions
@@ -51,6 +56,7 @@ export interface ProductAction {
   type: ProductActionKind;
   payload?: ProductItemTypes[] | ProductItemTypes | CustomProductsPayloadProps;
   error?: string;
+  filterArr?: activeFilterProps[] | null;
 }
 
 interface CustomProductsPayloadProps {
@@ -76,16 +82,22 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   ////////////////////////////////
   addUpdateDeleteLoading: false,
   addUpdateDeleteErr: null,
+  ///////////////////////////////
+  filters: JSON.parse(localStorage.getItem("activeFilters")!) || null,
 };
 
 export interface ProductContextTypes {
   state: ProductsInitialStateTypes;
   dispatch: React.Dispatch<ProductAction>;
+  addFilter: (filter: activeFilterProps) => void;
+  removeFilter: (id: string) => void;
 }
 
 export const ProductContext = createContext<ProductContextTypes>({
   state: INITIAL_STATE,
   dispatch: () => {},
+  addFilter: () => {},
+  removeFilter: () => {},
 });
 
 const ProductReducer = (
@@ -220,6 +232,12 @@ const ProductReducer = (
         addUpdateDeleteErr: action.error!,
       };
 
+    case ProductActionKind.ADD_FILTER:
+      return { ...state, filters: action.filterArr! };
+
+    case ProductActionKind.REMOVE_FILTER:
+      return { ...state, filters: action.filterArr! };
+
     default:
       return state;
   }
@@ -232,9 +250,37 @@ export const ProductContextProvider = ({
 }) => {
   const [state, dispatch] = useReducer(ProductReducer, INITIAL_STATE);
 
+  const addFilter = (obj: activeFilterProps) => {
+    let updatedArr: activeFilterProps[];
+
+    if (obj.type === "price" && state.filters) {
+      const arr = state.filters.filter((i) => i.type !== "price");
+      updatedArr = [...arr, obj];
+    } else if (obj.type === "rating" && state.filters) {
+      const arr = state.filters.filter((i) => i.type !== "rating");
+      updatedArr = [...arr, obj];
+    } else {
+      updatedArr = state.filters ? [...state.filters, obj] : [obj];
+    }
+
+    localStorage.setItem("activeFilters", JSON.stringify(updatedArr));
+    dispatch({ type: ProductActionKind.ADD_FILTER, filterArr: updatedArr });
+  };
+
+  const removeFilter = (id: string) => {
+    if (!state.filters) return;
+    const updated = state.filters.filter((i) => i.id !== id);
+    if (updated.length === 0) localStorage.removeItem("activeFilters");
+    else localStorage.setItem("activeFilters", JSON.stringify(updated));
+    const filterArr = updated.length > 0 ? updated : null;
+    dispatch({ type: ProductActionKind.REMOVE_FILTER, filterArr });
+  };
+
   const values = {
     state,
     dispatch,
+    addFilter,
+    removeFilter,
   };
 
   return (

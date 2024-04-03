@@ -22,11 +22,11 @@ const LoginForm = () => {
     e.preventDefault();
     let email: string = "";
     let username: string = "";
-    if (!userNameRef.current?.value.includes("@")) {
+    if (!userNameRef.current?.value.includes("@"))
       username = userNameRef.current?.value!;
-    } else if (userNameRef.current?.value.includes("@")) {
+    else if (userNameRef.current?.value.includes("@"))
       email = userNameRef.current?.value!;
-    }
+
     const password = passwordRef.current?.value!;
     const userData = { username, email, password };
     setLoading(true);
@@ -80,7 +80,7 @@ const LoginForm = () => {
                 type="submit"
                 onClick={onLoginHandler}
               />
-              <button disabled={loading && true}>
+              <button disabled={loading && true} className="google-btn">
                 <GoogleLogin
                   onSuccess={(res) => onGoogleLoginSuccess(res.credential!)}
                   type="icon"
