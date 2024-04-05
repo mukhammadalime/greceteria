@@ -11,7 +11,6 @@ export const sortOptions = [
 
 const NewsFilter = () => {
   const [addNewsModal, setAddNewsModal] = useState<boolean>(false);
-  const [sortOpen, setSortOpen] = useState<boolean>(false);
   const { state } = useContext(UserContext);
   const { sortNews, searchNews } = useContext(NewsContext);
 
@@ -44,9 +43,7 @@ const NewsFilter = () => {
           <FilterOptions
             options={sortOptions}
             title="Sort By: Newest"
-            onToggle={() => setSortOpen((prev) => !prev)}
             onSelect={(id: string) => onSortHandler(id)}
-            open={sortOpen}
           />
 
           {state.user && state.user.role !== "user" && (

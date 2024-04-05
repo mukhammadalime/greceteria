@@ -7,7 +7,6 @@ import { UserContext } from "../store/UserContext";
 import { OrderActionKind, OrderContext } from "../store/OrderContext";
 import { getAllOrders, getMyOrders } from "../api/orders";
 import { orderPriceOptions, orderSortOptions } from "../data/helperData";
-import useToggleOptions from "../hooks/useToggleOptions";
 import useAxiosPrivate from "../hooks/auth/useAxiosPrivate";
 import { AuthContext } from "../store/AuthContext";
 
@@ -21,8 +20,6 @@ const OrderHistory = () => {
     filterOrders,
     sortOrders,
   } = useContext(OrderContext);
-  // This function opens the requested filter and closed other remaining open filters.
-  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(2);
   const axiosPrivate = useAxiosPrivate();
   const { auth } = useContext(AuthContext);
 
@@ -54,18 +51,14 @@ const OrderHistory = () => {
               <FilterOptions
                 options={orderPriceOptions}
                 title="Select Price"
-                onToggle={toggleOptionsHandler.bind(null, 0)}
                 onSelect={(id: string) => filterOrders(id)}
-                open={filtersOpen[0]}
                 query={filterQuery}
                 clearOption
               />
               <FilterOptions
                 options={orderSortOptions}
                 title="Sort By: Status"
-                onToggle={toggleOptionsHandler.bind(null, 1)}
                 onSelect={(id: string) => sortOrders(id)}
-                open={filtersOpen[1]}
                 query={sortQuery}
                 clearOption
               />

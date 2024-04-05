@@ -189,7 +189,6 @@ const NewsReducer = (
       return { ...state, news: action.sortedNews! };
 
     case NewsActionKind.SEARCH_NEWS:
-      console.log("action.searchedNews:", action.searchedNews);
       return { ...state, searchedNews: action.searchedNews! };
 
     default:

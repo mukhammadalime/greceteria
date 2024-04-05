@@ -43,7 +43,7 @@ const UserDetailsMain = ({
 };
 
 interface UserDetailsMainProps {
-  edit: boolean;
+  edit?: boolean;
   photo: string;
   name: string;
   username: string;

@@ -22,10 +22,10 @@ const useClose = (ref: React.RefObject<HTMLDivElement>) => {
     };
   }, [ref]);
 
-  // return {
-  //   boxOpen,
-  //   setBoxOpen,
-  // };
+  return {
+    boxOpen,
+    setBoxOpen,
+  };
 };
 
 export default useClose;

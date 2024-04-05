@@ -20,7 +20,6 @@ const customerItemsWidths = ["100%", "100%", "100%", "100%", "100%"];
 const customersTableHeaderItems = ["NAME", "EMAIL", "TELEPHONE", "STATUS", ""];
 
 const Customers = () => {
-  const [sortOpen, setSortOpen] = useState(false);
   const [reload, setReload] = useState<boolean>(false);
   const {
     state: {
@@ -64,9 +63,7 @@ const Customers = () => {
               <FilterOptions
                 options={sortOptions}
                 title="Sort By: Status"
-                onToggle={() => setSortOpen((prev) => !prev)}
                 onSelect={(arg: string) => sortCustomers(arg)}
-                open={sortOpen}
                 query={sortQuery}
                 clearOption
               />

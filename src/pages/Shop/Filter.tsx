@@ -4,7 +4,6 @@ import FilterOptions from "../../components/UI/FilterOptions";
 import AddProductModal from "../../components/modals/AddProductModal";
 import { CategoryContext } from "../../store/CategoryContext";
 import { ProductContext } from "../../store/ProductContext";
-import useToggleOptions from "../../hooks/useToggleOptions";
 import { productPriceOptions, ratingOptions } from "../../data/helperData";
 import { UserContext } from "../../store/UserContext";
 import { activeFilterTypeProps } from "../../utils/types";
@@ -32,9 +31,6 @@ const Filter = ({ productsLength }: { productsLength: number | undefined }) => {
     addFilter({ id, value, type });
   };
 
-  // This function opens the requested filter and closed other remaining open filters
-  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(4);
-
   return (
     <>
       {addProductModal && (
@@ -56,9 +52,7 @@ const Filter = ({ productsLength }: { productsLength: number | undefined }) => {
                   return { name: i.name, _id: i._id };
                 })}
                 title="Select Category"
-                onToggle={toggleOptionsHandler.bind(null, 0)}
                 onSelect={(id: string) => onSetActiveFilters(id, "category")}
-                open={filtersOpen[0]}
                 addSelectedNotAllowed
               />
             )}
@@ -66,16 +60,12 @@ const Filter = ({ productsLength }: { productsLength: number | undefined }) => {
             <FilterOptions
               options={productPriceOptions}
               title="Select Price"
-              onToggle={toggleOptionsHandler.bind(null, 1)}
-              open={filtersOpen[1]}
               onSelect={(id: string) => onSetActiveFilters(id, "price")}
               addSelectedNotAllowed
             />
             <FilterOptions
               options={ratingOptions}
               title="Select Rating"
-              onToggle={toggleOptionsHandler.bind(null, 2)}
-              open={filtersOpen[2]}
               onSelect={(id: string) => onSetActiveFilters(id, "rating")}
               addSelectedNotAllowed
             />

@@ -29,7 +29,7 @@ export const getProducts = async (
 
 export const getCustomProducts = async (
   dispatch: Dispatch<ProductAction>,
-  type: "relatedProducts" | "topProducts" | "saleProducts",
+  type: "relatedProducts" | "topProducts" | "saleProducts" | "searchProducts",
   query?: string
 ) => {
   try {

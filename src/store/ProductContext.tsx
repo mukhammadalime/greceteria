@@ -5,6 +5,7 @@ import { activeFilterProps } from "../utils/types";
 
 interface ProductsInitialStateTypes {
   products: ProductItemTypes[] | null;
+  productsLoading: boolean;
   relatedProducts: ProductItemTypes[] | null;
   relatedProductsLoading: boolean;
   topProducts: ProductItemTypes[] | null;
@@ -12,13 +13,15 @@ interface ProductsInitialStateTypes {
   saleProducts: ProductItemTypes[] | null;
   saleProductsLoading: boolean;
   product: ProductItemTypes | null;
-  productsLoading: boolean;
   productLoading: boolean;
+  searchProducts: ProductItemTypes[] | null;
+  // searchProductsLoading: boolean;
   addUpdateDeleteLoading: boolean;
   addUpdateDeleteErr: string | null;
   productsErr: string | null;
   productErr: string | null;
   filters: activeFilterProps[] | null;
+  searchQuery: string;
 }
 
 // An enum with all the types of actions to use in our reducer
@@ -49,6 +52,7 @@ export enum ProductActionKind {
 
   ADD_FILTER = "ADD_FILTER",
   REMOVE_FILTER = "REMOVE_FILTER",
+  SEARCH = "SEARCH",
 }
 
 // An interface for our actions
@@ -57,11 +61,12 @@ export interface ProductAction {
   payload?: ProductItemTypes[] | ProductItemTypes | CustomProductsPayloadProps;
   error?: string;
   filterArr?: activeFilterProps[] | null;
+  searchText?: string;
 }
 
 interface CustomProductsPayloadProps {
   products?: ProductItemTypes[];
-  type: "relatedProducts" | "topProducts" | "saleProducts";
+  type: "relatedProducts" | "topProducts" | "saleProducts" | "searchProducts";
 }
 
 const INITIAL_STATE: ProductsInitialStateTypes = {
@@ -72,9 +77,11 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   relatedProducts: null,
   topProducts: null,
   saleProducts: null,
+  searchProducts: null,
   relatedProductsLoading: false,
   topProductsLoading: false,
   saleProductsLoading: false,
+  // searchProductsLoading: false,
   ////////////////////////////////
   product: null,
   productLoading: false,
@@ -84,6 +91,7 @@ const INITIAL_STATE: ProductsInitialStateTypes = {
   addUpdateDeleteErr: null,
   ///////////////////////////////
   filters: JSON.parse(localStorage.getItem("activeFilters")!) || null,
+  searchQuery: "",
 };
 
 export interface ProductContextTypes {
@@ -91,6 +99,7 @@ export interface ProductContextTypes {
   dispatch: React.Dispatch<ProductAction>;
   addFilter: (filter: activeFilterProps) => void;
   removeFilter: (id: string) => void;
+  setSearchQuery: (val: string) => void;
 }
 
 export const ProductContext = createContext<ProductContextTypes>({
@@ -98,6 +107,7 @@ export const ProductContext = createContext<ProductContextTypes>({
   dispatch: () => {},
   addFilter: () => {},
   removeFilter: () => {},
+  setSearchQuery: () => {},
 });
 
 const ProductReducer = (
@@ -238,6 +248,9 @@ const ProductReducer = (
     case ProductActionKind.REMOVE_FILTER:
       return { ...state, filters: action.filterArr! };
 
+    case ProductActionKind.SEARCH:
+      return { ...state, searchQuery: action.searchText! };
+
     default:
       return state;
   }
@@ -269,11 +282,17 @@ export const ProductContextProvider = ({
 
   const removeFilter = (id: string) => {
     if (!state.filters) return;
+
     const updated = state.filters.filter((i) => i.id !== id);
     if (updated.length === 0) localStorage.removeItem("activeFilters");
     else localStorage.setItem("activeFilters", JSON.stringify(updated));
+
     const filterArr = updated.length > 0 ? updated : null;
     dispatch({ type: ProductActionKind.REMOVE_FILTER, filterArr });
+  };
+
+  const setSearchQuery = (val: string) => {
+    dispatch({ type: ProductActionKind.SEARCH, searchText: val });
   };
 
   const values = {
@@ -281,6 +300,7 @@ export const ProductContextProvider = ({
     dispatch,
     addFilter,
     removeFilter,
+    setSearchQuery,
   };
 
   return (

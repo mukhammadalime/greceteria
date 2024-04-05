@@ -72,7 +72,6 @@ const CustomerDetails = () => {
               <div className="customer-details dashboard__main">
                 <div className="user__details">
                   <UserDetailsMain
-                    edit
                     photo={customer.photo}
                     name={customer.name}
                     username={customer.username}

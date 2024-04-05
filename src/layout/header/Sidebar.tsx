@@ -87,32 +87,35 @@ const Sidebar = ({ onCloseSidebar, open }: SidebarTypes) => {
       : navAdminItems;
 
   return (
-    <div className={`sidebar${open ? " open" : ""}`}>
-      <div className="sidebar__top">
-        <div onClick={onCloseSidebar}>
-          <CloseIcon />
+    <>
+      <div className={`sidebar${open ? " open" : ""}`}>
+        <div className="sidebar__top">
+          <div onClick={onCloseSidebar}>
+            <CloseIcon />
+          </div>
+          <h1>Groceteria</h1>
         </div>
-        <h1>Groceteria</h1>
-      </div>
 
-      <div className="sidebar__items">
-        {navItems.map((item) => (
-          <Link
-            to={item.link}
-            className="sidebar__item"
-            key={item.name}
-            onClick={onCloseSidebar}
-          >
-            {item.icon}
-            <h2>{item.name}</h2>
-          </Link>
-        ))}
-      </div>
+        <div className="sidebar__items">
+          {navItems.map((item) => (
+            <Link
+              to={item.link}
+              className="sidebar__item"
+              key={item.name}
+              onClick={onCloseSidebar}
+            >
+              {item.icon}
+              <h2>{item.name}</h2>
+            </Link>
+          ))}
+        </div>
 
-      <p className="footer__copyright">
-        Groceteria © 2024. All Rights Reserved
-      </p>
-    </div>
+        <p className="footer__copyright">
+          Groceteria © 2024. All Rights Reserved
+        </p>
+      </div>
+      {open && <div className="sidebar__backdrop" onClick={onCloseSidebar} />}
+    </>
   );
 };
 

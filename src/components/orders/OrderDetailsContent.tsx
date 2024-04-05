@@ -23,7 +23,6 @@ const statusOptions = [
 const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { state } = useContext(UserContext);
-  const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
   const { dispatch } = useContext(OrderContext);
   const axiosPrivate = useAxiosPrivate();
 
@@ -79,9 +78,7 @@ const OrderDetailsContent = ({ order }: { order: OrderProps }) => {
                 <FilterOptions
                   options={statusOptions}
                   title=""
-                  onToggle={() => setOptionsOpen((prev) => !prev)}
                   onSelect={(arg: string) => onUpdateOrder(arg)}
-                  open={optionsOpen}
                   defaultValue={order.status}
                 />
               </div>

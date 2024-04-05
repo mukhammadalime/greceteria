@@ -14,7 +14,6 @@ import {
 } from "../../utils/helperFunctions";
 import UploadedImages from "./components/UploadedImages";
 import { inStockOptions, weightOptions } from "../../data/helperData";
-import useToggleOptions from "../../hooks/useToggleOptions";
 import { ActionTypeProps } from "../../utils/types";
 import { createFormDataHandler } from "../../api/helper";
 import useAxiosPrivate from "../../hooks/auth/useAxiosPrivate";
@@ -33,7 +32,6 @@ const AddProductOverlay = ({
   const navigate = useNavigate();
   const { state: productsState, dispatch } = useContext(ProductContext);
   const axiosPrivate = useAxiosPrivate();
-  const { filtersOpen, toggleOptionsHandler } = useToggleOptions(3);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const brandNameRef = useRef<HTMLInputElement>(null);
@@ -145,9 +143,7 @@ const AddProductOverlay = ({
             <FilterOptions
               options={categoryOptions}
               title="Select Category"
-              onToggle={toggleOptionsHandler.bind(null, 0)}
               onSelect={(id: string) => setSelectedCategory(id)}
-              open={filtersOpen[0]}
               defaultValue={product?.category.name}
             />
           </div>
@@ -163,9 +159,7 @@ const AddProductOverlay = ({
             <FilterOptions
               options={weightOptions}
               title=""
-              onToggle={toggleOptionsHandler.bind(null, 1)}
               onSelect={(id: string) => setSelectedWeightType(id)}
-              open={filtersOpen[1]}
               defaultValue={selectedWeightType}
             />
           </div>
@@ -213,9 +207,7 @@ const AddProductOverlay = ({
               <FilterOptions
                 options={inStockOptions}
                 title=""
-                onToggle={toggleOptionsHandler.bind(null, 2)}
                 onSelect={(id: string) => setInStock(id)}
-                open={filtersOpen[2]}
                 defaultValue={inStock}
               />
             </div>

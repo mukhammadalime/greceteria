@@ -80,21 +80,12 @@
 
   @media (max-width: 768px) {
     &__item {
-      padding: 1.3rem;
+      padding: 1rem;
     }
   }
 
   @media (max-width: 650px) {
     grid-template-columns: unset;
-    &__item {
-      padding: 1rem;
-    }
-  }
-
-  @media (max-width: 600px) {
-    &__item {
-      padding: 1rem;
-    }
   }
 }
 
